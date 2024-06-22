@@ -1,7 +1,7 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link, redirect, useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios
-function Login() {
+export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -9,10 +9,13 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/adminLogin",
+        {
+          email,
+          password,
+        }
+      );
 
       alert(res.data.msg || "Login Successfully");
 
@@ -82,17 +85,9 @@ function Login() {
             >
               Resend Password
             </a>
-            <a href="/register" className="underline hover:text-indigo-500">
-              Register
-            </a>
-            <a href="/admin" className="underline hover:text-indigo-500">
-              Admin-login
-            </a>
           </div>
         </form>
       </div>
     </div>
   );
 }
-
-export default Login;
