@@ -13,6 +13,7 @@ import HeaderFunction from "./Header";
 import FooterFunction from "./footer";
 import ResetPassword from "./pages/resetpassword";
 import AdminLogin from "./pages/admin";
+import AdminDashboard from "./pages/adminDashBoard";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function AppContent() {
   const location = useLocation();
 
   // Define routes where the header and footer should not be shown
-  const noHeaderFooterRoutes = ["/admin"];
+  const noHeaderFooterRoutes = ["/admin", "/adminDashBoard"];
 
   return (
     <div className="App">
@@ -38,6 +39,7 @@ function AppContent() {
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>

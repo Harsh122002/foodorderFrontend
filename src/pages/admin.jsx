@@ -23,7 +23,7 @@ export default function AdminLogin() {
       if (token) {
         localStorage.setItem("token", token);
         // Redirect to the dashboard page
-        navigate("/dashboard");
+        navigate("/adminDashBoard");
       }
     } catch (error) {
       console.error("Error:", error);
