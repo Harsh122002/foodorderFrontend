@@ -14,6 +14,7 @@ import FooterFunction from "./footer";
 import ResetPassword from "./pages/resetpassword";
 import AdminLogin from "./pages/admin";
 import AdminDashboard from "./pages/adminDashBoard";
+import AddGroup from "./pages/addGroup";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function AppContent() {
       {!noHeaderFooterRoutes.includes(location.pathname) && <HeaderFunction />}
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/addGroup" element={<AddGroup />} />
         <Route path="/register" element={<Register />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
