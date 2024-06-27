@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FaHome, FaListAlt, FaInfoCircle } from "react-icons/fa"; // Example icons from react-icons
-
+import { FaHome } from "react-icons/fa"; // Example icons from react-icons
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 export default function HeaderFunction() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Check local storage for token on component mount (similar to componentDidMount)
     const token = localStorage.getItem("token");
@@ -18,14 +19,13 @@ export default function HeaderFunction() {
   };
 
   const handleLogin = () => {
-    // Simulate login logic and store token in local storage
-    localStorage.setItem("token", "your_token_here");
-    setIsLoggedIn(true);
+    navigate("/login");
   };
 
   const handleLogout = () => {
     // Clear token from local storage on logout
     localStorage.removeItem("token");
+    localStorage.removeItem("payload");
     setIsLoggedIn(false);
   };
 
@@ -50,24 +50,24 @@ export default function HeaderFunction() {
         </h2>
       </div>
       <nav className="flex space-x-4 sm:space-x-6 md:space-x-8">
-        <a
-          href="#home"
+        <Link
+          to="/dashboard"
           className="hidden lg:block text-lg text-white hover:text-blue-500"
         >
           Home
-        </a>
-        <a
-          href="#order-status"
+        </Link>
+        <Link
+          to="#order-status"
           className="hidden lg:block text-lg text-white hover:text-blue-500"
         >
           Order Status
-        </a>
-        <a
-          href="#about"
+        </Link>
+        <Link
+          to="#about"
           className="hidden lg:block text-lg text-white hover:text-blue-500"
         >
           About
-        </a>
+        </Link>
       </nav>
       <div className="flex items-center space-x-4">
         <img
@@ -102,24 +102,24 @@ export default function HeaderFunction() {
       </div>
       {isDropdownOpen && (
         <div className="absolute top-16 right-4 mt-2 w-48 bg-white rounded-md shadow-lg z-10 lg:hidden">
-          <a
-            href="#home"
+          <Link
+            to="/dashboard"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             Home
-          </a>
-          <a
-            href="#order-status"
+          </Link>
+          <Link
+            to="/order-status"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             Order Status
-          </a>
-          <a
-            href="#about"
+          </Link>
+          <Link
+            to="/about"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             About
-          </a>
+          </Link>
         </div>
       )}
     </div>

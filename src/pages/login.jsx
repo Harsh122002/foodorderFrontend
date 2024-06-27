@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Link, redirect, useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,10 +17,21 @@ function Login() {
       alert(res.data.msg || "Login Successfully");
 
       const token = res.data.token;
+      const payload = res.data.payload;
       if (token) {
         localStorage.setItem("token", token);
+        localStorage.setItem("payload", payload);
+
+        // Set a timeout to remove token after 1 hour (3600 seconds)
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("payload");
+          alert("Session expired. Please login again.");
+        }, 3600 * 1000); // 1 hour in milliseconds
+
         // Redirect to the dashboard page
-        navigate("/dashboard");
+        // navigate("/dashboard");
+        window.location.href = "/dashboard";
       }
     } catch (error) {
       console.error("Error:", error);
@@ -38,12 +49,27 @@ function Login() {
     }
   };
 
+  // Check for token expiration on component mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Check if token has expired
+      const tokenExpiration = new Date(localStorage.getItem("tokenExpiration"));
+      if (tokenExpiration && tokenExpiration < new Date()) {
+        localStorage.removeItem("token");
+        alert("Session expired. Please login again.");
+      } else {
+        window.location.href = "/dashboard";
+      }
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg shadow-lg sm:w-full md:w-96">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
             <label htmlFor="email" className="block text-gray-700">
               Email
             </label>
@@ -56,7 +82,7 @@ function Login() {
               required
             />
           </div>
-          <div className="mb-4">
+          <div>
             <label htmlFor="password" className="block text-gray-700">
               Password
             </label>
@@ -75,18 +101,24 @@ function Login() {
           >
             Login
           </button>
-          <div className="flex justify-between mt-4">
+          <div className=" sm:flex-auto lg:flex justify-between">
             <a
               href="/resetpassword"
-              className="underline hover:text-indigo-500"
+              className="text-sm text-indigo-500 hover:underline block sm:inline-block mb-2 sm:mb-0"
             >
               Resend Password
             </a>
-            <a href="/register" className="underline hover:text-indigo-500">
+            <a
+              href="/register"
+              className="text-sm text-indigo-500 hover:underline block sm:inline-block mb-2 sm:mb-0"
+            >
               Register
             </a>
-            <a href="/admin" className="underline hover:text-indigo-500">
-              Admin-login
+            <a
+              href="/admin"
+              className="text-sm text-indigo-500 hover:underline block sm:inline-block mb-2 sm:mb-0"
+            >
+              Admin Login
             </a>
           </div>
         </form>
