@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AddGroup() {
   const [groupName, setGroupName] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const navigate = useNavigate();
 
   const handleGroupNameChange = (event) => {
     setGroupName(event.target.value);
@@ -13,14 +16,39 @@ export default function AddGroup() {
     setImageFile(file);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // You can handle form submission logic here, such as uploading the image and group name
-    console.log("Group Name:", groupName);
-    console.log("Image File:", imageFile);
-    // Reset form state if needed
-    setGroupName("");
-    setImageFile(null);
+
+    // Create a FormData object to send the group name and image file
+    const formData = new FormData();
+    formData.append("groupName", groupName);
+    formData.append("imageFile", imageFile);
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/addGroupItem",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      alert("Group added successfully!");
+
+      // Reset form state if needed
+      setGroupName("");
+      setImageFile(null);
+      navigate("/adminDashBoard");
+    } catch (error) {
+      console.error("Error adding group:", error);
+      alert("Failed to add group. Please try again.");
+    }
   };
 
   return (
