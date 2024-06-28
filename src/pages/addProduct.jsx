@@ -1,16 +1,66 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function AddProduct() {
   const [groupName, setGroupName] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [productName, setProductName] = useState("");
+  const [groupOptions, setGroupOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchGroupItems = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/auth/getAllGroup"
+        );
+        // Assuming response.data is an array of group objects
+        setGroupOptions(response.data); // Set all group options
+      } catch (error) {
+        console.error("Error fetching group items", error);
+      }
+    };
+
+    fetchGroupItems();
+  }, []);
+
+  const handleProductNameChange = (e) => {
+    setProductName(e.target.value);
+  };
+
+  const handleImageFileChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
+  const handleGroupChange = (e) => {
+    setGroupName(e.target.value); // Update selected group name
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("productName", productName);
+    formData.append("imageFile", imageFile);
+    formData.append("groupName", groupName); // Include selected group name in form data
+
+    try {
+      await axios.post("http://localhost:5000/api/products", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Product added successfully!");
+    } catch (error) {
+      console.error("Error adding product", error);
+      alert("Failed to add product. Please try again.");
+    }
+  };
 
   return (
-    <div className="max-w-md mx-auto  p-6 bg-white rounded-md shadow-md mt-5 mb-5">
+    <div className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md mt-5 mb-5">
       <h2 className="text-2xl font-bold mb-6">Add Product</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
             htmlFor="productName"
@@ -23,6 +73,7 @@ export default function AddProduct() {
             id="productName"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             value={productName}
+            onChange={handleProductNameChange}
             required
           />
         </div>
@@ -33,13 +84,20 @@ export default function AddProduct() {
           >
             Group Name
           </label>
-          <input
-            type="text"
+          <select
             id="groupName"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            value={groupName}
+            onChange={handleGroupChange}
+            value={groupName} // Ensure `groupName` is a single value
             required
-          />
+          >
+            <option value="">Select a Group</option>
+            {groupOptions.map((item) => (
+              <option key={item._id} value={item.groupName}>
+                {item.groupName}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label
@@ -53,6 +111,7 @@ export default function AddProduct() {
             id="imageFile"
             accept="image/*"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            onChange={handleImageFileChange}
             required
           />
         </div>
