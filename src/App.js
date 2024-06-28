@@ -15,6 +15,7 @@ import ResetPassword from "./pages/resetpassword";
 import AdminLogin from "./pages/admin";
 import AdminDashboard from "./pages/adminDashBoard";
 import AddGroup from "./pages/addGroup";
+import AddProduct from "./pages/addProduct";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function AppContent() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/addGroup" element={<AddGroup />} />
+        <Route path="/addProduct" element={<AddProduct />} />
         <Route path="/register" element={<Register />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function AddGroup() {
   const [groupName, setGroupName] = useState("");
@@ -52,7 +52,7 @@ export default function AddGroup() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md">
+    <div className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md mt-5 mb-5">
       <h2 className="text-2xl font-bold mb-6">Add Group</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -93,6 +93,13 @@ export default function AddGroup() {
         >
           Submit
         </button>
+        {"  "}
+        <Link
+          to="/adminDashBoard"
+          className="text-lg text-indigo-500 hover:underline block sm:inline-block mb-2 sm:mb-0"
+        >
+          Back
+        </Link>
       </form>
     </div>
   );
