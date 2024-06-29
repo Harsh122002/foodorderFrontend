@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddProduct() {
@@ -7,6 +7,7 @@ export default function AddProduct() {
   const [imageFile, setImageFile] = useState(null);
   const [productName, setProductName] = useState("");
   const [groupOptions, setGroupOptions] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGroupItems = async () => {
@@ -43,14 +44,17 @@ export default function AddProduct() {
     formData.append("productName", productName);
     formData.append("imageFile", imageFile);
     formData.append("groupName", groupName); // Include selected group name in form data
+    const token = localStorage.getItem("token");
 
     try {
-      await axios.post("http://localhost:5000/api/products", formData, {
+      await axios.post("http://localhost:5000/api/auth/addProduct", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
       alert("Product added successfully!");
+      navigate("/adminDashBoard");
     } catch (error) {
       console.error("Error adding product", error);
       alert("Failed to add product. Please try again.");
@@ -93,7 +97,7 @@ export default function AddProduct() {
           >
             <option value="">Select a Group</option>
             {groupOptions.map((item) => (
-              <option key={item._id} value={item.groupName}>
+              <option key={item._id} value={item._id}>
                 {item.groupName}
               </option>
             ))}
