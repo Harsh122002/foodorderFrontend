@@ -6,6 +6,7 @@ export default function AddProduct() {
   const [groupName, setGroupName] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [productName, setProductName] = useState("");
+  const [price, setPrice] = useState(""); // New state for price
   const [groupOptions, setGroupOptions] = useState([]);
   const navigate = useNavigate();
 
@@ -37,6 +38,10 @@ export default function AddProduct() {
     setGroupName(e.target.value); // Update selected group name
   };
 
+  const handlePriceChange = (e) => {
+    setPrice(e.target.value); // Update price
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -44,6 +49,7 @@ export default function AddProduct() {
     formData.append("productName", productName);
     formData.append("imageFile", imageFile);
     formData.append("groupName", groupName); // Include selected group name in form data
+    formData.append("price", price); // Include price in form data
     const token = localStorage.getItem("token");
 
     try {
@@ -102,6 +108,24 @@ export default function AddProduct() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="price"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Price
+          </label>
+          <input
+            type="number"
+            id="price"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            value={price}
+            onChange={handlePriceChange}
+            required
+            min="0"
+            step="1"
+          />
         </div>
         <div className="mb-4">
           <label
