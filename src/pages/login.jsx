@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { checkSessionExpiration } from "../utils/session";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -17,20 +18,21 @@ function Login() {
       alert(res.data.msg || "Login Successfully");
 
       const token = res.data.token;
-      const payload = res.data.payload;
+      const userId = res.data.userId;
       if (token) {
         localStorage.setItem("token", token);
-        localStorage.setItem("payload", payload);
+        localStorage.setItem("userId", userId);
+        sessionStorage.setItem("token", token);
 
         // Set a timeout to remove token after 1 hour (3600 seconds)
         setTimeout(() => {
           localStorage.removeItem("token");
-          localStorage.removeItem("payload");
+          localStorage.removeItem("userId");
+          sessionStorage.removeItem("token");
           alert("Session expired. Please login again.");
-        }, 3600 * 1000); // 1 hour in milliseconds
+        }, 1000); // 1 hour in milliseconds
 
         // Redirect to the dashboard page
-        // navigate("/dashboard");
         window.location.href = "/dashboard";
       }
     } catch (error) {
@@ -51,16 +53,10 @@ function Login() {
 
   // Check for token expiration on component mount
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Check if token has expired
-      const tokenExpiration = new Date(localStorage.getItem("tokenExpiration"));
-      if (tokenExpiration && tokenExpiration < new Date()) {
-        localStorage.removeItem("token");
-        alert("Session expired. Please login again.");
-      } else {
-        window.location.href = "/dashboard";
-      }
+    const isSessionValid = checkSessionExpiration();
+    if (isSessionValid) {
+      // Session is valid, redirect to dashboard
+      window.location.href = "/dashboard";
     }
   }, []);
 

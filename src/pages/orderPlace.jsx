@@ -1,9 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TotalAmountContext } from "./TotalAmountContext";
+import { CartContext } from "./CartContext";
+import axios from "axios";
 
 export default function OrderPlace() {
   const totalAmount = useContext(TotalAmountContext);
+  const { cart } = useContext(CartContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -11,6 +14,36 @@ export default function OrderPlace() {
     mobileNumber: "",
     paymentMethod: "cash",
   });
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
+
+        const response = await axios.post(
+          "http://localhost:5000/api/auth/getUserDetail",
+          { userId },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const { name, mobile } = response.data;
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          name: name || "",
+          mobileNumber: mobile || "",
+        }));
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,6 +98,19 @@ export default function OrderPlace() {
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             required
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Products</label>
+          <ul className="border border-gray-300 rounded-md p-2">
+            {cart.map((item) => (
+              <li key={item.productId} className="flex justify-between">
+                <span>{item.name}</span>
+                <span>Qty: {item.qty}</span>
+                <span>Price: Rs. {item.price}</span>
+                <span>Total: Rs. {item.price * item.qty}</span>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <label className="block text-sm font-medium">Total Amount</label>
