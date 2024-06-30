@@ -48,7 +48,8 @@ export const Dashboard = () => {
         id: product.id,
         name: product.productName,
         qty,
-        image: product.image,
+        image: product.filePath,
+        price: product.price,
       });
     }
   };
@@ -60,17 +61,19 @@ export const Dashboard = () => {
           key={index}
           className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 mx-auto"
         >
-          <div className="w-60 h-60 rounded overflow-hidden shadow-lg mx-auto">
+          <div className="w-60 h-60   rounded overflow-hidden shadow-lg mx-auto">
             <img
-              className="w-full h-32"
-              src={product.image || "/back.png"}
-              alt="Product"
+              className="w-full h-32 p-4"
+              src={`http://localhost:5000/${product.filePath}` || "/back.png"}
+              alt={product.productName}
             />
             <div className="ml-2 text-xl hover:text-2xl">
               {product.productName}
             </div>
-            <br />
-            <div className="flex justify-left items-center ml-2 mt-2">
+
+            <div className="ml-2 text-sm">Price :Rs.{product.price}</div>
+
+            <div className="flex justify-left items-center ml-2 mt-2 text-sm">
               <button
                 onClick={() => decrementQty(index)}
                 className="bg-red-500 text-white px-2 py-1 rounded"

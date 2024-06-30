@@ -1,4 +1,3 @@
-// App.js
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -19,12 +18,16 @@ import AddGroup from "./pages/addGroup";
 import AddProduct from "./pages/addProduct";
 import { CartPage } from "./pages/CartPage";
 import { CartProvider } from "./pages/CartContext";
+import OrderPlace from "./pages/orderPlace";
+import { TotalAmountProvider } from "./pages/TotalAmountContext";
 
 function App() {
   return (
     <Router>
       <CartProvider>
-        <AppContent />
+        <TotalAmountProvider>
+          <AppContent />
+        </TotalAmountProvider>
       </CartProvider>
     </Router>
   );
@@ -49,6 +52,7 @@ function AppContent() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/adminDashboard" element={<AdminDashboard />} />
+        <Route path="/orderPlace" element={<OrderPlace />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
