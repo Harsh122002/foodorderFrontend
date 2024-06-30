@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FaHome } from "react-icons/fa"; // Example icons from react-icons
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { CartContext } from "./pages/CartContext";
+
 export default function HeaderFunction() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [cartLength, setCartLength] = useState(0); // State to track cart length
   const navigate = useNavigate();
+  const { cart } = useContext(CartContext);
+
   useEffect(() => {
     // Check local storage for token on component mount (similar to componentDidMount)
     const token = localStorage.getItem("token");
@@ -13,6 +18,11 @@ export default function HeaderFunction() {
       setIsLoggedIn(true);
     }
   }, []);
+
+  useEffect(() => {
+    // Update cart length when cart changes
+    setCartLength(cart.length);
+  }, [cart]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -27,6 +37,11 @@ export default function HeaderFunction() {
     localStorage.removeItem("token");
     localStorage.removeItem("payload");
     setIsLoggedIn(false);
+  };
+
+  const handleCartClick = () => {
+    // Handle clicking on the cart icon (e.g., navigate to cart page)
+    navigate("/cart");
   };
 
   return (
@@ -69,12 +84,21 @@ export default function HeaderFunction() {
           About
         </Link>
       </nav>
-      <div className="flex items-center space-x-4">
-        <img
-          src="/cart.png"
-          alt="Shopping Cart"
-          className="w-6 h-6 sm:w-8 sm:h-8 rounded"
-        />
+
+      <div className="flex items-center space-x-4 relative">
+        <div className="relative">
+          <img
+            src="/cart.png"
+            alt="Shopping Cart"
+            className="w-6 h-6 sm:w-8 sm:h-8 rounded cursor-pointer"
+            onClick={handleCartClick}
+          />
+          {cartLength > 0 && (
+            <sup className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs absolute -top-1 -right-1">
+              {cartLength}
+            </sup>
+          )}
+        </div>
         {/* Show only one icon on small and medium screens */}
         <button
           onClick={toggleDropdown}
@@ -100,6 +124,7 @@ export default function HeaderFunction() {
           </button>
         )}
       </div>
+
       {isDropdownOpen && (
         <div className="absolute top-16 right-4 mt-2 w-48 bg-white rounded-md shadow-lg z-10 lg:hidden">
           <Link
@@ -109,13 +134,13 @@ export default function HeaderFunction() {
             Home
           </Link>
           <Link
-            to="/order-status"
+            to="#order-status"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             Order Status
           </Link>
           <Link
-            to="/about"
+            to="#about"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             About

@@ -1,3 +1,4 @@
+// App.js
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -16,11 +17,15 @@ import AdminLogin from "./pages/admin";
 import AdminDashboard from "./pages/adminDashBoard";
 import AddGroup from "./pages/addGroup";
 import AddProduct from "./pages/addProduct";
+import { CartPage } from "./pages/CartPage";
+import { CartProvider } from "./pages/CartContext";
 
 function App() {
   return (
     <Router>
-      <AppContent />
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </Router>
   );
 }
@@ -44,6 +49,7 @@ function AppContent() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/adminDashboard" element={<AdminDashboard />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>
