@@ -20,13 +20,17 @@ import { CartPage } from "./pages/CartPage";
 import { CartProvider } from "./pages/CartContext";
 import OrderPlace from "./pages/orderPlace";
 import { TotalAmountProvider } from "./pages/TotalAmountContext";
+import Success from "./pages/success";
+import { OrderProvider } from "./pages/OrderContext";
 
 function App() {
   return (
     <Router>
       <CartProvider>
         <TotalAmountProvider>
-          <AppContent />
+          <OrderProvider>
+            <AppContent />
+          </OrderProvider>
         </TotalAmountProvider>
       </CartProvider>
     </Router>
@@ -54,6 +58,7 @@ function AppContent() {
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/orderPlace" element={<OrderPlace />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/Success" element={<Success />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>

@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { TotalAmountContext } from "./TotalAmountContext";
 import { CartContext } from "./CartContext";
 import axios from "axios";
+import { useOrder } from "./OrderContext";
 
 export default function OrderPlace() {
   const totalAmount = useContext(TotalAmountContext);
-  const { cart } = useContext(CartContext);
+  const { cart, removeFromCart1 } = useContext(CartContext);
+  const { setOrderId } = useOrder(); // Destructure setOrderId from useOrder hook
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -53,12 +55,51 @@ export default function OrderPlace() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.paymentMethod === "cash") {
-      navigate("/success");
-    } else {
-      navigate("/onlinePayment");
+
+    const orderData = {
+      userId: localStorage.getItem("userId"),
+      name: formData.name,
+      address: formData.address,
+      mobileNumber: formData.mobileNumber,
+      products: cart.map((item) => ({
+        productId: item.productId,
+        name: item.name,
+        quantity: item.qty,
+        price: item.price,
+      })),
+      totalAmount: totalAmount,
+      paymentMethod: formData.paymentMethod,
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/orderDetail",
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        const { orderId } = response.data;
+        setOrderId(orderId); // Set orderId using setOrderId from useOrder
+        removeFromCart1();
+        if (formData.paymentMethod === "cash") {
+          navigate("/success");
+        } else {
+          navigate("/onlinePayment");
+        }
+      } else {
+        console.error("Order placement failed", response);
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
     }
   };
 
@@ -103,7 +144,7 @@ export default function OrderPlace() {
           <label className="block text-sm font-medium">Products</label>
           <ul className="border border-gray-300 rounded-md p-2">
             {cart.map((item) => (
-              <li key={item.productId} className="flex justify-between">
+              <li key={item.index} className="flex justify-between">
                 <span>{item.name}</span>
                 <span>Qty: {item.qty}</span>
                 <span>Price: Rs. {item.price}</span>
