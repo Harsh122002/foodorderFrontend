@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { TotalAmountContext } from "./TotalAmountContext";
 import { CartContext } from "./CartContext";
-import axios from "axios";
 import { useOrder } from "./OrderContext";
 
-export default function OrderPlace() {
+const OrderPlace = () => {
   const totalAmount = useContext(TotalAmountContext);
   const { cart, removeFromCart1 } = useContext(CartContext);
-  const { setOrderId } = useOrder(); // Destructure setOrderId from useOrder hook
+  const { setOrderId } = useOrder();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -88,18 +88,94 @@ export default function OrderPlace() {
 
       if (response.status === 201) {
         const { orderId } = response.data;
-        setOrderId(orderId); // Set orderId using setOrderId from useOrder
+        setOrderId(orderId);
         removeFromCart1();
+
         if (formData.paymentMethod === "cash") {
           navigate("/success");
-        } else {
-          navigate("/onlinePayment");
+        } else if (formData.paymentMethod === "online") {
+          initiateRazorpayPayment(orderId);
         }
       } else {
         console.error("Order placement failed", response);
       }
     } catch (error) {
       console.error("Error placing order:", error);
+    }
+  };
+
+  const initiateRazorpayPayment = async (orderId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/payment",
+        { totalAmount: totalAmount, currency: "INR" }
+      );
+
+      const { data } = response;
+
+      const options = {
+        key: "rzp_test_PmPFQvT5b2a9Qp", // Replace with your actual Razorpay key
+        amount: data.amount,
+        currency: data.currency,
+        name: "Food Order",
+        description: "Payment for Order",
+        image: "/logo.png", // Replace with your company logo
+        order_id: data.orderId,
+        handler: function (response) {
+          navigate("/success");
+
+          console.log(response);
+
+          // After successful payment, verify payment on backend
+          verifyPayment(
+            data.orderId,
+            response.razorpay_payment_id,
+            response.razorpay_signature
+          );
+        },
+        prefill: {
+          name: formData.name,
+          contact: formData.mobileNumber,
+        },
+        notes: {
+          address: formData.address,
+        },
+        theme: {
+          color: "#F37254",
+        },
+      };
+
+      // Check if Razorpay object exists in window
+      if (window.Razorpay) {
+        const razorpayInstance = new window.Razorpay(options);
+        razorpayInstance.open();
+      } else {
+        console.error("Razorpay script not loaded.");
+        // Handle error scenario if Razorpay script not loaded
+      }
+    } catch (error) {
+      console.error("Error initiating Razorpay payment:", error);
+    }
+  };
+
+  const verifyPayment = async (orderId, paymentId, signature) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/verify",
+        { orderId, paymentId, signature }
+      );
+
+      const { status } = response.data;
+
+      if (status === "success") {
+        navigate("/success");
+      } else {
+        console.error("Payment verification failed");
+        // Handle payment failure scenario
+      }
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      // Handle error scenario
     }
   };
 
@@ -195,4 +271,6 @@ export default function OrderPlace() {
       </form>
     </div>
   );
-}
+};
+
+export default OrderPlace;
