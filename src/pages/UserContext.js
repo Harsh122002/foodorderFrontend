@@ -45,8 +45,19 @@ export const UserProvider = ({ children }) => {
     fetchUserDetail();
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("tokenExpiration");
+    sessionStorage.removeItem("token");
+    setUserDetail(null);
+    setIsLoggedIn(false);
+  };
+
   return (
-    <UserContext.Provider value={{ userDetail, isLoggedIn }}>
+    <UserContext.Provider
+      value={{ userDetail, isLoggedIn, logout, setUserDetail }}
+    >
       {children}
     </UserContext.Provider>
   );

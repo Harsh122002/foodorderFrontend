@@ -1,6 +1,13 @@
 // utils/session.js
 
-export const checkSessionExpiration = () => {
+const clearSession = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("tokenExpiration");
+  sessionStorage.removeItem("token");
+};
+
+export const checkSessionExpiration = (navigate) => {
   const token = sessionStorage.getItem("token");
 
   if (token) {
@@ -11,6 +18,7 @@ export const checkSessionExpiration = () => {
       // Session has expired
       clearSession();
       alert("Session expired. Please login again.");
+      navigate("/login");
       return false;
     }
 
@@ -21,17 +29,11 @@ export const checkSessionExpiration = () => {
     setTimeout(() => {
       clearSession();
       alert("Session expired. Please login again.");
+      navigate("/login");
     }, remainingTime);
 
     return true; // Session is valid
   }
 
   return false; // No session token found
-};
-
-const clearSession = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("userId");
-  localStorage.removeItem("tokenExpiration");
-  sessionStorage.removeItem("token");
 };

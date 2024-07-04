@@ -23,6 +23,8 @@ import { TotalAmountProvider } from "./pages/TotalAmountContext";
 import Success from "./pages/success";
 import { OrderProvider } from "./pages/OrderContext";
 import { UserProvider } from "./pages/UserContext";
+import Profile from "./pages/profile";
+import About from "./pages/about";
 
 function App() {
   return (
@@ -61,7 +63,9 @@ function AppContent() {
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/orderPlace" element={<OrderPlace />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/Success" element={<Success />} />
+        <Route path="/about" element={<About />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>

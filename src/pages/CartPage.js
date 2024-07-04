@@ -14,7 +14,7 @@ export const CartPage = () => {
   );
 
   const handleOrder = () => {
-    const session = checkSessionExpiration();
+    const session = checkSessionExpiration(navigate);
     if (session) {
       navigate("/orderPlace");
     } else {
@@ -25,7 +25,7 @@ export const CartPage = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Shopping Cart</h2>
+      <h2 className="text-2xl font-bold mb-4">Collection of Item</h2>
       {cart.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (

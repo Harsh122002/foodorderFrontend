@@ -46,7 +46,7 @@ export const Dashboard = () => {
     const qty = quantities[index];
 
     // Check if token exists in local storage
-    const isSessionValid = checkSessionExpiration();
+    const isSessionValid = checkSessionExpiration(navigate);
     if (!isSessionValid) {
       alert("Session Expired");
       // Redirect to login page if session is not valid
