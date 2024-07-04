@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { checkSessionExpiration } from "../utils/session";
 
 export default function AddGroup() {
   const [groupName, setGroupName] = useState("");
@@ -18,6 +19,13 @@ export default function AddGroup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Check session expiration
+    const sessionValid = checkSessionExpiration();
+    if (!sessionValid) {
+      navigate("/login");
+      return;
+    }
 
     // Create a FormData object to send the group name and image file
     const formData = new FormData();

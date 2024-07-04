@@ -5,7 +5,15 @@ import { checkSessionExpiration } from "../utils/session";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check for token expiration on component mount
+    const isSessionValid = checkSessionExpiration();
+    if (isSessionValid) {
+      // Redirect to the dashboard page if session is valid
+      window.location.href = "/dashboard";
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,15 +30,13 @@ function Login() {
       if (token) {
         localStorage.setItem("token", token);
         localStorage.setItem("userId", userId);
-        sessionStorage.setItem("token", token);
 
-        // Set a timeout to remove token after 1 hour (3600 seconds)
-        setTimeout(() => {
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
-          sessionStorage.removeItem("token");
-          alert("Session expired. Please login again.");
-        }, 1000); // 1 hour in milliseconds
+        // Set token expiration (e.g., 1 hour from now)
+        const tokenExpiration = new Date();
+        tokenExpiration.setHours(tokenExpiration.getHours() + 1); // 1 hour expiry
+        localStorage.setItem("tokenExpiration", tokenExpiration);
+
+        sessionStorage.setItem("token", token);
 
         // Redirect to the dashboard page
         window.location.href = "/dashboard";
@@ -50,15 +56,6 @@ function Login() {
       }
     }
   };
-
-  // Check for token expiration on component mount
-  useEffect(() => {
-    const isSessionValid = checkSessionExpiration();
-    if (isSessionValid) {
-      // Session is valid, redirect to dashboard
-      window.location.href = "/dashboard";
-    }
-  }, []);
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">

@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState, useContext } from "react";
 import { CartContext } from "./CartContext";
-
+import { useNavigate } from "react-router-dom";
+import { checkSessionExpiration } from "../utils/session";
 export const Dashboard = () => {
   const { addToCart } = useContext(CartContext);
   const [quantities, setQuantities] = useState([]);
   const [products, setProducts] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -43,6 +44,16 @@ export const Dashboard = () => {
   const handleAddToCart = (index) => {
     const product = products[index];
     const qty = quantities[index];
+
+    // Check if token exists in local storage
+    const isSessionValid = checkSessionExpiration();
+    if (!isSessionValid) {
+      alert("Session Expired");
+      // Redirect to login page if session is not valid
+      navigate("/login");
+      return;
+    }
+
     if (qty > 0) {
       addToCart({
         id: product.id,
@@ -51,6 +62,7 @@ export const Dashboard = () => {
         image: product.filePath,
         price: product.price,
       });
+      alert(`Added ${qty} ${product.productName}(s) to cart!`);
     }
   };
 

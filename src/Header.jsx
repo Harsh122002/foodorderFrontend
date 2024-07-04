@@ -3,18 +3,19 @@ import { FaHome } from "react-icons/fa"; // Example icons from react-icons
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { CartContext } from "./pages/CartContext";
+import { checkSessionExpiration } from "./utils/session";
 
 export default function HeaderFunction() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
   const [cartLength, setCartLength] = useState(0); // State to track cart length
   const navigate = useNavigate();
-  const { cart } = useContext(CartContext);
+  const { cart, removeFromCart1 } = useContext(CartContext);
 
   useEffect(() => {
-    // Check local storage for token on component mount (similar to componentDidMount)
-    const token = localStorage.getItem("token");
-    if (token) {
+    const session = checkSessionExpiration();
+
+    if (session) {
       setIsLoggedIn(true);
     }
   }, []);
@@ -35,7 +36,10 @@ export default function HeaderFunction() {
   const handleLogout = () => {
     // Clear token from local storage on logout
     localStorage.removeItem("token");
-    localStorage.removeItem("payload");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("tokenExpiration");
+    sessionStorage.removeItem("token");
+    removeFromCart1();
     setIsLoggedIn(false);
   };
 
@@ -106,21 +110,21 @@ export default function HeaderFunction() {
         >
           <FaHome />
         </button>
-        {isLoggedIn ? (
-          // Show Logout button if logged in
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white text-sm sm:text-base px-2 sm:px-4 py-1 sm:py-2 rounded hover:bg-red-700"
-          >
-            Logout
-          </button>
-        ) : (
-          // Show Login button if not logged in
+        {/* Conditional rendering based on isLoggedIn state */}
+        {!isLoggedIn && (
           <button
             onClick={handleLogin}
             className="bg-blue-500 text-white text-sm sm:text-base px-2 sm:px-4 py-1 sm:py-2 rounded hover:bg-blue-700"
           >
             Login
+          </button>
+        )}
+        {isLoggedIn && (
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white text-sm sm:text-base px-2 sm:px-4 py-1 sm:py-2 rounded hover:bg-red-700"
+          >
+            Logout
           </button>
         )}
       </div>

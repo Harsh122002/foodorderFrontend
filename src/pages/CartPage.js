@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { CartContext } from "./CartContext";
 import { useNavigate } from "react-router-dom";
+import { checkSessionExpiration } from "../utils/session";
 
 export const CartPage = () => {
   const { cart, removeFromCart } = useContext(CartContext);
@@ -13,7 +14,13 @@ export const CartPage = () => {
   );
 
   const handleOrder = () => {
-    navigate("/orderPlace");
+    const session = checkSessionExpiration();
+    if (session) {
+      navigate("/orderPlace");
+    } else {
+      alert("Session expired");
+      navigate("/login");
+    }
   };
 
   return (
