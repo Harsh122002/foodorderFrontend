@@ -22,6 +22,7 @@ import OrderPlace from "./pages/orderPlace";
 import { TotalAmountProvider } from "./pages/TotalAmountContext";
 import Success from "./pages/success";
 import { OrderProvider } from "./pages/OrderContext";
+import { UserProvider } from "./pages/UserContext";
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
       <CartProvider>
         <TotalAmountProvider>
           <OrderProvider>
-            <AppContent />
+            <UserProvider>
+              <AppContent />
+            </UserProvider>
           </OrderProvider>
         </TotalAmountProvider>
       </CartProvider>

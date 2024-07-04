@@ -1,27 +1,27 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaHome } from "react-icons/fa"; // Example icons from react-icons
+import { FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { CartContext } from "./pages/CartContext";
 import { checkSessionExpiration } from "./utils/session";
+import { UserContext } from "./pages/UserContext";
 
 export default function HeaderFunction() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-  const [cartLength, setCartLength] = useState(0); // State to track cart length
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cartLength, setCartLength] = useState(0);
   const navigate = useNavigate();
   const { cart, removeFromCart1 } = useContext(CartContext);
-
+  const { userDetail } = useContext(UserContext);
+  console.log(userDetail);
   useEffect(() => {
     const session = checkSessionExpiration();
-
     if (session) {
       setIsLoggedIn(true);
     }
   }, []);
 
   useEffect(() => {
-    // Update cart length when cart changes
     setCartLength(cart.length);
   }, [cart]);
 
@@ -34,7 +34,6 @@ export default function HeaderFunction() {
   };
 
   const handleLogout = () => {
-    // Clear token from local storage on logout
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("tokenExpiration");
@@ -44,7 +43,6 @@ export default function HeaderFunction() {
   };
 
   const handleCartClick = () => {
-    // Handle clicking on the cart icon (e.g., navigate to cart page)
     navigate("/cart");
   };
 
@@ -103,14 +101,13 @@ export default function HeaderFunction() {
             </sup>
           )}
         </div>
-        {/* Show only one icon on small and medium screens */}
         <button
           onClick={toggleDropdown}
           className="block lg:hidden text-white text-2xl"
         >
           <FaHome />
         </button>
-        {/* Conditional rendering based on isLoggedIn state */}
+        {userDetail && <p>{userDetail.name}</p>}
         {!isLoggedIn && (
           <button
             onClick={handleLogin}
