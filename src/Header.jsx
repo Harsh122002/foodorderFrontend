@@ -68,12 +68,14 @@ export default function HeaderFunction() {
         >
           Home
         </Link>
-        <Link
-          to="#order-status"
-          className="hidden lg:block text-lg text-white hover:text-blue-500"
-        >
-          Order Status
-        </Link>
+        {isLoggedIn && (
+          <Link
+            to="/orderStatus"
+            className="hidden lg:block text-lg text-white hover:text-blue-500"
+          >
+            Order Status
+          </Link>
+        )}
         <Link
           to="/about"
           className="hidden lg:block text-lg text-white hover:text-blue-500"
@@ -139,12 +141,14 @@ export default function HeaderFunction() {
           >
             Home
           </Link>
-          <Link
-            to="#order-status"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            Order Status
-          </Link>
+          {isLoggedIn && (
+            <Link
+              to="/orderStatus"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Order Status
+            </Link>
+          )}
           <Link
             to="/about"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

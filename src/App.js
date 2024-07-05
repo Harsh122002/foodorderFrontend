@@ -25,6 +25,8 @@ import { OrderProvider } from "./pages/OrderContext";
 import { UserProvider } from "./pages/UserContext";
 import Profile from "./pages/profile";
 import About from "./pages/about";
+import OrderStatus from "./pages/orderStatus";
+import ProductManage from "./pages/productManage";
 
 function App() {
   return (
@@ -46,7 +48,13 @@ function AppContent() {
   const location = useLocation();
 
   // Define routes where the header and footer should not be shown
-  const noHeaderFooterRoutes = ["/admin", "/adminDashBoard"];
+  const noHeaderFooterRoutes = [
+    "/admin",
+    "/adminDashBoard",
+    "/productManage",
+    "/addProduct",
+    "/addGroup",
+  ];
 
   return (
     <div className="App">
@@ -66,6 +74,8 @@ function AppContent() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/Success" element={<Success />} />
         <Route path="/about" element={<About />} />
+        <Route path="/orderStatus" element={<OrderStatus />} />
+        <Route path="/productManage" element={<ProductManage />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>
