@@ -12,6 +12,8 @@ export default function AdminDashboard() {
     declined: 0,
   });
   const [userCount, setUserCount] = useState(0);
+  const [groups, setGroups] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     // Fetch order statuses from the API
@@ -32,6 +34,26 @@ export default function AdminDashboard() {
       })
       .catch((error) => {
         console.error("Error fetching user count:", error);
+      });
+
+    // Fetch all groups from the API
+    axios
+      .get("http://localhost:5000/api/auth/getAllGroup")
+      .then((response) => {
+        setGroups(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching groups:", error);
+      });
+
+    // Fetch all products from the API
+    axios
+      .get("http://localhost:5000/api/auth/getAllProduct")
+      .then((response) => {
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
       });
   }, []);
 
@@ -81,10 +103,24 @@ export default function AdminDashboard() {
             </div>
           </Link>
         ))}
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full sm:w-64 h-32 flex flex-col items-center justify-center text-purple-500">
-          <div className="text-2xl font-semibold">{userCount}</div>
-          <div>Registered Users</div>
-        </div>
+        <Link to="/allGroups" className="w-full sm:w-64">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-32 flex flex-col items-center justify-center text-purple-500">
+            <div className="text-2xl font-semibold">{groups.length}</div>
+            <div>Groups</div>
+          </div>
+        </Link>
+        <Link to="/allProducts" className="w-full sm:w-64">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-32 flex flex-col items-center justify-center text-purple-500">
+            <div className="text-2xl font-semibold">{products.length}</div>
+            <div>Products</div>
+          </div>
+        </Link>
+        <Link to="/registeredUsers" className="w-full sm:w-64">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-32 flex flex-col items-center justify-center text-purple-500">
+            <div className="text-2xl font-semibold">{userCount}</div>
+            <div>Registered Users</div>
+          </div>
+        </Link>
       </div>
 
       <div className="flex flex-wrap items-center justify-center space-x-4 mb-10">

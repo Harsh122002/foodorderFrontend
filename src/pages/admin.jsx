@@ -5,7 +5,6 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -20,8 +19,18 @@ export default function AdminLogin() {
       alert(res.data.msg || "Login Successfully");
 
       const token = res.data.token;
+      const userId = res.data.userId;
       if (token) {
         localStorage.setItem("token", token);
+        localStorage.setItem("userId", userId);
+
+        // Set token expiration (e.g., 1 hour from now)
+        const tokenExpiration = new Date();
+        tokenExpiration.setHours(tokenExpiration.getHours() + 1); // 1 hour expiry
+        localStorage.setItem("tokenExpiration", tokenExpiration);
+
+        sessionStorage.setItem("token", token);
+
         // Redirect to the dashboard page
         navigate("/adminDashBoard");
       }

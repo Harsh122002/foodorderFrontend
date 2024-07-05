@@ -31,6 +31,9 @@ import ProductManagementPage from "./pages/pending";
 import Running from "./pages/running";
 import Complete from "./pages/complete";
 import Declined from "./pages/decliened";
+import AllGroups from "./pages/allGroups";
+import AllProducts from "./pages/allProducts";
+import RegisteredUsers from "./pages/registeredUsers";
 
 function App() {
   return (
@@ -62,6 +65,9 @@ function AppContent() {
     "/running",
     "/complete",
     "/declined",
+    "/allGroups",
+    "/registeredUsers",
+    "/allProducts",
   ];
 
   return (
@@ -78,6 +84,7 @@ function AppContent() {
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/orderPlace" element={<OrderPlace />} />
+        <Route path="/allGroups" element={<AllGroups />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/Success" element={<Success />} />
@@ -86,6 +93,8 @@ function AppContent() {
         <Route path="/productManage" element={<ProductManage />} />
         <Route path="/pending" element={<ProductManagementPage />} />
         <Route path="/complete" element={<Complete />} />
+        <Route path="/allProducts" element={<AllProducts />} />
+        <Route path="/registeredUsers" element={<RegisteredUsers />} />
         <Route path="/declined" element={<Declined />} />
         <Route path="/running" element={<Running />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
