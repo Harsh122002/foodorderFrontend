@@ -16,6 +16,7 @@ const OrderPlace = () => {
     mobileNumber: "",
     paymentMethod: "cash",
   });
+  const [isLoading, setIsLoading] = useState(false); // Loader state
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -105,6 +106,8 @@ const OrderPlace = () => {
   };
 
   const initiateRazorpayPayment = async (orderId) => {
+    setIsLoading(true); // Show loader
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/payment",
@@ -122,9 +125,8 @@ const OrderPlace = () => {
         image: "/logo.png", // Replace with your company logo
         order_id: data.orderId,
         handler: function (response) {
+          setIsLoading(false); // Hide loader
           navigate("/success");
-
-          console.log(response);
 
           // After successful payment, verify payment on backend
           verifyPayment(
@@ -146,14 +148,24 @@ const OrderPlace = () => {
       };
 
       // Check if Razorpay object exists in window
-      if (window.Razorpay) {
+      if (typeof window.Razorpay === "function") {
         const razorpayInstance = new window.Razorpay(options);
         razorpayInstance.open();
       } else {
         console.error("Razorpay script not loaded.");
-        // Handle error scenario if Razorpay script not loaded
+        // Retry loading Razorpay script after a short delay
+        setTimeout(() => {
+          if (typeof window.Razorpay === "function") {
+            const razorpayInstance = new window.Razorpay(options);
+            razorpayInstance.open();
+          } else {
+            console.error("Razorpay script not loaded after retry.");
+          }
+          setIsLoading(false); // Hide loader after retry
+        }, 1000); // Retry after 1 second
       }
     } catch (error) {
+      setIsLoading(false); // Hide loader
       console.error("Error initiating Razorpay payment:", error);
     }
   };
@@ -262,9 +274,10 @@ const OrderPlace = () => {
             </label>
           </div>
         </div>
+        {isLoading && <div className="loader">Loading...</div>} {/* Loader */}
         <button
           type="submit"
-          className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          className="mt-4 bg-green-500 text-white py-2 px-4 rounded-md"
         >
           Place Order
         </button>

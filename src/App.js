@@ -27,6 +27,10 @@ import Profile from "./pages/profile";
 import About from "./pages/about";
 import OrderStatus from "./pages/orderStatus";
 import ProductManage from "./pages/productManage";
+import ProductManagementPage from "./pages/pending";
+import Running from "./pages/running";
+import Complete from "./pages/complete";
+import Declined from "./pages/decliened";
 
 function App() {
   return (
@@ -54,6 +58,10 @@ function AppContent() {
     "/productManage",
     "/addProduct",
     "/addGroup",
+    "/pending",
+    "/running",
+    "/complete",
+    "/declined",
   ];
 
   return (
@@ -76,6 +84,10 @@ function AppContent() {
         <Route path="/about" element={<About />} />
         <Route path="/orderStatus" element={<OrderStatus />} />
         <Route path="/productManage" element={<ProductManage />} />
+        <Route path="/pending" element={<ProductManagementPage />} />
+        <Route path="/complete" element={<Complete />} />
+        <Route path="/declined" element={<Declined />} />
+        <Route path="/running" element={<Running />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>

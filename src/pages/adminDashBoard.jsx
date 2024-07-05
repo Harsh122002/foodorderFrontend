@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -46,6 +47,14 @@ export default function AdminDashboard() {
     navigate("/productManage");
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("tokenExpiration");
+    sessionStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold mb-10 mt-5 text-emerald-500 text-center">
@@ -55,21 +64,22 @@ export default function AdminDashboard() {
       {/* Order Status Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-10">
         {Object.entries(orderStatuses).map(([status, count]) => (
-          <div
-            key={status}
-            className={`bg-white shadow-lg rounded-lg p-6 w-full sm:w-64 h-32 flex flex-col items-center justify-center ${
-              status === "pending"
-                ? "text-yellow-500"
-                : status === "running"
-                ? "text-blue-500"
-                : status === "complete"
-                ? "text-green-500"
-                : "text-red-500"
-            }`}
-          >
-            <div className="text-2xl font-semibold">{count}</div>
-            <div className="capitalize">{status}</div>
-          </div>
+          <Link to={`/${status}`} key={status} className="w-full sm:w-64">
+            <div
+              className={`bg-white shadow-lg rounded-lg p-6 h-32 flex flex-col items-center justify-center ${
+                status === "pending"
+                  ? "text-yellow-500"
+                  : status === "running"
+                  ? "text-blue-500"
+                  : status === "complete"
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
+            >
+              <div className="text-2xl font-semibold">{count}</div>
+              <div className="capitalize">{status}</div>
+            </div>
+          </Link>
         ))}
         <div className="bg-white shadow-lg rounded-lg p-6 w-full sm:w-64 h-32 flex flex-col items-center justify-center text-purple-500">
           <div className="text-2xl font-semibold">{userCount}</div>
@@ -77,32 +87,33 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex flex-nowrap">
-          <button
-            className="bg-blue-500 w-full sm:w-48 h-16 text-white px-4 py-2 rounded-2xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-2xl"
-            onClick={handleGroupAdd}
-          >
-            Add Food Group
-          </button>
-        </div>
-        <div className="flex flex-nowrap">
-          <button
-            className="bg-green-500 w-full sm:w-48 h-16 text-white px-4 py-2 rounded-2xl hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 shadow-2xl"
-            onClick={handleProductAdd}
-          >
-            Add Product
-          </button>
-        </div>
-        <div className="flex flex-nowrap">
-          <button
-            className="bg-red-500 w-full sm:w-48 h-16 text-white px-4 py-2 rounded-2xl hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-2xl"
-            onClick={handleProductManage}
-          >
-            Manage Orders
-          </button>
-        </div>
+      <div className="flex flex-wrap items-center justify-center space-x-4 mb-10">
+        <button
+          className="bg-blue-500 w-full sm:w-48 h-16 text-white px-4 py-2 rounded-2xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-2xl"
+          onClick={handleGroupAdd}
+        >
+          Add Food Group
+        </button>
+        <button
+          className="bg-green-500 w-full sm:w-48 h-16 text-white px-4 py-2 rounded-2xl hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 shadow-2xl"
+          onClick={handleProductAdd}
+        >
+          Add Product
+        </button>
+        <button
+          className="bg-red-500 w-full sm:w-48 h-16 text-white px-4 py-2 rounded-2xl hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-2xl"
+          onClick={handleProductManage}
+        >
+          Manage Orders
+        </button>
       </div>
+
+      <button
+        className="bg-gray-500 w-full sm:w-48 h-16 text-white px-4 py-2 rounded-2xl hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 shadow-2xl"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
     </div>
   );
 }
