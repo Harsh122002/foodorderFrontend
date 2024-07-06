@@ -3,6 +3,8 @@ import axios from "axios";
 
 export default function RegisteredUsers() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -11,29 +13,57 @@ export default function RegisteredUsers() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/getAllUsers"
+        "http://localhost:5000/api/auth/all-users"
       );
-      setUsers(response.data);
+      if (response.data && Array.isArray(response.data.users)) {
+        setUsers(response.data.users);
+      } else {
+        setError("Unexpected response format");
+      }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      setError("Error fetching users");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Registered Users</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {users.map((user, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg overflow-hidden shadow-lg p-4"
-          >
-            <h2 className="text-xl font-semibold mb-2">{user.username}</h2>
-            <div>Email: {user.email}</div>
-            <div>Role: {user.role}</div>
-          </div>
-        ))}
-      </div>
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Registered Users
+      </h1>
+      {loading ? (
+        <p className="text-center text-gray-500">Loading...</p>
+      ) : error ? (
+        <p className="text-center text-red-500">{error}</p>
+      ) : users.length === 0 ? (
+        <p className="text-center text-gray-500">No registered users found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {users.map((user) => (
+            <div
+              key={user._id}
+              className="bg-white rounded-lg overflow-hidden shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-2 text-gray-800">
+                {user.name}
+              </h2>
+              <div className="text-gray-600 mb-1">Email: {user.email}</div>
+              <div className="text-gray-600 mb-1">Address: {user.address}</div>
+              <div className="text-gray-600 mb-1">Mobile: {user.mobile}</div>
+              <div className="text-gray-600 mb-1">Role: {user.role}</div>
+              <div className="text-gray-600 mb-1">
+                Registered Date: {new Date(user.added).toLocaleDateString()}
+              </div>
+              <div className="text-gray-600">
+                Profile Update Date:{" "}
+                {new Date(user.update).toLocaleDateString()}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

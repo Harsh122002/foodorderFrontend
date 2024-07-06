@@ -21,6 +21,7 @@ export default function AllGroups() {
 
   const handleDelete = async (groupId) => {
     try {
+      console.log(groupId);
       const response = await axios.delete(
         `http://localhost:5000/api/auth/deleteGroup/${groupId}`
       );

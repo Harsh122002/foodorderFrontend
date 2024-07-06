@@ -9,7 +9,7 @@ export const Dashboard = () => {
   const [quantities, setQuantities] = useState([]);
   const [products, setProducts] = useState([]);
   const [groups, setGroups] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null); // State to hold selected group ID
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,11 +54,9 @@ export const Dashboard = () => {
     const product = products[index];
     const qty = quantities[index];
 
-    // Check if token exists in local storage
     const isSessionValid = checkSessionExpiration(navigate);
     if (!isSessionValid) {
       alert("Session Expired");
-      // Redirect to login page if session is not valid
       navigate("/login");
       return;
     }
@@ -76,12 +74,14 @@ export const Dashboard = () => {
   };
 
   const fetchProductsByGroup = async (groupId) => {
+    console.log(groupId);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/auth/getProductsByGroup/${groupId}`
       );
       setProducts(response.data);
-      setSelectedGroup(groupId); // Set selected group ID
+      setSelectedGroup(groupId);
+      setQuantities(Array(response.data.length).fill(0)); // Reset quantities when group changes
     } catch (error) {
       console.error("Error fetching products by group:", error);
     }
@@ -93,7 +93,8 @@ export const Dashboard = () => {
         "http://localhost:5000/api/auth/getAllProduct"
       );
       setProducts(response.data);
-      setSelectedGroup(null); // Reset selected group ID
+      setSelectedGroup(null);
+      setQuantities(Array(response.data.length).fill(0)); // Reset quantities when resetting products
     } catch (error) {
       console.error("Error resetting products:", error);
     }
@@ -101,10 +102,8 @@ export const Dashboard = () => {
 
   return (
     <div className="flex flex-wrap justify-center">
-      {/* Left Column */}
       <div className="flex flex-col items-center w-full sm:w-auto md:w-1/4 lg:w-1/5 p-4">
         <div className="mb-4">
-          {/* All Button */}
           <button
             className="w-24 h-24 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center"
             onClick={resetProducts}
@@ -113,32 +112,34 @@ export const Dashboard = () => {
           </button>
         </div>
 
-        {/* Group Images Section */}
         <div className="flex flex-col items-center">
           {groups.map((group, groupIndex) => (
-            <div
-              key={groupIndex}
-              className="w-24 h-24 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center"
-              onClick={() => fetchProductsByGroup(group.id)}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                className="w-20 h-20 object-cover rounded-full"
-                src={`http://localhost:5000/${group.filePath}` || "/back.png"}
-                alt={group.groupName}
-              />
+            <>
+              <div
+                key={groupIndex}
+                className={`w-24 h-24 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
+                  selectedGroup === group._id ? "bg-gray-200" : ""
+                }`}
+                onClick={() => fetchProductsByGroup(group._id)}
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  className="w-20 h-20 object-cover rounded-full"
+                  src={`http://localhost:5000/${group.filePath}` || "/back.png"}
+                  alt={group.groupName}
+                />
+              </div>
               <div className="text-xl font-semibold">{group.groupName}</div>
-            </div>
+            </>
           ))}
         </div>
       </div>
 
-      {/* Right Column */}
       <div className="flex flex-wrap justify-center w-full md:w-3/4 lg:w-4/5">
         {products.map((product, index) => (
           <div
             key={index}
-            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 mx-auto"
+            className="w-full sm:w-1/2 md:w-1/2 lg:w-1/3 p-4 mx-auto"
           >
             <div className="w-60 h-60 rounded overflow-hidden shadow-lg mx-auto">
               <img
