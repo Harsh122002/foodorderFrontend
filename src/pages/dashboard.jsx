@@ -10,6 +10,7 @@ export const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [showGroups, setShowGroups] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,7 +75,6 @@ export const Dashboard = () => {
   };
 
   const fetchProductsByGroup = async (groupId) => {
-    console.log(groupId);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/auth/getProductsByGroup/${groupId}`
@@ -100,37 +100,61 @@ export const Dashboard = () => {
     }
   };
 
+  const toggleGroups = () => {
+    setShowGroups(!showGroups);
+  };
+
   return (
     <div className="flex flex-wrap justify-center">
       <div className="flex flex-col items-center w-full sm:w-auto md:w-1/4 lg:w-1/5 p-4">
         <div className="mb-4">
           <button
-            className="w-24 h-24 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center"
+            className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
+              selectedGroup === null ? "bg-gray-200" : ""
+            }`}
             onClick={resetProducts}
+            style={{ cursor: "pointer" }}
           >
-            All
+            <img
+              className="w-14 h-14 object-cover rounded-full"
+              src="/back.png"
+              alt="All"
+            />
           </button>
+          <div className="text-sm font-semibold text-center">All</div>
         </div>
 
-        <div className="flex flex-col items-center">
+        <button
+          onClick={toggleGroups}
+          className="bg-blue-500 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700 block md:hidden"
+        >
+          {showGroups ? "Hide Groups" : "Show Groups"}
+        </button>
+
+        <div
+          className={`flex flex-col items-center ${
+            showGroups ? "block" : "hidden"
+          } md:block`}
+        >
           {groups.map((group, groupIndex) => (
-            <>
-              <div
-                key={groupIndex}
-                className={`w-24 h-24 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
+            <div key={groupIndex} className="mb-4">
+              <button
+                className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
                   selectedGroup === group._id ? "bg-gray-200" : ""
                 }`}
                 onClick={() => fetchProductsByGroup(group._id)}
                 style={{ cursor: "pointer" }}
               >
                 <img
-                  className="w-20 h-20 object-cover rounded-full"
+                  className="w-14 h-14 object-cover rounded-full"
                   src={`http://localhost:5000/${group.filePath}` || "/back.png"}
                   alt={group.groupName}
                 />
+              </button>
+              <div className="text-sm font-semibold text-center">
+                {group.groupName}
               </div>
-              <div className="text-xl font-semibold">{group.groupName}</div>
-            </>
+            </div>
           ))}
         </div>
       </div>
