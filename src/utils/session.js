@@ -17,7 +17,7 @@ export const checkSessionExpiration = (navigate) => {
       clearSession();
       alert("Session expired. Please login again.");
       navigate("/login");
-      Location.reload(); // Reload the page
+      Location.reload("/login"); // Reload the page
       return false;
     }
 
@@ -29,7 +29,7 @@ export const checkSessionExpiration = (navigate) => {
       clearSession();
       alert("Session expired. Please login again.");
       navigate("/login");
-      Location.reload(); // Reload the page
+      Location.reload("/login"); // Reload the page
     }, remainingTime);
 
     return true; // Session is valid
