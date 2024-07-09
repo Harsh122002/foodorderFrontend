@@ -13,10 +13,8 @@ export default function HeaderFunction() {
   const { userDetail, isLoggedIn, logout } = useContext(UserContext);
 
   useEffect(() => {
-    const session = checkSessionExpiration(navigate);
-    if (session) {
-      setIsDropdownOpen(true);
-    }
+    const sessionValid = checkSessionExpiration(navigate);
+    setIsDropdownOpen(sessionValid);
   }, [navigate]);
 
   useEffect(() => {

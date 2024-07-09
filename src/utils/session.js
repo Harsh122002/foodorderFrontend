@@ -1,4 +1,4 @@
-const clearSession = () => {
+export const clearSession = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("userId");
   localStorage.removeItem("tokenExpiration");
@@ -17,19 +17,19 @@ export const checkSessionExpiration = (navigate) => {
       clearSession();
       alert("Session expired. Please login again.");
       navigate("/login");
-      Location.reload("/login"); // Reload the page
+      window.location.reload(); // Reload the page
       return false;
     }
 
     // Calculate remaining time until expiration
-    const remainingTime = tokenExpiration - new Date();
+    const remainingTime = tokenExpiration.getTime() - new Date().getTime();
 
     // Set a timeout to clear session and alert user when session expires
     setTimeout(() => {
       clearSession();
       alert("Session expired. Please login again.");
+      window.location.reload();
       navigate("/login");
-      Location.reload("/login"); // Reload the page
     }, remainingTime);
 
     return true; // Session is valid

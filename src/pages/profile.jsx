@@ -1,12 +1,22 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
+import { checkSessionExpiration } from "../utils/session";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const { userDetail, setUserDetail } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({ ...userDetail });
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const isSessionValid = checkSessionExpiration(navigate);
+    if (!isSessionValid) {
+      // Redirect to login if the session has expired
+      window.location.reload("/login");
+    }
+  }, [navigate]);
   if (!userDetail) {
     return (
       <div className="flex justify-center items-center h-screen">
