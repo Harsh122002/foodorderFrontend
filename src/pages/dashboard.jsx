@@ -140,7 +140,9 @@ export const Dashboard = () => {
             <div key={groupIndex} className="mb-4">
               <button
                 className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
-                  selectedGroup === group._id ? "bg-gray-200" : ""
+                  selectedGroup === group._id
+                    ? "bg-gray-200 border-2 border-blue-500"
+                    : ""
                 }`}
                 onClick={() => fetchProductsByGroup(group._id)}
                 style={{ cursor: "pointer" }}
