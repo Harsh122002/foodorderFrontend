@@ -278,6 +278,7 @@ const OrderPlace = () => {
         <button
           type="submit"
           className="mt-4 bg-green-500 text-white py-2 px-4 rounded-md"
+          disabled={cart.length === 0} // Disable button if cart is empty
         >
           Place Order
         </button>
