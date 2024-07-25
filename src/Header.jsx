@@ -109,7 +109,7 @@ export default function HeaderFunction() {
 
         <button
           onClick={toggleDropdown}
-          className="block lg:hidden text-white text-2xl"
+          className="block lg:hidden text-white text-2xl bg-black"
         >
           <FaHome />
         </button>
