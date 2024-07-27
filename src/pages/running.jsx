@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Running() {
   const [orders, setOrders] = useState([]);
@@ -7,6 +8,28 @@ export default function Running() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      console.log(`Updating order ${orderId} to status ${newStatus}`);
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/update-order-status",
+        { orderId, status: newStatus }
+      );
+      console.log("Response from server:", response.data);
+
+      if (response.status === 200) {
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.orderId === orderId ? { ...order, status: newStatus } : order
+          )
+        );
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  };
 
   const fetchOrders = async () => {
     try {
@@ -25,7 +48,9 @@ export default function Running() {
       <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-10 mt-5 text-emerald-500 text-center">
         Running Orders Management
       </div>
-
+      <Link to="/adminDashBoard" className="mb-3 hover:text-xl">
+        Back
+      </Link>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {orders.map((order) => (
           <div
@@ -34,7 +59,21 @@ export default function Running() {
           >
             <div className="text-sm sm:text-base font-semibold mb-2">
               <span>Order ID: {order.orderId}</span> |{" "}
-              <span>Status: {order.status}</span>
+              <div className="text-sm sm:text-base font-semibold mb-2">
+                <span>Order ID: {order.orderId}</span> |<span>Status: </span>
+                <select
+                  value={order.status}
+                  onChange={(e) =>
+                    handleStatusChange(order.orderId, e.target.value)
+                  }
+                  className="border rounded px-2 py-1"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="running">Running</option>
+                  <option value="complete">Complete</option>
+                  <option value="declined">Declined</option>
+                </select>
+              </div>{" "}
             </div>
             <div className="text-sm sm:text-base mb-2">
               Total Amount: Rs {order.totalAmount.toFixed(2)}

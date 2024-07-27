@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Declined() {
   const [orders, setOrders] = useState([]);
@@ -25,7 +26,9 @@ export default function Declined() {
       <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-10 mt-5 text-emerald-500 text-center">
         Decliened Orders Management
       </div>
-
+      <Link to="/adminDashBoard" className="mb-3 hover:text-xl">
+        Back
+      </Link>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {orders.map((order) => (
           <div

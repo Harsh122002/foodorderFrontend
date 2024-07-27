@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function ProductManage() {
   const [orders, setOrders] = useState([]);
@@ -29,11 +30,24 @@ export default function ProductManage() {
       console.log("Response from server:", response.data);
 
       if (response.status === 200) {
-        setOrders((prevOrders) =>
-          prevOrders.map((order) =>
-            order.orderId === orderId ? { ...order, status: newStatus } : order
-          )
-        );
+        // Remove the order if its status is "completed" or "declined"
+        if (
+          newStatus === "complete" ||
+          newStatus === "declined" ||
+          newStatus === "running"
+        ) {
+          setOrders((prevOrders) =>
+            prevOrders.filter((order) => order.orderId !== orderId)
+          );
+        } else {
+          setOrders((prevOrders) =>
+            prevOrders.map((order) =>
+              order.orderId === orderId
+                ? { ...order, status: newStatus }
+                : order
+            )
+          );
+        }
       }
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -45,53 +59,61 @@ export default function ProductManage() {
       <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-10 mt-5 text-emerald-500 text-center">
         Orders Management
       </div>
-
+      <Link to="/adminDashBoard" className="mb-3 hover:text-xl">
+        Back
+      </Link>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {orders.map((order) => (
-          <div
-            key={order.orderId}
-            className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between"
-          >
-            <div className="text-sm sm:text-base font-semibold mb-2">
-              <span>Order ID: {order.orderId}</span> |<span>Status: </span>
-              <select
-                value={order.status}
-                onChange={(e) =>
-                  handleStatusChange(order.orderId, e.target.value)
-                }
-                className="border rounded px-2 py-1"
-              >
-                <option value="pending">Pending</option>
-                <option value="running">Running</option>
-                <option value="complete">Complete</option>
-                <option value="declined">Declined</option>
-              </select>
+        {orders.length > 0 ? (
+          orders.map((order) => (
+            <div
+              key={order.orderId}
+              className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between"
+            >
+              <div className="text-sm sm:text-base font-semibold mb-2">
+                <span>Order ID: {order.orderId}</span> |<span>Status: </span>
+                <select
+                  value={order.status}
+                  onChange={(e) =>
+                    handleStatusChange(order.orderId, e.target.value)
+                  }
+                  className="border rounded px-2 py-1"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="running">Running</option>
+                  <option value="complete">Complete</option>
+                  <option value="declined">Declined</option>
+                </select>
+              </div>
+              <div className="text-sm sm:text-base mb-2">
+                Total Amount: Rs {order.totalAmount.toFixed(2)}
+              </div>
+              <div className="text-sm sm:text-base mb-2">
+                Address: {order.address}
+              </div>
+              <div className="text-sm sm:text-base mb-4">
+                <div className="font-semibold">Products:</div>
+                <ul className="list-disc list-inside">
+                  {order.products.map((product, index) => (
+                    <li key={index}>
+                      {product.name} - Quantity: {product.quantity} - Price: Rs
+                      {product.price.toFixed(2)} - Total Price: Rs
+                      {product.totalPrice.toFixed(2)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="text-sm sm:text-base">
+                <div className="font-semibold">User:</div>
+                <div>Username: {order.user.username}</div>
+                <div>Email: {order.user.email}</div>
+              </div>
             </div>
-            <div className="text-sm sm:text-base mb-2">
-              Total Amount: Rs {order.totalAmount.toFixed(2)}
-            </div>
-            <div className="text-sm sm:text-base mb-2">
-              Address: {order.address}
-            </div>
-            <div className="text-sm sm:text-base mb-4">
-              <div className="font-semibold">Products:</div>
-              <ul className="list-disc list-inside">
-                {order.products.map((product, index) => (
-                  <li key={index}>
-                    {product.name} - Quantity: {product.quantity} - Price: Rs
-                    {product.price.toFixed(2)} - Total Price: Rs
-                    {product.totalPrice.toFixed(2)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="text-sm sm:text-base">
-              <div className="font-semibold">User:</div>
-              <div>Username: {order.user.username}</div>
-              <div>Email: {order.user.email}</div>
-            </div>
+          ))
+        ) : (
+          <div className="text-lg font-semibold text-gray-500">
+            No orders to display
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

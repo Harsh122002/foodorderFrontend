@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function AllGroups() {
   const [groups, setGroups] = useState([]);
@@ -41,6 +42,9 @@ export default function AllGroups() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center">Groups</h1>
+      <Link to="/adminDashBoard" className="mb-3 text-center hover:text-xl">
+        Back
+      </Link>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {groups.map((group, index) => (
           <div

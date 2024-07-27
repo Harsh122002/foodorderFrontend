@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function RegisteredUsers() {
   const [users, setUsers] = useState([]);
@@ -33,6 +34,9 @@ export default function RegisteredUsers() {
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
         Registered Users
       </h1>
+      <Link to="/adminDashBoard" className="mb-3 text-center hover:text-xl">
+        Back
+      </Link>
       {loading ? (
         <p className="text-center text-gray-500">Loading...</p>
       ) : error ? (
