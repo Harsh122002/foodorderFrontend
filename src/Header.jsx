@@ -41,7 +41,7 @@ export default function HeaderFunction() {
 
   return (
     <div
-      className="container max-w-full px-4 sm:px-8 md:px-16 h-28 flex flex-wrap items-center justify-between rounded-bl-full"
+      className="fixed container max-w-full px-4 sm:px-8 md:px-16 h-28 flex flex-wrap items-center justify-between rounded-bl-full "
       style={{
         backgroundImage: `url(/back.png)`,
         backgroundRepeat: "no-repeat",

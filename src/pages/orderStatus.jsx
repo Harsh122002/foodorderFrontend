@@ -57,60 +57,71 @@ export default function OrderStatus() {
 
   return (
     <div className="container mx-auto">
-      {orders.length > 0 ? (
-        orders.map((order) => (
-          <div
-            key={order._id}
-            className="my-4 p-4 bg-white shadow-md rounded-lg"
-          >
-            <h2 className="text-xl font-bold">Order ID: {order._id}</h2>
-            <p>Status: {order.status}</p>
-            <p>Total: Rs {order.totalAmount}</p>
-            <h3 className="mt-2">Products:</h3>
-            <ul>
-              {order.products.map((productItem) => (
-                <li
-                  key={productItem._id}
-                  className="flex items-center justify-between border-b py-2"
-                >
-                  <div>
-                    <p className="font-medium">
-                      Product Name: {productItem.name}
-                    </p>
-                    <p>Quantity: {productItem.quantity}</p>
-                    <p>Price: Rs {productItem.price}</p>
-                    <p>Amount: Rs {productItem.quantity * productItem.price}</p>
-                  </div>
-                </li>
-              ))}
-              <br />
-              <li>
-                {order.status.toLowerCase() === "pending" && (
-                  <button
-                    onClick={() => handleCancelOrder(order._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
-                  >
-                    Cancel Order
-                  </button>
-                )}
-                {order.status.toLowerCase() === "running" && (
-                  <p className="text-green-600">
-                    You are delivering successfully!
-                  </p>
-                )}
-                {order.status.toLowerCase() === "complete" && (
-                  <p className="text-blue-600">Order completed successfully!</p>
-                )}
-                {order.status.toLowerCase() === "declined" && (
-                  <p className="text-red-600">Order declined.</p>
-                )}
-              </li>
-            </ul>
-          </div>
-        ))
-      ) : (
-        <div className="text-center mt-4">No orders found.</div>
-      )}
+      <div className="p-4 rounded-lg">
+        <div className="mt-32">
+          <h1 className="text-center font-bold  text-4xl text-blue-950 ">
+            Order Status
+          </h1>
+          {orders.length > 0 ? (
+            orders.map((order) => (
+              <div key={order._id}>
+                <div className="p-4 bg-white shadow-md rounded-lg mt-2">
+                  <h2 className="text-xl font-bold">Order ID: {order._id}</h2>
+                  <p>Status: {order.status}</p>
+                  <p>Total: Rs {order.totalAmount}</p>
+                  <h3 className="mt-2">Products:</h3>
+                  <ul>
+                    {order.products.map((productItem) => (
+                      <li
+                        key={productItem._id}
+                        className="flex items-center justify-between border-b py-2"
+                      >
+                        <div>
+                          <p className="font-medium">
+                            Product Name: {productItem.name}
+                          </p>
+                          <p>Quantity: {productItem.quantity}</p>
+                          <p>Price: Rs {productItem.price}</p>
+                          <p>
+                            Amount: Rs{" "}
+                            {productItem.quantity * productItem.price}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                    <br />
+                    <li>
+                      {order.status.toLowerCase() === "pending" && (
+                        <button
+                          onClick={() => handleCancelOrder(order._id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
+                        >
+                          Cancel Order
+                        </button>
+                      )}
+                      {order.status.toLowerCase() === "running" && (
+                        <p className="text-green-600">
+                          You are delivering successfully!
+                        </p>
+                      )}
+                      {order.status.toLowerCase() === "complete" && (
+                        <p className="text-blue-600">
+                          Order completed successfully!
+                        </p>
+                      )}
+                      {order.status.toLowerCase() === "declined" && (
+                        <p className="text-red-600">Order declined.</p>
+                      )}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center mt-4">No orders found.</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

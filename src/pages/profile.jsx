@@ -66,7 +66,7 @@ export default function Profile() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4 text-center">Profile</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center mt-32">Profile</h1>
       <div className="bg-white shadow-lg rounded-lg p-6">
         {editMode ? (
           <form onSubmit={handleSubmit} className="space-y-4">

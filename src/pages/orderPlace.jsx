@@ -193,7 +193,7 @@ const OrderPlace = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Place Your Order</h2>
+      <h2 className="text-2xl font-bold mb-4 mt-32">Place Your Order</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium">Name</label>

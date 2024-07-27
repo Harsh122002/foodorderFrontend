@@ -32,7 +32,7 @@ export const Dashboard = () => {
     };
 
     fetchProductsAndGroups();
-  }, []);
+  }, []); // Include navigate in the dependency array
 
   const incrementQty = (index) => {
     const newQuantities = [...quantities];
@@ -101,8 +101,8 @@ export const Dashboard = () => {
 
   return (
     <div className="flex flex-wrap justify-center">
-      <div className="w-full p-4 flex overflow-x-auto whitespace-nowrap space-x-4 lg: justify-center">
-        <div className="mb-4 inline-block">
+      <div className="w-full p-4 flex overflow-x-auto mt-28 whitespace-nowrap space-x-4 lg: justify-center">
+        <div className="mb-2 inline-block">
           <button
             className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
               selectedGroup === null ? "bg-gray-200" : ""
@@ -111,8 +111,8 @@ export const Dashboard = () => {
             style={{ cursor: "pointer" }}
           >
             <img
-              className="w-14 h-14 object-cover rounded-full"
-              src="/back.png"
+              className="w-14 h-14 object-cover rounded-full bg-blue-900"
+              src="/ALL.png"
               alt="All"
             />
           </button>
@@ -120,7 +120,7 @@ export const Dashboard = () => {
         </div>
 
         {groups.map((group, groupIndex) => (
-          <div key={groupIndex} className="mb-4 inline-block">
+          <div key={groupIndex} className="mb-2 inline-block">
             <button
               className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
                 selectedGroup === group._id
@@ -155,7 +155,7 @@ export const Dashboard = () => {
                 src={`http://localhost:5000/${product.filePath}` || "/back.png"}
                 alt={product.productName}
               />
-              <div className="ml-2 text-xl hover:text-2xl">
+              <div className="ml-2 text-nowrap hover:text-2xl ">
                 {product.productName}
               </div>
               <div className="ml-2 text-sm">Price: Rs.{product.price}</div>
@@ -175,7 +175,7 @@ export const Dashboard = () => {
                 </button>
                 <button
                   onClick={() => handleAddToCart(index)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded ml-10 hover:bg-blue-700 transform hover:translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 transition"
+                  className="bg-blue-500 text-white px-4 py-2 rounded ml-10 hover:bg-blue-700  hover:translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 transition"
                 >
                   Add to Cart
                 </button>

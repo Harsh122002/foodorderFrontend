@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { checkSessionExpiration } from "../utils/session";
+import { checkSessionExpiration, startSession } from "../utils/session";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -37,6 +37,7 @@ function Login() {
         localStorage.setItem("tokenExpiration", tokenExpiration);
 
         sessionStorage.setItem("token", token);
+        startSession(token);
 
         // Redirect to the dashboard page
         window.location.href = "/dashboard";
@@ -59,7 +60,7 @@ function Login() {
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg sm:w-full md:w-96">
+      <div className="bg-white p-8 rounded-lg shadow-lg sm:w-full md:w-96 mt-20">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

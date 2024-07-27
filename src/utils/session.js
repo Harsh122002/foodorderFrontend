@@ -1,17 +1,18 @@
+// Function to clear session
 export const clearSession = () => {
-  localStorage.removeItem("token");
   localStorage.removeItem("userId");
-  localStorage.removeItem("tokenExpiration");
+  localStorage.removeItem("token");
   sessionStorage.removeItem("token");
+  localStorage.removeItem("tokenExpiration");
 };
 
+// Function to check session expiration
 export const checkSessionExpiration = (navigate) => {
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   if (token) {
     const tokenExpiration = new Date(localStorage.getItem("tokenExpiration"));
 
-    // Check if the token has already expired
     if (tokenExpiration && tokenExpiration < new Date()) {
       // Session has expired
       clearSession();
@@ -37,3 +38,20 @@ export const checkSessionExpiration = (navigate) => {
 
   return false; // No session token found
 };
+
+// Function to start the session with a 1-hour expiration
+export const startSession = (token) => {
+  localStorage.setItem("token", token);
+  const tokenExpiration = new Date();
+  tokenExpiration.setHours(tokenExpiration.getHours() + 1);
+  localStorage.setItem("tokenExpiration", tokenExpiration.toISOString());
+
+  // Set timeout for 1 hour to automatically log out the user
+  setTimeout(() => {
+    clearSession();
+    alert("Session expired. Please login again.");
+    window.location.reload("/login");
+  }, 3600000); // 1 hour in milliseconds
+};
+
+// Call this function when the user logs in to start the session
