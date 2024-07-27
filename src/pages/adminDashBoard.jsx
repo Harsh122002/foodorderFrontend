@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { checkSessionExpiration } from "../utils/session";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -16,46 +17,45 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Fetch order statuses from the API
-    axios
-      .get("http://localhost:5000/api/auth/order-statuses")
-      .then((response) => {
-        setOrderStatuses(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching order statuses:", error);
-      });
+    const fetchData = async () => {
+      const isSessionValid = checkSessionExpiration(navigate);
+      if (!isSessionValid) {
+        alert("Session Expired");
+        navigate("/admin");
+        return;
+      }
 
-    // Fetch user count from the API
-    axios
-      .get("http://localhost:5000/api/auth/user-count")
-      .then((response) => {
-        setUserCount(response.data.userCount);
-      })
-      .catch((error) => {
-        console.error("Error fetching user count:", error);
-      });
+      try {
+        // Fetch order statuses from the API
+        const orderStatusesResponse = await axios.get(
+          "http://localhost:5000/api/auth/order-statuses"
+        );
+        setOrderStatuses(orderStatusesResponse.data);
 
-    // Fetch all groups from the API
-    axios
-      .get("http://localhost:5000/api/auth/getAllGroup")
-      .then((response) => {
-        setGroups(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching groups:", error);
-      });
+        // Fetch user count from the API
+        const userCountResponse = await axios.get(
+          "http://localhost:5000/api/auth/user-count"
+        );
+        setUserCount(userCountResponse.data.userCount);
 
-    // Fetch all products from the API
-    axios
-      .get("http://localhost:5000/api/auth/getAllProduct")
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, []);
+        // Fetch all groups from the API
+        const groupsResponse = await axios.get(
+          "http://localhost:5000/api/auth/getAllGroup"
+        );
+        setGroups(groupsResponse.data);
+
+        // Fetch all products from the API
+        const productsResponse = await axios.get(
+          "http://localhost:5000/api/auth/getAllProduct"
+        );
+        setProducts(productsResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [navigate]);
 
   const handleGroupAdd = () => {
     navigate("/addGroup");
