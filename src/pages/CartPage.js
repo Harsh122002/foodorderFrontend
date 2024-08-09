@@ -36,7 +36,7 @@ export const CartPage = () => {
                 <img
                   src={
                     item.image
-                      ? `http://localhost:5000/${item.image}`
+                      ? `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${item.image}`
                       : "/back.png"
                   }
                   alt={item.name}
