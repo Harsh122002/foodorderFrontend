@@ -22,7 +22,7 @@ export const UserProvider = ({ children }) => {
       try {
         console.log("Fetching user details with token:", token);
         const response = await axios.post(
-          "http://localhost:5000/api/auth/getUserDetail",
+          `${process.env.REACT_APP_API_BASE_URL}/getUserDetail`,
           { userId },
           {
             headers: {

@@ -12,7 +12,7 @@ export default function Success() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/generatePdf",
+        `${process.env.REACT_APP_API_BASE_URL}/generatePdf`,
         { orderId },
         { responseType: "blob" } // Ensure response type is blob to handle binary data
       );

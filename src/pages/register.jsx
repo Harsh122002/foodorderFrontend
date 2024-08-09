@@ -30,7 +30,7 @@ function Register() {
     try {
       if (!showOtpField) {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/register",
+          `${process.env.REACT_APP_API_BASE_URL}/register`,
           {
             name,
             email,
@@ -42,7 +42,7 @@ function Register() {
         setShowOtpField(true);
       } else {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/verify-otp",
+          `${process.env.REACT_APP_API_BASE_URL}/verify-otp`,
           {
             email,
             otp,

@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [userCount, setUserCount] = useState(0);
   const [groups, setGroups] = useState([]);
   const [products, setProducts] = useState([]);
+  const [allAmount, setAllAmount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,27 +29,31 @@ export default function AdminDashboard() {
       try {
         // Fetch order statuses from the API
         const orderStatusesResponse = await axios.get(
-          "http://localhost:5000/api/auth/order-statuses"
+          `${process.env.REACT_APP_API_BASE_URL}/order-statuses`
         );
         setOrderStatuses(orderStatusesResponse.data);
 
         // Fetch user count from the API
         const userCountResponse = await axios.get(
-          "http://localhost:5000/api/auth/user-count"
+          `${process.env.REACT_APP_API_BASE_URL}/user-count`
         );
         setUserCount(userCountResponse.data.userCount);
 
         // Fetch all groups from the API
         const groupsResponse = await axios.get(
-          "http://localhost:5000/api/auth/getAllGroup"
+          `${process.env.REACT_APP_API_BASE_URL}/getAllGroup`
         );
         setGroups(groupsResponse.data);
 
-        // Fetch all products from the API
         const productsResponse = await axios.get(
-          "http://localhost:5000/api/auth/getAllProduct"
+          `${process.env.REACT_APP_API_BASE_URL}/getAllProduct`
         );
         setProducts(productsResponse.data);
+
+        const AllAmountResponse = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/getTotalAmount`
+        );
+        setAllAmount(AllAmountResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -119,6 +124,12 @@ export default function AdminDashboard() {
           <div className="bg-white shadow-lg rounded-lg p-6 h-32 flex flex-col items-center justify-center text-purple-500">
             <div className="text-2xl font-semibold">{userCount}</div>
             <div>Registered Users</div>
+          </div>
+        </Link>
+        <Link to="/allAmount" className="w-full sm:w-64">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-32 flex flex-col items-center justify-center text-purple-500">
+            <div className="text-2xl font-semibold">{allAmount}</div>
+            <div>Groups</div>
           </div>
         </Link>
       </div>

@@ -9,7 +9,7 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/adminLogin",
+        `${process.env.REACT_APP_API_BASE_URL}/adminLogin`,
         {
           email,
           password,

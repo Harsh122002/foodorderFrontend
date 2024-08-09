@@ -36,7 +36,7 @@ export default function AddGroup() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/addGroupItem",
+        `${process.env.REACT_APP_API_BASE_URL}/addGroupItem`,
         formData,
         {
           headers: {

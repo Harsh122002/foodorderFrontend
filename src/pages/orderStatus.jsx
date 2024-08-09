@@ -19,7 +19,7 @@ export default function OrderStatus() {
 
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/getAllOrder",
+          `${process.env.REACT_APP_API_BASE_URL}/getAllOrder`,
           { userId }
         );
         setOrders(response.data);
@@ -36,7 +36,7 @@ export default function OrderStatus() {
   const handleCancelOrder = async (orderId) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/auth/orderDelete`,
+        `${process.env.REACT_APP_API_BASE_URL}/orderDelete`,
         { orderId }
       );
       // Assuming you want to refresh the orders after cancellation

@@ -16,8 +16,8 @@ export const Dashboard = () => {
     const fetchProductsAndGroups = async () => {
       try {
         const [productResponse, groupResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/auth/getAllProduct"),
-          axios.get("http://localhost:5000/api/auth/getAllGroup"),
+          axios.get(`${process.env.REACT_APP_API_BASE_URL}/getAllProduct`),
+          axios.get(`${process.env.REACT_APP_API_BASE_URL}/getAllGroup`),
         ]);
 
         const productsData = productResponse.data;
@@ -76,7 +76,7 @@ export const Dashboard = () => {
   const fetchProductsByGroup = async (groupId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/auth/getProductsByGroup/${groupId}`
+        `${process.env.REACT_APP_API_BASE_URL}/getProductsByGroup/${groupId}`
       );
       setProducts(response.data);
       setSelectedGroup(groupId);
@@ -89,7 +89,7 @@ export const Dashboard = () => {
   const resetProducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/getAllProduct"
+        `${process.env.REACT_APP_API_BASE_URL}/getAllProduct`
       );
       setProducts(response.data);
       setSelectedGroup(null);
@@ -132,7 +132,10 @@ export const Dashboard = () => {
             >
               <img
                 className="w-14 h-14 object-cover rounded-full"
-                src={`http://localhost:5000/${group.filePath}` || "/back.png"}
+                src={
+                  `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${group.filePath}` ||
+                  "/back.png"
+                }
                 alt={group.groupName}
               />
             </button>
@@ -152,7 +155,10 @@ export const Dashboard = () => {
             <div className="w-60 h-60 rounded overflow-hidden shadow-lg mx-auto">
               <img
                 className="w-full h-32 p-4"
-                src={`http://localhost:5000/${product.filePath}` || "/back.png"}
+                src={
+                  `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${product.filePath}` ||
+                  "/back.png"
+                }
                 alt={product.productName}
               />
               <div className="ml-2 text-nowrap hover:text-2xl ">

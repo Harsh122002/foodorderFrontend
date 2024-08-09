@@ -25,7 +25,7 @@ const OrderPlace = () => {
         const token = localStorage.getItem("token");
 
         const response = await axios.post(
-          "http://localhost:5000/api/auth/getUserDetail",
+          `${process.env.REACT_APP_API_BASE_URL}/getUserDetail`,
           { userId },
           {
             headers: {
@@ -78,7 +78,7 @@ const OrderPlace = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/orderDetail",
+        `${process.env.REACT_APP_API_BASE_URL}/orderDetail`,
         orderData,
         {
           headers: {
@@ -110,7 +110,7 @@ const OrderPlace = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/payment",
+        `${process.env.REACT_APP_API_BASE_URL}/payment`,
         { totalAmount: totalAmount, currency: "INR" }
       );
 
@@ -173,7 +173,7 @@ const OrderPlace = () => {
   const verifyPayment = async (orderId, paymentId, signature) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/verify",
+        `${process.env.REACT_APP_API_BASE_URL}/verify`,
         { orderId, paymentId, signature }
       );
 

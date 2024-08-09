@@ -12,7 +12,7 @@ export default function Complete() {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/all-completed-orders"
+        `${process.env.REACT_APP_API_BASE_URL}/all-completed-orders`
       ); // Assuming the endpoint to fetch running orders
       setOrders(response.data);
       console.log(response.data);

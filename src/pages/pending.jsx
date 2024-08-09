@@ -12,7 +12,7 @@ export default function ProductManagementPage() {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/all-pending-orders"
+        `${process.env.REACT_APP_API_BASE_URL}/all-pending-orders`
       );
       setOrders(response.data);
     } catch (error) {
@@ -24,7 +24,7 @@ export default function ProductManagementPage() {
     try {
       console.log(`Updating order ${orderId} to status ${newStatus}`);
       const response = await axios.post(
-        "http://localhost:5000/api/auth/update-order-status",
+        `${process.env.REACT_APP_API_BASE_URL}/update-order-status`,
         { orderId, status: newStatus }
       );
       console.log("Response from server:", response.data);

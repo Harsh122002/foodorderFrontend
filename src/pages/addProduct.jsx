@@ -14,7 +14,7 @@ export default function AddProduct() {
     const fetchGroupItems = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/auth/getAllGroup"
+          `${process.env.REACT_APP_API_BASE_URL}/getAllGroup`
         );
         // Assuming response.data is an array of group objects
         setGroupOptions(response.data); // Set all group options
@@ -53,12 +53,16 @@ export default function AddProduct() {
     const token = localStorage.getItem("token");
 
     try {
-      await axios.post("http://localhost:5000/api/auth/addProduct", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/addProduct`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert("Product added successfully!");
       navigate("/adminDashBoard");
     } catch (error) {

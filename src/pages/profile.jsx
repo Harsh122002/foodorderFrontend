@@ -46,7 +46,7 @@ export default function Profile() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:5000/api/auth/updateUserDetail",
+        `${process.env.REACT_APP_API_BASE_URL}/updateUserDetail`,
         formData,
         {
           headers: {

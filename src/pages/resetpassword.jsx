@@ -14,7 +14,7 @@ export default function ResetPassword() {
     try {
       if (!showOtp) {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/request-password-reset",
+          `${process.env.REACT_APP_API_BASE_URL}/request-password-reset`,
           {
             email,
           }
@@ -23,7 +23,7 @@ export default function ResetPassword() {
         setShowOtp(true);
       } else {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/verify-password",
+          `${process.env.REACT_APP_API_BASE_URL}/verify-password`,
           {
             email,
             otp,

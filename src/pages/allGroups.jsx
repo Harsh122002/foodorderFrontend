@@ -12,7 +12,7 @@ export default function AllGroups() {
   const fetchGroups = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/getAllGroup"
+        `${process.env.REACT_APP_API_BASE_URL}/getAllGroup`
       );
       setGroups(response.data);
     } catch (error) {
@@ -24,7 +24,7 @@ export default function AllGroups() {
     try {
       console.log(groupId);
       const response = await axios.delete(
-        `http://localhost:5000/api/auth/deleteGroup/${groupId}`
+        `${process.env.REACT_APP_API_BASE_URL}/deleteGroup/${groupId}`
       );
       if (response.status === 200) {
         // If deletion is successful, fetch updated groups

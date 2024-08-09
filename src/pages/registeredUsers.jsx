@@ -14,7 +14,7 @@ export default function RegisteredUsers() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/all-users"
+        `${process.env.REACT_APP_API_BASE_URL}/all-users`
       );
       if (response.data && Array.isArray(response.data.users)) {
         setUsers(response.data.users);

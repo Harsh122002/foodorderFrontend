@@ -15,7 +15,7 @@ export default function AllProducts() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:5000/api/auth/getAllProduct"
+        `${process.env.REACT_APP_API_BASE_URL}/getAllProduct`
       );
       setProducts(response.data);
     } catch (error) {
@@ -29,7 +29,7 @@ export default function AllProducts() {
   const handleDelete = async (productId) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/auth/deleteProduct/${productId}`
+        `${process.env.REACT_APP_API_BASE_URL}/deleteProduct/${productId}`
       );
       fetchProducts(); // Fetch updated products after deletion
       alert("Product deleted successfully.");
