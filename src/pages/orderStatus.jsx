@@ -22,7 +22,8 @@ export default function OrderStatus() {
           `${process.env.REACT_APP_API_BASE_URL}/getAllOrder`,
           { userId }
         );
-        setOrders(response.data);
+        const sortedOrders = sortOrdersByStatus(response.data);
+        setOrders(sortedOrders);
       } catch (error) {
         setError(error.response ? error.response.data.message : "Server error");
       } finally {
@@ -33,15 +34,31 @@ export default function OrderStatus() {
     fetchOrders();
   }, [userDetail]);
 
+  const sortOrdersByStatus = (orders) => {
+    const statusOrder = {
+      pending: 1,
+      running: 2,
+      complete: 3,
+      declined: 4,
+    };
+
+    return orders.slice().sort((a, b) => {
+      return (
+        (statusOrder[a.status.toLowerCase()] || 5) -
+        (statusOrder[b.status.toLowerCase()] || 5)
+      );
+    });
+  };
+
   const handleCancelOrder = async (orderId) => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/orderDelete`,
         { orderId }
       );
-      // Assuming you want to refresh the orders after cancellation
       alert(response.data.message);
-      window.location.reload();
+      const updatedOrders = orders.filter((order) => order._id !== orderId);
+      setOrders(updatedOrders);
     } catch (error) {
       setError(error.response ? error.response.data.message : "Server error");
     }
@@ -59,7 +76,7 @@ export default function OrderStatus() {
     <div className="container mx-auto">
       <div className="p-4 rounded-lg">
         <div className="mt-32">
-          <h1 className="text-center font-bold  text-4xl text-blue-950 ">
+          <h1 className="text-center font-bold text-4xl text-blue-950">
             Order Status
           </h1>
           {orders.length > 0 ? (

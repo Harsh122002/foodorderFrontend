@@ -54,6 +54,7 @@ export default function AdminDashboard() {
           `${process.env.REACT_APP_API_BASE_URL}/getTotalAmount`
         );
         setAllAmount(AllAmountResponse.data);
+        console.log(AllAmountResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -126,10 +127,13 @@ export default function AdminDashboard() {
             <div>Registered Users</div>
           </div>
         </Link>
-        <Link to="/allAmount" className="w-full sm:w-64">
+        <Link to="/#" className="w-full sm:w-64">
           <div className="bg-white shadow-lg rounded-lg p-6 h-32 flex flex-col items-center justify-center text-purple-500">
-            <div className="text-2xl font-semibold">{allAmount}</div>
-            <div>Groups</div>
+            <div className="text-2xl font-semibold">
+              Rs.
+              {typeof allAmount === "object" ? "No Earn" : allAmount}
+            </div>
+            <div>Total Earn</div>
           </div>
         </Link>
       </div>
