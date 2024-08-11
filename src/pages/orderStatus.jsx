@@ -22,7 +22,8 @@ export default function OrderStatus() {
           `${process.env.REACT_APP_API_BASE_URL}/getAllOrder`,
           { userId }
         );
-        const sortedOrders = sortOrdersByStatus(response.data);
+        const sortedOrders = sortOrdersByDate(response.data);
+
         setOrders(sortedOrders);
       } catch (error) {
         setError(error.response ? error.response.data.message : "Server error");
@@ -34,19 +35,26 @@ export default function OrderStatus() {
     fetchOrders();
   }, [userDetail]);
 
-  const sortOrdersByStatus = (orders) => {
-    const statusOrder = {
-      pending: 1,
-      running: 2,
-      complete: 3,
-      declined: 4,
-    };
+  // const sortOrdersByStatus = (orders) => {
+  //   const statusOrder = {
+  //     pending: 1,
+  //     running: 2,
+  //     complete: 3,
+  //     declined: 4,
+  //   };
 
+  //   return orders.slice().sort((a, b) => {
+  //     return (
+  //       (statusOrder[a.status.toLowerCase()] || 5) -
+  //       (statusOrder[b.status.toLowerCase()] || 5)
+  //     );
+  //   });
+  // };
+
+  const sortOrdersByDate = (orders) => {
     return orders.slice().sort((a, b) => {
-      return (
-        (statusOrder[a.status.toLowerCase()] || 5) -
-        (statusOrder[b.status.toLowerCase()] || 5)
-      );
+      // Compare by date in ascending order (earlier dates first)
+      return new Date(b.createdAt) - new Date(a.createdAt);
     });
   };
 
@@ -71,6 +79,17 @@ export default function OrderStatus() {
   if (error) {
     return <div className="text-center mt-4">Error: {error}</div>;
   }
+  function formatDateToIndian(dateString) {
+    const date = new Date(dateString);
+
+    // Get day, month, and year
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const year = date.getFullYear();
+
+    // Format the date as DD-MM-YYYY
+    return `${day}-${month}-${year}`;
+  }
 
   return (
     <div className="container mx-auto">
@@ -86,6 +105,7 @@ export default function OrderStatus() {
                   <h2 className="text-xl font-bold">Order ID: {order._id}</h2>
                   <p>Status: {order.status}</p>
                   <p>Total: Rs {order.totalAmount}</p>
+                  <p>Order Date:{formatDateToIndian(order.createdAt)}</p>
                   <h3 className="mt-2">Products:</h3>
                   <ul>
                     {order.products.map((productItem) => (
