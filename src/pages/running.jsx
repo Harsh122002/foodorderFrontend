@@ -7,7 +7,7 @@ export default function Running() {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [orders]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
@@ -24,7 +24,6 @@ export default function Running() {
             order.orderId === orderId ? { ...order, status: newStatus } : order
           )
         );
-        window.location.reload();
       }
     } catch (error) {
       console.error("Error updating order status:", error);
