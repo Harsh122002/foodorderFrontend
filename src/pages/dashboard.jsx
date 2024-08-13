@@ -10,6 +10,8 @@ export const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // New state for pagination
+  const [itemsPerPage] = useState(6); // Number of items per page
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,6 +82,7 @@ export const Dashboard = () => {
       );
       setProducts(response.data);
       setSelectedGroup(groupId);
+      setCurrentPage(1); // Reset to page 1 when group changes
       setQuantities(Array(response.data.length).fill(0)); // Reset quantities when group changes
     } catch (error) {
       console.error("Error fetching products by group:", error);
@@ -93,11 +96,29 @@ export const Dashboard = () => {
       );
       setProducts(response.data);
       setSelectedGroup(null);
+      setCurrentPage(1); // Reset to page 1 when resetting products
       setQuantities(Array(response.data.length).fill(0)); // Reset quantities when resetting products
     } catch (error) {
       console.error("Error resetting products:", error);
     }
   };
+
+  // Calculate the products to be displayed on the current page
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Create page numbers for pagination controls
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(products.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <div className="flex flex-wrap justify-center">
@@ -147,7 +168,7 @@ export const Dashboard = () => {
       </div>
 
       <div className="flex flex-wrap justify-center w-full md:w-3/4 lg:w-4/5">
-        {products.map((product, index) => (
+        {currentProducts.map((product, index) => (
           <div
             key={index}
             className="w-full sm:w-1/2 md:w-1/2 lg:w-1/3 p-4 mx-auto"
@@ -189,6 +210,28 @@ export const Dashboard = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="w-full flex justify-center mt-4 mb-4">
+        <nav>
+          <ul className="flex space-x-2">
+            {pageNumbers.map((number) => (
+              <li key={number}>
+                <button
+                  onClick={() => paginate(number)}
+                  className={`px-4 py-2 border rounded ${
+                    currentPage === number
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
+                >
+                  {number}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </div>
   );
