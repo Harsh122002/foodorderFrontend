@@ -121,7 +121,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="flex flex-wrap justify-center">
+    <div className="flex flex-wrap justify-center bg-slate-200">
       <div className="w-full p-4 flex overflow-x-auto mt-28 whitespace-nowrap space-x-4 lg: justify-center">
         <div className="mb-2 inline-block">
           <button
