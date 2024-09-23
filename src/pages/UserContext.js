@@ -30,7 +30,6 @@ export const UserProvider = ({ children }) => {
             },
           }
         );
-        console.log("User details fetched successfully:", response.data);
         setUserDetail(response.data);
         setIsLoggedIn(true);
       } catch (error) {

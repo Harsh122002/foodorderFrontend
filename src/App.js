@@ -35,6 +35,7 @@ import Declined from "./pages/decliened";
 import AllGroups from "./pages/allGroups";
 import AllProducts from "./pages/allProducts";
 import RegisteredUsers from "./pages/registeredUsers";
+import Rating from "./pages/rating";
 
 function App() {
   return (
@@ -98,6 +99,7 @@ function AppContent() {
         <Route path="/registeredUsers" element={<RegisteredUsers />} />
         <Route path="/declined" element={<Declined />} />
         <Route path="/running" element={<Running />} />
+        <Route path="/rating" element={<Rating />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>

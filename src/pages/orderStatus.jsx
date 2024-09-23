@@ -141,10 +141,23 @@ export default function OrderStatus() {
                           You are delivering successfully!
                         </p>
                       )}
-                      {order.status.toLowerCase() === "complete" && (
-                        <p className="text-blue-600">
-                          Order completed successfully!
-                        </p>
+                      {order.status.toLowerCase() === "completed" && (
+                        <div className="flex justify-between items-center">
+                          <p className="text-blue-600">
+                            Order completed successfully!
+                          </p>
+                          {order.rating === null && (
+                            <p>
+                              Please rate this order{" "}
+                              <a
+                                href={`/rating?orderId=${order._id}`}
+                                className="text-blue-500 underline"
+                              >
+                                Rating
+                              </a>
+                            </p>
+                          )}
+                        </div>
                       )}
                       {order.status.toLowerCase() === "declined" && (
                         <p className="text-red-600">Order declined.</p>
