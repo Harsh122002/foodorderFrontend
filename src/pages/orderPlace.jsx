@@ -59,6 +59,11 @@ const OrderPlace = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.address) {
+      alert("Please fill in the address.");
+      return; // Stops the function execution if address is empty
+    }
+
     const orderData = {
       userId: localStorage.getItem("userId"),
       name: formData.name,

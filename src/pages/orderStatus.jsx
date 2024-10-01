@@ -7,6 +7,7 @@ export default function OrderStatus() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { userDetail } = useContext(UserContext);
+  const [refresh, setRefresh] = useState(true);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,6 +28,8 @@ export default function OrderStatus() {
           { userId }
         );
         const sortedOrders = sortOrdersByDate(response.data);
+        console.log(sortedOrders);
+
         setOrders(sortedOrders);
       } catch (error) {
         setError(error.response ? error.response.data.message : "Server error");
@@ -36,7 +39,7 @@ export default function OrderStatus() {
     };
 
     fetchOrders();
-  }, [userDetail]);
+  }, [userDetail, refresh]);
 
   const sortOrdersByDate = (orders) => {
     return orders.slice().sort((a, b) => {
@@ -53,6 +56,7 @@ export default function OrderStatus() {
       alert(response.data.message);
       const updatedOrders = orders.filter((order) => order._id !== orderId);
       setOrders(updatedOrders);
+      setRefresh(false);
     } catch (error) {
       setError(error.response ? error.response.data.message : "Server error");
     }
@@ -96,7 +100,6 @@ export default function OrderStatus() {
                   <p>Status: {order.status}</p>
                   <p>Total: Rs {order.totalAmount}</p>
                   <p>Order Date: {formatDateToIndian(order.createdAt)}</p>
-                  <h3 className="mt-2">Products:</h3>
                   <ul>
                     {order.products.map((productItem) => (
                       <li
@@ -107,6 +110,15 @@ export default function OrderStatus() {
                           <p className="font-medium">
                             Product Name: {productItem.name}
                           </p>
+                          <img
+                            src={
+                              productItem.image
+                                ? `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${productItem.image}`
+                                : ""
+                            }
+                            alt={productItem.name}
+                            className="w-full h-32 object-cover mb-4"
+                          />{" "}
                           <p>Quantity: {productItem.quantity}</p>
                           <p>Price: Rs {productItem.price}</p>
                           <p>
@@ -119,12 +131,17 @@ export default function OrderStatus() {
                     <br />
                     <li>
                       {order.status.toLowerCase() === "pending" && (
-                        <button
-                          onClick={() => handleCancelOrder(order._id)}
-                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
-                        >
-                          Cancel Order
-                        </button>
+                        <>
+                          <p>
+                            Please wait, your order will arrive in 30 minutes.
+                          </p>
+                          <button
+                            onClick={() => handleCancelOrder(order._id)}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
+                          >
+                            Cancel Order
+                          </button>
+                        </>
                       )}
                       {order.status.toLowerCase() === "running" && (
                         <p className="text-green-600">

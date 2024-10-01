@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { checkSessionExpiration } from "../utils/session";
 
 export const CartPage = () => {
-  const { cart, removeFromCart } = useContext(CartContext);
+  const { cart, removeFromCart, updateCartItemQuantity } =
+    useContext(CartContext);
   const navigate = useNavigate();
 
   // Calculate total order amount
@@ -24,7 +25,7 @@ export const CartPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 ">
+    <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4 mt-32">Collection of Item</h2>
       {cart.length === 0 ? (
         <p>Your cart is empty</p>
@@ -43,8 +44,32 @@ export const CartPage = () => {
                   className="w-full h-32 object-cover mb-4"
                 />
                 <h3 className="text-xl font-semibold">{item.name}</h3>
-                <p className="mt-2 text-xs">Quantity: {item.qty}</p>
                 <p className="mt-2 text-xs">Price: Rs.{item.price}</p>
+                <div className="flex items-center mt-2">
+                  <button
+                    onClick={() =>
+                      updateCartItemQuantity(
+                        item.name,
+                        Math.max(item.qty - 1, 1)
+                      )
+                    }
+                    className="bg-blue-500 hover:bg-blue-600 active:bg-blue-800 text-white px-[13px] py-1 rounded-md  transition duration-200"
+                  >
+                    -
+                  </button>
+                  <span className="mx-2">{item.qty}</span>
+                  <button
+                    onClick={() =>
+                      updateCartItemQuantity(
+                        item.name,
+                        Math.min(item.qty + 1, 4)
+                      )
+                    }
+                    className="bg-blue-500 hover:bg-blue-600 active:bg-blue-800 text-white px-2 py-1  rounded-md transition duration-200"
+                  >
+                    +
+                  </button>
+                </div>
                 <p className="mt-2 text-xs">
                   Total: Rs.{item.qty * item.price}
                 </p>
