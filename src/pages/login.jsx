@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { checkSessionExpiration, startSession } from "../utils/session";
+import { FaGithub } from "react-icons/fa"; // Importing icons from FontAwesome
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [git, setGit] = useState(true);
 
   useEffect(() => {
     // Check for token expiration on component mount
@@ -15,8 +17,8 @@ function Login() {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const autoLogin = async (email, password) => {
+    // Perform login without e.preventDefault since no event is available
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/login`,
@@ -61,6 +63,35 @@ function Login() {
     }
   };
 
+  useEffect(() => {
+    // Check for email and password in URL parameters and trigger auto-login
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailParam = urlParams.get("email");
+    const passwordParam = urlParams.get("password");
+
+    if (emailParam && passwordParam) {
+      setEmail(emailParam);
+      setPassword(passwordParam);
+
+      // Auto-submit the login if email and password are provided in the URL
+      autoLogin(emailParam, passwordParam);
+    }
+  }, [git]);
+  // GitHub Login Handler
+  const handleGitHubLogin = () => {
+    setGit(true);
+    // Redirect to the backend GitHub OAuth endpoint
+    const redirectUri = `${process.env.REACT_APP_API_BASE_URL}/auth/github/callback`; // Match this with GitHub settings
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=Ov23liApTdOCEb50m4j1&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=user:email`;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form submission's default behavior
+    autoLogin(email, password); // Reuse the autoLogin function
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg sm:w-full md:w-96 mt-20">
@@ -98,7 +129,7 @@ function Login() {
           >
             Login
           </button>
-          <div className=" sm:flex-auto lg:flex justify-between">
+          <div className="sm:flex-auto lg:flex justify-between">
             <a
               href="/resetpassword"
               className="text-sm text-indigo-500 hover:underline block sm:inline-block mb-2 sm:mb-0"
@@ -119,6 +150,15 @@ function Login() {
             </a>
           </div>
         </form>
+        {/* GitHub Sign-In Button */}
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={handleGitHubLogin}
+            className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200"
+          >
+            <FaGithub size={30} className="ml-[2px]" />
+          </button>
+        </div>
       </div>
     </div>
   );

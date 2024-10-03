@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
 function Register() {
   const [name, setName] = useState("");
@@ -38,7 +38,7 @@ function Register() {
             mobile,
           }
         );
-        alert(response.data.msg || "Otp Send In Email");
+        alert(response.data.msg || "Otp Sent In Email");
         setShowOtpField(true);
       } else {
         const response = await axios.post(
@@ -51,19 +51,18 @@ function Register() {
         console.log(response.data);
         alert(
           response.data.msg ||
-            "OTP verified successfully & Register successfully"
+            "OTP verified successfully & Registered successfully"
         );
 
         const token = response.data.token;
         if (token) {
           localStorage.setItem("token", token);
-          // Redirect to login page or any other page
+          navigate("/login");
         }
-        navigate("/login");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert(error.response.data.msg || "User Already Exist");
+      alert(error.response.data.msg || "User Already Exists");
     }
   };
 
@@ -151,7 +150,7 @@ function Register() {
               <div className="mb-4">
                 <p>
                   This Otp Will Expire within{" "}
-                  {`${minutes}:${seconds < 10 ? "0" : ""}  ${seconds} `} Minutes
+                  {`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`} Minutes
                 </p>
               </div>
               <button
