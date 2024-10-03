@@ -36,7 +36,6 @@ import AllGroups from "./pages/allGroups";
 import AllProducts from "./pages/allProducts";
 import RegisteredUsers from "./pages/registeredUsers";
 import Rating from "./pages/rating";
-import GitHubCallback from "./pages/gitHub";
 
 function App() {
   return (
