@@ -7,7 +7,7 @@ export default function ProductManagementPage() {
 
   useEffect(() => {
     fetchOrders();
-  }, [orders]);
+  }, []);
 
   const fetchOrders = async () => {
     try {
@@ -35,6 +35,7 @@ export default function ProductManagementPage() {
             order.orderId === orderId ? { ...order, status: newStatus } : order
           )
         );
+        fetchOrders();
       }
     } catch (error) {
       console.error("Error updating order status:", error);

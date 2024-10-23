@@ -12,7 +12,7 @@ export default function AdminDashboard() {
   const [orderStatuses, setOrderStatuses] = useState({
     pending: 0,
     running: 0,
-    complete: 0,
+    completed: 0,
     declined: 0,
   });
   const [userCount, setUserCount] = useState(0);
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
     setLoading(true);
     const isSessionValid = checkSessionExpiration(navigate);
     if (!isSessionValid) {
-      alert("Session Expired");
+      // alert("Session Expired");
       navigate("/admin");
       return;
     }
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
             link="/running"
           />
           <DashboardCard
-            count={orderStatuses.complete}
+            count={orderStatuses.completed}
             title="Complete"
             color="text-green-500"
             link="/complete"

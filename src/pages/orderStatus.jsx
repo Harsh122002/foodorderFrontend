@@ -28,8 +28,6 @@ export default function OrderStatus() {
           { userId }
         );
         const sortedOrders = sortOrdersByDate(response.data);
-        console.log(sortedOrders);
-
         setOrders(sortedOrders);
       } catch (error) {
         setError(error.response ? error.response.data.message : "Server error");
@@ -92,88 +90,94 @@ export default function OrderStatus() {
           <h1 className="text-center font-bold text-4xl text-blue-950">
             Order Status
           </h1>
-          {currentOrders.length > 0 ? (
-            currentOrders.map((order) => (
-              <div key={order._id}>
-                <div className="p-4 bg-white shadow-md rounded-lg mt-2">
-                  <h2 className="text-xl font-bold">Order ID: {order._id}</h2>
-                  <p>Status: {order.status}</p>
-                  <p>Total: Rs {order.totalAmount}</p>
-                  <p>Order Date: {formatDateToIndian(order.createdAt)}</p>
-                  <ul>
-                    {order.products.map((productItem) => (
-                      <li
-                        key={productItem._id}
-                        className="flex items-center justify-between border-b py-2"
-                      >
-                        <div>
-                          <p className="font-medium">
-                            Product Name: {productItem.name}
-                          </p>
-                          <img
-                            src={
-                              productItem.image
-                                ? `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${productItem.image}`
-                                : ""
-                            }
-                            alt={productItem.name}
-                            className="w-full h-32 object-cover mb-4"
-                          />{" "}
-                          <p>Quantity: {productItem.quantity}</p>
-                          <p>Price: Rs {productItem.price}</p>
-                          <p>
-                            Amount: Rs{" "}
-                            {productItem.quantity * productItem.price}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                    <br />
-                    <li>
-                      {order.status.toLowerCase() === "pending" && (
-                        <>
-                          <p>
-                            Please wait, your order will arrive in 30 minutes.
-                          </p>
-                          <button
-                            onClick={() => handleCancelOrder(order._id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
-                          >
-                            Cancel Order
-                          </button>
-                        </>
-                      )}
-                      {order.status.toLowerCase() === "running" && (
-                        <p className="text-green-600">
-                          You are delivering successfully!
-                        </p>
-                      )}
-                      {order.status.toLowerCase() === "completed" && (
-                        <div className="flex justify-between items-center">
-                          <p className="text-blue-600">
-                            Order completed successfully!
-                          </p>
-                          {order.rating === null && (
-                            <p>
-                              Please rate this order{" "}
-                              <a
-                                href={`/rating?orderId=${order._id}`}
-                                className="text-blue-500 underline"
-                              >
-                                Rating
-                              </a>
+          {orders.length > 0 ? (
+            currentOrders.length > 0 ? (
+              currentOrders.map((order) => (
+                <div key={order._id}>
+                  <div className="p-4 bg-white shadow-md rounded-lg mt-2">
+                    <h2 className="text-xl font-bold">Order ID: {order._id}</h2>
+                    <p>Status: {order.status}</p>
+                    <p>Total: Rs {order.totalAmount}</p>
+                    <p>Order Date: {formatDateToIndian(order.createdAt)}</p>
+                    <ul>
+                      {order.products.map((productItem) => (
+                        <li
+                          key={productItem._id}
+                          className="flex items-center justify-between border-b py-2"
+                        >
+                          <div>
+                            <p className="font-medium">
+                              Product Name: {productItem.name}
                             </p>
-                          )}
-                        </div>
-                      )}
-                      {order.status.toLowerCase() === "declined" && (
-                        <p className="text-red-600">Order declined.</p>
-                      )}
-                    </li>
-                  </ul>
+                            <img
+                              src={
+                                productItem.image
+                                  ? `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${productItem.image}`
+                                  : ""
+                              }
+                              alt={productItem.name}
+                              className="w-full h-32 object-cover mb-4"
+                            />
+                            <p>Quantity: {productItem.quantity}</p>
+                            <p>Price: Rs {productItem.price}</p>
+                            <p>
+                              Amount: Rs{" "}
+                              {productItem.quantity * productItem.price}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                      <br />
+                      <li>
+                        {order.status.toLowerCase() === "pending" && (
+                          <>
+                            <p>
+                              Please wait, your order will arrive in 30 minutes.
+                            </p>
+                            <button
+                              onClick={() => handleCancelOrder(order._id)}
+                              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
+                            >
+                              Cancel Order
+                            </button>
+                          </>
+                        )}
+                        {order.status.toLowerCase() === "running" && (
+                          <p className="text-green-600">
+                            You are delivering successfully!
+                          </p>
+                        )}
+                        {order.status.toLowerCase() === "complete" && (
+                          <div className="flex justify-between items-center">
+                            <p className="text-blue-600">
+                              Order completed successfully!
+                            </p>
+                            {order.rating === null && (
+                              <p>
+                                Please rate this order{" "}
+                                <a
+                                  href={`/rating?orderId=${order._id}`}
+                                  className="text-blue-500 underline"
+                                >
+                                  Rating
+                                </a>
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        {order.status.toLowerCase() === "declined" && (
+                          <p className="text-red-600">Order declined.</p>
+                        )}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="text-center mt-4">
+                No orders found on this page.
               </div>
-            ))
+            )
           ) : (
             <div className="text-center mt-4">No orders found.</div>
           )}

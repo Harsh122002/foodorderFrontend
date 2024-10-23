@@ -138,19 +138,24 @@ export default function Profile() {
         ) : (
           <>
             <div className="mb-2">
-              <strong className="text-gray-700">Name:</strong> {userDetail.name}
+              <strong className="text-gray-700">Name:</strong>{" "}
+              {userDetail?.name ? userDetail.name : "Please Enter Name"}
             </div>
             <div className="mb-2">
               <strong className="text-gray-700">Email:</strong>{" "}
-              {userDetail.email}
+              {userDetail?.email ? userDetail.email : "Please Enter Email"}
             </div>
             <div className="mb-2">
               <strong className="text-gray-700">Phone:</strong>{" "}
-              {userDetail.mobile}
+              {userDetail?.mobile
+                ? userDetail.mobile
+                : "Please Enter Mobile Number"}
             </div>
             <div className="mb-2">
               <strong className="text-gray-700">Address:</strong>{" "}
-              {userDetail.address}
+              {userDetail?.address
+                ? userDetail.address
+                : "Please Enter Address"}
             </div>
             <div className="flex justify-end">
               <button
