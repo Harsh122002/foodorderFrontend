@@ -81,11 +81,23 @@ function Register() {
                   id="name"
                   type="text"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow only letters and spaces
+                    if (/^[a-zA-Z\s]*$/.test(value)) {
+                      setName(value);
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                   required
                 />
+                {name.length > 0 && !/^[a-zA-Z\s]+$/.test(name) && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Name can only contain letters and spaces.
+                  </p>
+                )}
               </div>
+
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700">
                   Email
@@ -98,7 +110,14 @@ function Register() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                   required
                 />
+                {email.length > 0 &&
+                  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Please enter a valid email address.
+                    </p>
+                  )}
               </div>
+
               <div className="mb-4">
                 <label htmlFor="password" className="block text-gray-700">
                   Password
@@ -109,8 +128,14 @@ function Register() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                  minLength={6}
                   required
                 />
+                {password.length > 0 && password.length < 6 && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Password must be at least 6 characters long.
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <label htmlFor="mobile" className="block text-gray-700">
@@ -120,11 +145,24 @@ function Register() {
                   id="mobile"
                   type="text"
                   value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow only numeric values
+                    if (/^\d*$/.test(value)) {
+                      setMobile(value); // Update state only for valid input
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                  maxLength={10} // Restrict input to 10 digits
                   required
                 />
+                {mobile.length > 0 && mobile.length !== 10 && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Mobile number must be exactly 10 digits.
+                  </p>
+                )}
               </div>
+
               <button
                 type="submit"
                 className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"

@@ -63,6 +63,11 @@ export default function ResetPassword() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
               required
             />
+            {email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
+              <p className="text-red-500 text-sm mt-1">
+                Please enter a valid email address.
+              </p>
+            )}
           </div>
 
           {showOtp && (
@@ -95,8 +100,14 @@ export default function ResetPassword() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                  minLength={6}
                   required
                 />
+                {newPassword.length > 0 && newPassword.length < 6 && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Password must be at least 6 characters long.
+                  </p>
+                )}
               </div>
             </>
           )}

@@ -78,10 +78,22 @@ export default function Profile() {
                 type="text"
                 name="name"
                 value={formData.name}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^[a-zA-Z\s]*$/.test(value)) {
+                    handleChange(e); // Only update for valid input
+                  }
+                }}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
+              {formData.name.length === 0 && (
+                <p className="text-red-500 text-sm mt-1">
+                  Name is required and must contain only letters.
+                </p>
+              )}
             </div>
+
             <div className="mb-2">
               <label className="block text-gray-700 font-semibold mb-1">
                 Email:
@@ -92,9 +104,16 @@ export default function Profile() {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
                 readOnly
               />
+              {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                <p className="text-red-500 text-sm mt-1">
+                  Please provide a valid email address.
+                </p>
+              )}
             </div>
+
             <div className="mb-2">
               <label className="block text-gray-700 font-semibold mb-1">
                 Phone:
@@ -103,10 +122,23 @@ export default function Profile() {
                 type="text"
                 name="mobile"
                 value={formData.mobile}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d*$/.test(value)) {
+                    handleChange(e); // Allow only numeric values
+                  }
+                }}
+                maxLength={10}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
+              {formData.mobile.length > 0 && formData.mobile.length !== 10 && (
+                <p className="text-red-500 text-sm mt-1">
+                  Mobile number must be exactly 10 digits.
+                </p>
+              )}
             </div>
+
             <div className="mb-2">
               <label className="block text-gray-700 font-semibold mb-1">
                 Address:
@@ -117,8 +149,15 @@ export default function Profile() {
                 value={formData.address}
                 onChange={handleChange}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
+              {formData.address.length === 0 && (
+                <p className="text-red-500 text-sm mt-1">
+                  Address is required.
+                </p>
+              )}
             </div>
+
             <div className="flex justify-end space-x-2">
               <button
                 type="button"

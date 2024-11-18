@@ -166,7 +166,13 @@ export default function OrderStatus() {
                           </div>
                         )}
                         {order.status.toLowerCase() === "declined" && (
-                          <p className="text-red-600">Order declined.</p>
+                          <>
+                            <p className="text-red-600">Order declined.</p>
+                            <p className="text-blue-500 text-sm">
+                              any payment made will be refunded to your account
+                              within 7 business days.
+                            </p>
+                          </>
                         )}
                       </li>
                     </ul>

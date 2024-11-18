@@ -84,6 +84,11 @@ function Login() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
               required
             />
+            {email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
+              <p className="text-red-500 text-sm mt-1">
+                Please enter a valid email address.
+              </p>
+            )}
           </div>
           <div>
             <label htmlFor="password" className="block text-gray-700">
@@ -95,8 +100,14 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+              minLength={6}
               required
             />
+            {password.length > 0 && password.length < 6 && (
+              <p className="text-red-500 text-sm mt-1">
+                Password must be at least 6 characters long.
+              </p>
+            )}
           </div>
           <button
             type="submit"
@@ -117,12 +128,12 @@ function Login() {
             >
               Register
             </a>
-            <a
+            {/* <a
               href="/admin"
               className="text-sm text-indigo-500 hover:underline block sm:inline-block mb-2 sm:mb-0"
             >
               Admin Login
-            </a>
+            </a> */}
           </div>
         </form>
         <div className="flex justify-center mt-4">
