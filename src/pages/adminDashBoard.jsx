@@ -21,6 +21,11 @@ export default function AdminDashboard() {
   const [allAmount, setAllAmount] = useState(0);
 
   useEffect(() => {
+    const isSessionValid = checkSessionExpiration(navigate);
+    if (!isSessionValid) {
+      navigate("/admin");
+      return;
+    }
     // Call the fetchData function when component loads
     fetchData();
   }, []);
@@ -61,15 +66,15 @@ export default function AdminDashboard() {
     }
   };
 
-  // Navigation Handlers
-  const handleGroupAdd = () => navigate("/addGroup");
-  const handleProductAdd = () => navigate("/addProduct");
-  const handleProductManage = () => navigate("/productManage");
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
-    navigate("/login");
-  };
+  // // Navigation Handlers
+  // const handleGroupAdd = () => navigate("/addGroup");
+  // const handleProductAdd = () => navigate("/addProduct");
+  // const handleProductManage = () => navigate("/productManage");
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   sessionStorage.removeItem("token");
+  //   navigate("/login");
+  // };
 
   // Show loader while fetching data
   if (loading) {
@@ -79,12 +84,7 @@ export default function AdminDashboard() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar Component */}
-      <Sidebar
-        handleGroupAdd={handleGroupAdd}
-        handleProductAdd={handleProductAdd}
-        handleProductManage={handleProductManage}
-        handleLogout={handleLogout}
-      />
+      <Sidebar className="fixed"/>
 
       {/* Main Dashboard Content */}
       <div className="flex-1 bg-gray-100 p-8">

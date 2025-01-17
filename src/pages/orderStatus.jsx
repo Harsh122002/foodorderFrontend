@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "./UserContext";
+import { Link } from "react-router-dom";
 
 export default function OrderStatus() {
   const [orders, setOrders] = useState([]);
@@ -90,6 +91,9 @@ export default function OrderStatus() {
           <h1 className="text-center font-bold text-4xl text-blue-950">
             Order Status
           </h1>
+          {orders.length === 0 && (
+            <div className="text-black mb-4">No orders found</div>
+          )}
           {orders.length > 0 ? (
             currentOrders.length > 0 ? (
               currentOrders.map((order) => (
@@ -99,11 +103,11 @@ export default function OrderStatus() {
                     <p>Status: {order.status}</p>
                     <p>Total: Rs {order.totalAmount}</p>
                     <p>Order Date: {formatDateToIndian(order.createdAt)}</p>
-                    <ul>
+                    <ul className="flex flex-row flex-wrap gap-2">
                       {order.products.map((productItem) => (
                         <li
                           key={productItem._id}
-                          className="flex items-center justify-between border-b py-2"
+                          className="flex items-center justify-between  py-2"
                         >
                           <div>
                             <p className="font-medium">
@@ -116,7 +120,7 @@ export default function OrderStatus() {
                                   : ""
                               }
                               alt={productItem.name}
-                              className="w-full h-32 object-cover mb-4"
+                              className="w-full h-48 object-cover mb-4"
                             />
                             <p>Quantity: {productItem.quantity}</p>
                             <p>Price: Rs {productItem.price}</p>
@@ -127,7 +131,9 @@ export default function OrderStatus() {
                           </div>
                         </li>
                       ))}
-                      <br />
+                    </ul>
+                    <br />
+                    <ul>
                       <li>
                         {order.status.toLowerCase() === "pending" && (
                           <>
@@ -147,7 +153,7 @@ export default function OrderStatus() {
                             You are delivering successfully!
                           </p>
                         )}
-                        {order.status.toLowerCase() === "complete" && (
+                        {order.status.toLowerCase() === "completed" && (
                           <div className="flex justify-between items-center">
                             <p className="text-blue-600">
                               Order completed successfully!
@@ -155,12 +161,12 @@ export default function OrderStatus() {
                             {order.rating === null && (
                               <p>
                                 Please rate this order{" "}
-                                <a
-                                  href={`/rating?orderId=${order._id}`}
+                                <Link
+                                  to={`/rating?orderId=${order._id}`}
                                   className="text-blue-500 underline"
                                 >
                                   Rating
-                                </a>
+                                </Link>
                               </p>
                             )}
                           </div>

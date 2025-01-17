@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaHome } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import { CartContext } from "./pages/CartContext";
 import { checkSessionExpiration } from "./utils/session";
 import { UserContext } from "./pages/UserContext";
 import ScrollToTopButton from "./utils/scroll";
+import { IoMenu } from "react-icons/io5";
 
 export default function HeaderFunction() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -109,12 +109,6 @@ export default function HeaderFunction() {
             </div>
           )}
 
-          <button
-            onClick={toggleDropdown}
-            className="block lg:hidden text-white text-2xl "
-          >
-            <FaHome />
-          </button>
           {isLoggedIn && <p style={{ color: "white" }}>{userDetail.name}</p>}
           {!isLoggedIn ? (
             <button
@@ -132,6 +126,12 @@ export default function HeaderFunction() {
             </button>
           )}
         </div>
+        <button
+          onClick={toggleDropdown}
+          className="block lg:hidden text-white text-2xl "
+        >
+          <IoMenu />
+        </button>
 
         {isDropdownOpen && (
           <div className="absolute top-16 right-4 mt-2 w-48 bg-white rounded-md shadow-lg z-10 lg:hidden">

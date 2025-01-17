@@ -84,6 +84,8 @@ function AppContent() {
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/rating" element={<Rating />} />
+
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/orderPlace" element={<OrderPlace />} />
         <Route path="/allGroups" element={<AllGroups />} />

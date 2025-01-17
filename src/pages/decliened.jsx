@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 export default function Declined() {
   const [orders, setOrders] = useState([]);
@@ -22,6 +23,8 @@ export default function Declined() {
   };
 
   return (
+     <div className="flex">
+          <Sidebar />
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-10 mt-5 text-emerald-500 text-center">
         Decliened Orders Management
@@ -50,6 +53,11 @@ export default function Declined() {
               <ul className="list-disc list-inside">
                 {order.products.map((product, index) => (
                   <li key={index}>
+                     <img
+                        src={`http://localhost:5000/${product.filePath}`}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover inline-block mr-2"
+                      />
                     {product.name} - Quantity: {product.quantity} - Price: Rs
                     {product.price.toFixed(2)} - Total Price: Rs
                     {product.totalPrice.toFixed(2)}
@@ -65,6 +73,7 @@ export default function Declined() {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 }

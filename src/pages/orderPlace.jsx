@@ -56,12 +56,30 @@ const OrderPlace = () => {
     }));
   };
 
+  const placeOrder = async (orderData, token) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/orderDetail`,
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response; // Return the response for further processing
+    } catch (error) {
+      console.error("Error placing order:", error);
+      throw error; // Propagate the error to the caller
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.address) {
       alert("Please fill in the address.");
-      return; // Stops the function execution if address is empty
+      return; // Stops the function execution if the address is empty
     }
 
     const orderData = {
@@ -82,37 +100,30 @@ const OrderPlace = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/orderDetail`,
-        orderData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // Handle cash payments directly
+      if (formData.paymentMethod === "cash") {
+        const response = await placeOrder(orderData, token);
 
-      if (response.status === 201) {
-        const { orderId } = response.data;
-        setOrderId(orderId);
-        removeFromCart1();
-
-        if (formData.paymentMethod === "cash") {
-          navigate("/success");
-        } else if (formData.paymentMethod === "online") {
-          initiateRazorpayPayment(orderId);
+        if (response.status === 201) {
+          const { orderId } = response.data;
+          setOrderId(orderId);
+          removeFromCart1(); // Clear the cart after placing the order
+          navigate("/success"); // Redirect to success page
+        } else {
+          console.error("Order placement failed", response);
         }
-      } else {
-        console.error("Order placement failed", response);
+      } else if (formData.paymentMethod === "online") {
+        setIsLoading(false);
+        // For online payments, skip the API call and directly initiate Razorpay
+        initiateRazorpayPayment(orderData,token);
       }
     } catch (error) {
       console.error("Error placing order:", error);
     }
   };
 
-  const initiateRazorpayPayment = async (orderId) => {
+  const initiateRazorpayPayment = async (orderData,token) => {
     setIsLoading(true); // Show loader
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/payment`,
@@ -120,6 +131,7 @@ const OrderPlace = () => {
       );
 
       const { data } = response;
+      setIsLoading(false);
 
       const options = {
         key: "rzp_test_PmPFQvT5b2a9Qp", // Replace with your actual Razorpay key
@@ -129,16 +141,27 @@ const OrderPlace = () => {
         description: "Payment for Order",
         image: "/logo.png", // Replace with your company logo
         order_id: data.orderId,
-        handler: function (response) {
-          setIsLoading(false); // Hide loader
-          navigate("/success");
 
-          // After successful payment, verify payment on backend
-          verifyPayment(
+
+        handler: async function (response) {
+           // After successful payment, verify payment on backend
+           verifyPayment(
             data.orderId,
             response.razorpay_payment_id,
             response.razorpay_signature
           );
+          const res= await placeOrder(orderData, token);
+          if (response.status === 201) {
+            const { orderId } = res.data;
+            setOrderId(orderId);
+            removeFromCart1();
+            setIsLoading(false);// Clear the cart after placing the order
+            navigate("/success"); // Redirect to success page
+          } else {
+            console.error("Order placement failed", response);
+          }
+
+         
         },
         prefill: {
           name: formData.name,
@@ -283,7 +306,7 @@ const OrderPlace = () => {
         <button
           type="submit"
           className="mt-4 bg-green-500 text-white py-2 px-4 rounded-md"
-          disabled={cart.length === 0} // Disable button if cart is empty
+          disabled={cart.length === 0}
         >
           Place Order
         </button>

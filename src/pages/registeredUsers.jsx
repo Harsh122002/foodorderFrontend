@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 export default function RegisteredUsers() {
   const [users, setUsers] = useState([]);
@@ -30,6 +31,8 @@ export default function RegisteredUsers() {
   };
 
   return (
+     <div className="flex">
+          <Sidebar />
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
         Registered Users
@@ -68,6 +71,7 @@ export default function RegisteredUsers() {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 }

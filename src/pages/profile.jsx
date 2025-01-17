@@ -17,6 +17,7 @@ export default function Profile() {
       window.location.reload("/login");
     }
   }, [navigate]);
+
   if (!userDetail) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -65,11 +66,11 @@ export default function Profile() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4 text-center mt-32">Profile</h1>
+    <div className="container flex flex-col align-items-center justify-center h-[100vh] mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4 text-center text-blue-600 mt-44">Profile</h1>
       <div className="bg-white shadow-lg rounded-lg p-6">
         {editMode ? (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 ">
             <div className="mb-2">
               <label className="block text-gray-700 font-semibold mb-1">
                 Name:
@@ -77,17 +78,17 @@ export default function Profile() {
               <input
                 type="text"
                 name="name"
-                value={formData.name}
+                value={formData.name || ""}
                 onChange={(e) => {
                   const value = e.target.value;
                   if (/^[a-zA-Z\s]*$/.test(value)) {
-                    handleChange(e); // Only update for valid input
+                    handleChange(e);
                   }
                 }}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-              {formData.name.length === 0 && (
+              {formData.name?.length === 0 && (
                 <p className="text-red-500 text-sm mt-1">
                   Name is required and must contain only letters.
                 </p>
@@ -101,13 +102,13 @@ export default function Profile() {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={formData.email || ""}
                 onChange={handleChange}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
                 readOnly
               />
-              {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+              {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email || "") && (
                 <p className="text-red-500 text-sm mt-1">
                   Please provide a valid email address.
                 </p>
@@ -121,18 +122,18 @@ export default function Profile() {
               <input
                 type="text"
                 name="mobile"
-                value={formData.mobile}
+                value={formData.mobile || ""}
                 onChange={(e) => {
                   const value = e.target.value;
                   if (/^\d*$/.test(value)) {
-                    handleChange(e); // Allow only numeric values
+                    handleChange(e);
                   }
                 }}
                 maxLength={10}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-              {formData.mobile.length > 0 && formData.mobile.length !== 10 && (
+              {formData.mobile?.length > 0 && formData.mobile.length !== 10 && (
                 <p className="text-red-500 text-sm mt-1">
                   Mobile number must be exactly 10 digits.
                 </p>
@@ -146,15 +147,13 @@ export default function Profile() {
               <input
                 type="text"
                 name="address"
-                value={formData.address}
+                value={formData.address || ""}
                 onChange={handleChange}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-              {formData.address.length === 0 && (
-                <p className="text-red-500 text-sm mt-1">
-                  Address is required.
-                </p>
+              {formData.address?.length === 0 && (
+                <p className="text-red-500 text-sm mt-1">Address is required.</p>
               )}
             </div>
 
@@ -178,23 +177,19 @@ export default function Profile() {
           <>
             <div className="mb-2">
               <strong className="text-gray-700">Name:</strong>{" "}
-              {userDetail?.name ? userDetail.name : "Please Enter Name"}
+              {userDetail?.name || "Please Enter Name"}
             </div>
             <div className="mb-2">
               <strong className="text-gray-700">Email:</strong>{" "}
-              {userDetail?.email ? userDetail.email : "Please Enter Email"}
+              {userDetail?.email || "Please Enter Email"}
             </div>
             <div className="mb-2">
               <strong className="text-gray-700">Phone:</strong>{" "}
-              {userDetail?.mobile
-                ? userDetail.mobile
-                : "Please Enter Mobile Number"}
+              {userDetail?.mobile || "Please Enter Mobile Number"}
             </div>
             <div className="mb-2">
               <strong className="text-gray-700">Address:</strong>{" "}
-              {userDetail?.address
-                ? userDetail.address
-                : "Please Enter Address"}
+              {userDetail?.address || "Please Enter Address"}
             </div>
             <div className="flex justify-end">
               <button

@@ -122,11 +122,11 @@ export const Dashboard = () => {
 
   return (
     <div className="flex flex-wrap justify-center bg-slate-200">
-      <div className="w-full p-4 flex overflow-x-auto mt-28 whitespace-nowrap space-x-4 lg: justify-center">
+      <div className="w-full p-4 flex overflow-x-auto mt-28 whitespace-nowrap space-x-4 lg:justify-center">
         <div className="mb-2 inline-block">
           <button
             className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
-              selectedGroup === null ? "bg-gray-200" : ""
+              selectedGroup === null ? "border-2 border-blue-500" : ""
             }`}
             onClick={resetProducts}
             style={{ cursor: "pointer" }}
@@ -182,7 +182,7 @@ export const Dashboard = () => {
                 }
                 alt={product.productName}
               />
-              <div className="ml-2 text-nowrap hover:text-2xl ">
+              <div className="ml-2 text-nowrap hover:text-2xl">
                 {product.productName}
               </div>
               <div className="ml-2 text-sm">Price: Rs.{product.price}</div>
@@ -202,7 +202,7 @@ export const Dashboard = () => {
                 </button>
                 <button
                   onClick={() => handleAddToCart(index)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded ml-10 hover:bg-blue-700  hover:translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 transition"
+                  className="bg-blue-500 text-white px-4 py-2 rounded ml-10 hover:bg-blue-700 hover:translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 transition"
                 >
                   Add to Cart
                 </button>

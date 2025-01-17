@@ -1,15 +1,28 @@
 import React from "react";
 import ActionButton from "./actionButton"; // Reusable button component
-
-export default function Sidebar({
-  handleGroupAdd,
-  handleProductAdd,
-  handleProductManage,
-  handleLogout,
-}) {
+import { useNavigate } from "react-router-dom";
+export default function Sidebar() {
+  const navigate = useNavigate();
+  
+  const handleGroupAdd = () => navigate("/addGroup");
+  const handleGoHome = () => navigate("/adminDashBoard");
+const handleProductAdd = () => navigate("/addProduct");
+const handleProductManage = () => navigate("/productManage");
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
+  navigate("/admin");
+};
   return (
-    <div className="w-64 h-screen bg-gray-800 text-white flex flex-col items-center space-y-4 pt-10">
+    <div className="min-w-64 h-screen  bg-gray-800 text-white flex flex-col items-center space-y-4 pt-10 ">
       <h2 className="text-3xl font-bold mb-8">Admin Menu</h2>
+      <ActionButton
+        onClick={handleGoHome}
+        color="bg-gray-400"
+        hoverColor="bg-gray-600"
+        label="Home"
+        customClasses="w-full text-left px-4"
+      />
       <ActionButton
         onClick={handleGroupAdd}
         color="bg-blue-500"
