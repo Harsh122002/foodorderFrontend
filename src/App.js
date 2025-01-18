@@ -13,28 +13,28 @@ import { Dashboard } from "./pages/dashboard";
 import HeaderFunction from "./Header";
 import FooterFunction from "./footer";
 import ResetPassword from "./pages/resetpassword";
-import AdminLogin from "./pages/admin";
-import AdminDashboard from "./pages/adminDashBoard";
-import AddGroup from "./pages/addGroup";
-import AddProduct from "./pages/addProduct";
+import AdminLogin from "./pages/admin/admin";
+import AdminDashboard from "./pages/admin/adminDashBoard";
+import AddGroup from "./pages/admin/addGroup";
+import AddProduct from "./pages/admin/addProduct";
 import { CartPage } from "./pages/CartPage";
-import { CartProvider } from "./pages/CartContext";
+import { CartProvider } from "./pages/context/CartContext";
 import OrderPlace from "./pages/orderPlace";
-import { TotalAmountProvider } from "./pages/TotalAmountContext";
+import { TotalAmountProvider } from "./pages/context/TotalAmountContext";
 import Success from "./pages/success";
-import { OrderProvider } from "./pages/OrderContext";
-import { UserProvider } from "./pages/UserContext";
+import { OrderProvider } from "./pages/context/OrderContext";
+import { UserProvider } from "./pages/context/UserContext";
 import Profile from "./pages/profile";
 import About from "./pages/about";
 import OrderStatus from "./pages/orderStatus";
-import ProductManage from "./pages/productManage";
-import ProductManagementPage from "./pages/pending";
-import Running from "./pages/running";
-import Complete from "./pages/complete";
-import Declined from "./pages/decliened";
-import AllGroups from "./pages/allGroups";
-import AllProducts from "./pages/allProducts";
-import RegisteredUsers from "./pages/registeredUsers";
+import ProductManage from "./pages/admin/productManage";
+import ProductManagementPage from "./pages/admin/pending";
+import Running from "./pages/admin/running";
+import Complete from "./pages/admin/complete";
+import Declined from "./pages/admin/decliened";
+import AllGroups from "./pages/admin/allGroups";
+import AllProducts from "./pages/admin/allProducts";
+import RegisteredUsers from "./pages/admin/registeredUsers";
 import Rating from "./pages/rating";
 
 function App() {
@@ -85,7 +85,6 @@ function AppContent() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/rating" element={<Rating />} />
-
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/orderPlace" element={<OrderPlace />} />
         <Route path="/allGroups" element={<AllGroups />} />

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserContext } from "./UserContext";
+import { UserContext } from "./context/UserContext";
 import axios from "axios";
 import { checkSessionExpiration } from "../utils/session";
 import { useNavigate } from "react-router-dom";

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { CartContext } from "./pages/CartContext";
+import { CartContext } from "./pages/context/CartContext";
 import { checkSessionExpiration } from "./utils/session";
-import { UserContext } from "./pages/UserContext";
+import { UserContext } from "./pages/context/UserContext";
 import ScrollToTopButton from "./utils/scroll";
 import { IoMenu } from "react-icons/io5";
 

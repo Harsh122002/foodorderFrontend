@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState, useContext } from "react";
-import { CartContext } from "./CartContext";
 import { useNavigate } from "react-router-dom";
 import { checkSessionExpiration } from "../utils/session";
+import { CartContext } from "./context/CartContext"; // Add this line
 
 export const Dashboard = () => {
   const { addToCart } = useContext(CartContext);

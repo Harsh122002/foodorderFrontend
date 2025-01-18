@@ -9,6 +9,7 @@ export default function AddProduct() {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState(""); // New state for price
   const [groupOptions, setGroupOptions] = useState([]);
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
   const useQuery = () => {
@@ -46,6 +47,7 @@ export default function AddProduct() {
           setProductName(data.productName || "");
           setPrice(data.price || "");
           setGroupName(data.groupName || "");
+          setDescription(data.description || "");
           setImageFile(data.filePath || null);
         } catch (error) {
           console.error("Error fetching group:", error);
@@ -89,7 +91,7 @@ export default function AddProduct() {
       }
       formData.append("groupName", groupName); // Include selected group name in form data
       formData.append("price", price); // Include price in form data
-
+      formData.append("description", description); //
       try {
         await axios.post(
           `${process.env.REACT_APP_API_BASE_URL}/update-Proudct`,
@@ -113,7 +115,7 @@ export default function AddProduct() {
       formData.append("imageFile", imageFile);
       formData.append("groupName", groupName); // Include selected group name in form data
       formData.append("price", price); // Include price in form data
-
+      formData.append("description", description); // Include description in form data
       try {
         await axios.post(
           `${process.env.REACT_APP_API_BASE_URL}/addProduct`,
@@ -135,12 +137,14 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       <Sidebar />
-      <div className="flex flex-col justify-center items-center w-full">
-        <h2 className="text-2xl font-bold mb-6">Add Product</h2>
+      <div className="flex flex-col justify-center items-center w-full text-[#2E5077] bg-[#F6F4F0]">
+        <h2 className="text-3xl font-bold font-mono text-[#2E5077]  mb-6">
+          Add Product
+        </h2>
 
-        <div className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md mt-5 mb-5">
+        <div className="w-1/3 mx-auto p-6 bg-[#79D7BE] rounded-md shadow-md mt-5 mb-5">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
@@ -152,7 +156,7 @@ export default function AddProduct() {
               <input
                 type="text"
                 id="productName"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 bg-transparent py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 value={productName !== null ? productName : productName}
                 onChange={handleProductNameChange}
                 required
@@ -167,7 +171,7 @@ export default function AddProduct() {
               </label>
               <select
                 id="groupName"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 bg-transparent py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 onChange={handleGroupChange}
                 value={groupName !== null ? groupName : groupName} // Ensure `groupName` is a single value
                 required
@@ -190,12 +194,26 @@ export default function AddProduct() {
               <input
                 type="number"
                 id="price"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 bg-transparent border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 value={price !== null ? price : price}
                 onChange={handlePriceChange}
                 required
                 min="0"
                 step="1"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <textarea
+                id="description"
+                className="mt-1 block w-full px-3 py-2 bg-transparent border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                value={description !== null ? description : description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             {productId ? (
@@ -211,7 +229,7 @@ export default function AddProduct() {
                   id="imageFile"
                   accept="image/*"
                   onChange={handleImageFileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-1 block w-full px-3 py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
             ) : (
@@ -227,12 +245,12 @@ export default function AddProduct() {
                   id="imageFile"
                   accept="image/*"
                   onChange={handleImageFileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-1 block w-full px-3 py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   required
                 />
               </div>
             )}
-            {(imageFile && productId )&& (
+            {imageFile && productId && (
               <div className="mt-4 flex justify-center">
                 <img
                   src={`${process.env.REACT_APP_API_BASE_URL_IMAGE}/${imageFile}`}
@@ -241,13 +259,15 @@ export default function AddProduct() {
                 />
               </div>
             )}
-            {(imageFile && !productId)&&(<div className="mt-4 flex justify-center">
+            {imageFile && !productId && (
+              <div className="mt-4 flex justify-center">
                 <img
                   src={imageFile}
                   alt="Uploaded Preview"
                   className="w-28 h-16 object-cover rounded-md mb-3"
                 />
-              </div>)}
+              </div>
+            )}
             {productId ? (
               <button
                 type="submit"
@@ -267,7 +287,7 @@ export default function AddProduct() {
             {"  "}
             <Link
               to="/adminDashBoard"
-              className="text-lg text-indigo-500 hover:underline block sm:inline-block mb-2 sm:mb-0"
+              className="text-lg text-[#2E5077] hover:underline block sm:inline-block mb-2 sm:mb-0"
             >
               Back
             </Link>

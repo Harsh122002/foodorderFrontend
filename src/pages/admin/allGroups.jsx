@@ -47,13 +47,13 @@ export default function AllGroups() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
+      <div className="w-64  text-white fixed h-full">
         <Sidebar />
       </div>{" "}
       <div className="flex-1 ml-64 overflow-y-auto">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 bg-[#F6F4F0]">
           <h1 className="text-4xl font-bold mb-8 text-center">Groups</h1>
           <Link
             to="/adminDashBoard"
@@ -65,7 +65,7 @@ export default function AllGroups() {
             {groups.map((group, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg overflow-hidden shadow-lg relative"
+                className="bg-[#79D7BE] rounded-lg overflow-hidden shadow-lg relative"
               >
                 <button
                   onClick={() => handleDelete(group._id)}
@@ -84,7 +84,7 @@ export default function AllGroups() {
                       {group.groupName}
                     </h2>
                     <AiOutlineEdit
-                      className="text-black h-8 w-8 hover:text-blue-500"
+                      className="text-[#2E5077] h-8 w-8 hover:text-blue-500"
                       title="Edit"
                       onClick={() => handleUpdate(group._id)}
                     />

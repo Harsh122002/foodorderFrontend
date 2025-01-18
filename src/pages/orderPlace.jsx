@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { TotalAmountContext } from "./TotalAmountContext";
-import { CartContext } from "./CartContext";
-import { useOrder } from "./OrderContext";
+import { TotalAmountContext } from "./context/TotalAmountContext";
+import { CartContext } from "./context/CartContext"; // Add this line
+import { useOrder } from "./context/OrderContext"; // Add this line
 
 const OrderPlace = () => {
   const totalAmount = useContext(TotalAmountContext);

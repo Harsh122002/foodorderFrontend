@@ -44,15 +44,15 @@ export default function AllProducts() {
     navigate(`/addProduct?productId=${productId}`);
   };
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       {/* Sidebar */}
       <div className="w-64 bg-gray-800 text-white fixed h-full">
         <Sidebar />
       </div>
-  
+
       {/* Main Content */}
       <div className="flex-1 ml-64 overflow-y-auto">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 ">
           <h1 className="text-4xl font-bold mb-8 text-center">All Products</h1>
           <Link
             to="/adminDashBoard"
@@ -71,7 +71,7 @@ export default function AllProducts() {
               {products.map((product) => (
                 <div
                   key={product._id}
-                  className="bg-white rounded-lg overflow-hidden shadow-lg relative"
+                  className="bg-[#79D7BE] rounded-lg overflow-hidden shadow-lg relative"
                 >
                   <button
                     onClick={() => handleDelete(product._id)}
@@ -88,7 +88,7 @@ export default function AllProducts() {
                     <h2 className="text-xl font-semibold mb-2">
                       {product.productName}
                     </h2>
-                    <h6 className="text-xl font-semibold mb-2">
+                    <h6 className="text-xl  font-semibold mb-2">
                       {product.groupDetails.groupName}
                     </h6>
                     <div className="flex justify-between items-center">
@@ -96,7 +96,7 @@ export default function AllProducts() {
                         Price: Rs.{product.price}
                       </span>
                       <AiOutlineEdit
-                        className="text-black h-8 w-8 hover:text-blue-500"
+                        className="text-[#2E5077] h-8 w-8 hover:text-blue-500"
                         title="Edit"
                         onClick={() => handleUpdate(product._id)}
                       />
@@ -110,4 +110,4 @@ export default function AllProducts() {
       </div>
     </div>
   );
-} 
+}

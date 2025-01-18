@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { checkSessionExpiration } from "../utils/session";
+import { checkSessionExpiration } from "../../utils/session";
 import DashboardCard from "./dashboardCard";
-import Loader from "./loader";
+import Loader from "../loader";
 import Sidebar from "./Sidebar"; // Sidebar component
 
 export default function AdminDashboard() {
@@ -82,58 +82,51 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       {/* Sidebar Component */}
-      <Sidebar className="fixed"/>
+      <Sidebar className="fixed" />
 
       {/* Main Dashboard Content */}
-      <div className="flex-1 bg-gray-100 p-8">
-        <div className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold mb-10 mt-5 text-emerald-500 text-center">
+      <div className="flex-1 bg-[#F6F4F0] p-8">
+        <div className="text-4xl sm:text-5xl font-mono md:text-6xl w-full  font-bold mb-10 mt-5 text-[#2E5077] text-center">
           Admin Dashboard
         </div>
 
         {/* Dashboard cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-10">
+        <div className="flex flex-row flex-wrap justify-center gap-8 mb-10">
           <DashboardCard
             count={orderStatuses.pending}
             title="Pending"
-            color="text-yellow-500"
             link="/pending"
           />
           <DashboardCard
             count={orderStatuses.running}
             title="Running"
-            color="text-blue-500"
             link="/running"
           />
           <DashboardCard
             count={orderStatuses.completed}
             title="Complete"
-            color="text-green-500"
             link="/complete"
           />
           <DashboardCard
             count={orderStatuses.declined}
             title="Declined"
-            color="text-red-500"
             link="/declined"
           />
           <DashboardCard
             count={groups.length}
             title="Groups"
-            color="text-purple-500"
             link="/allGroups"
           />
           <DashboardCard
             count={products.length}
             title="Products"
-            color="text-purple-500"
             link="/allProducts"
           />
           <DashboardCard
             count={userCount}
             title="Registered Users"
-            color="text-purple-500"
             link="/registeredUsers"
           />
           <DashboardCard
@@ -141,7 +134,6 @@ export default function AdminDashboard() {
               typeof allAmount === "object" ? "No Earn" : `Rs. ${allAmount}`
             }
             title="Total Earn"
-            color="text-purple-500"
             link="#"
           />
         </div>
