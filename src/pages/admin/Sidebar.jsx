@@ -75,7 +75,7 @@ export default function Sidebar() {
           }`}
         >
           <button
-            className="w-full sm:w-48 h-16 flex gap-2 items-center justify-start hover:bg-[#3b6b93] active:scale-90 transition-all px-4"
+            className="w-full sm:w-48 h-16 flex gap-2 items-center justify-start hover:scale-105 active:scale-90 transition-all px-4"
             onClick={button.onClick}
           >
             {button.icon && <span className="text-xl">{button.icon}</span>}
