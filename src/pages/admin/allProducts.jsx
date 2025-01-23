@@ -91,9 +91,13 @@ export default function AllProducts() {
                     <h6 className="text-xl  font-semibold mb-2">
                       {product.groupDetails.groupName}
                     </h6>
+                    <p className="text-lg   mb-2">
+                      Price:Rs.{product.price}
+                    </p>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">
-                        Price: Rs.{product.price}
+                      Description: {product.description}
+
                       </span>
                       <AiOutlineEdit
                         className="text-[#2E5077] h-8 w-8 hover:text-blue-500"

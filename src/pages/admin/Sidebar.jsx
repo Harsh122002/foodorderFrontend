@@ -1,14 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { MdHome } from "react-icons/md";
+import {
+  MdHome,
+  MdOutlineDeleteOutline,
+  MdOutlineIncompleteCircle,
+} from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
-import { FaList, FaUser } from "react-icons/fa";
+import { FaList, FaUser, FaRunning } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { MdOutlinePending } from "react-icons/md";
+import { BiCategory } from "react-icons/bi";
+import { AiOutlineProduct } from "react-icons/ai";
 
 export default function Sidebar() {
   const navigate = useNavigate();
 
   const handleGroupAdd = () => navigate("/addGroup");
+  const handleGroup = () => navigate("/allGroups");
+  const handleProduct = () => navigate("/allProducts");
+
   const handleGoHome = () => navigate("/adminDashBoard");
   const handleProductAdd = () => navigate("/addProduct");
   const handleRegisterManage = () => navigate("/registeredUsers");
@@ -19,24 +29,34 @@ export default function Sidebar() {
   };
 
   const handleNavigate = (status) => {
-    navigate(`/orders/${status}`); // Adjust your routes accordingly
+    navigate(`/${status}`); // Adjust your routes accordingly
   };
 
   const buttons = [
     {
       label: "Home",
-      icon: <MdHome />,
+      icon: <MdHome className="text-2xl" />,
       onClick: handleGoHome,
     },
     {
-      label: "Add Food Group",
-      icon: <IoMdAdd />,
+      label: "Add Category",
+      icon: <IoMdAdd className="text-2xl" />,
       onClick: handleGroupAdd,
     },
     {
       label: "Add Product",
-      icon: <IoMdAdd />,
+      icon: <IoMdAdd className="text-2xl" />,
       onClick: handleProductAdd,
+    },
+    {
+      label: "Category",
+      icon: <BiCategory />,
+      onClick: handleGroup,
+    },
+    {
+      label: "Products",
+      icon: <AiOutlineProduct />,
+      onClick: handleProduct,
     },
     {
       label: "Manage Orders",
@@ -56,10 +76,14 @@ export default function Sidebar() {
   ];
 
   const orderStatuses = [
-    { label: "Pending", status: "pending" },
-    { label: "Declined", status: "declined" },
-    { label: "Running", status: "running" },
-    { label: "Completed", status: "completed" },
+    { label: "Pending", status: "pending", icon: <MdOutlinePending /> },
+    { label: "Running", status: "running", icon: <FaRunning /> },
+    {
+      label: "Completed",
+      status: "complete",
+      icon: <MdOutlineIncompleteCircle />,
+    },
+    { label: "Declined", status: "declined", icon: <MdOutlineDeleteOutline /> },
   ];
 
   return (
@@ -83,14 +107,18 @@ export default function Sidebar() {
           </button>
           {/* Dropdown for Manage Orders */}
           {button.isDropdown && (
-            <div className="absolute hidden group-hover:block w-full sm:w-48 bg-[#3b6b93] mt-1 rounded-md shadow-lg">
+            <div className="absolute ml-44 z-10 mt-0 hidden group-hover:block w-full sm:w-48 bg-[#3b6b93]  rounded-md shadow-lg">
               {orderStatuses.map((order, idx) => (
                 <button
                   key={idx}
-                  className="w-full h-12 flex items-center justify-start px-4 hover:bg-[#4d7aab] transition-all"
+                  className="w-full sm:w-48 h-16 flex gap-2 items-center justify-start hover:scale-105 active:scale-90 transition-all px-4"
                   onClick={() => handleNavigate(order.status)}
                 >
-                  {order.label}
+                  {button.icon && (
+                    <span className="text-xl ">{order.icon}</span>
+                  )}
+
+                  <span>{order.label}</span>
                 </button>
               ))}
             </div>

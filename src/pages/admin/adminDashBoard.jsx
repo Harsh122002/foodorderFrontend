@@ -5,6 +5,17 @@ import { checkSessionExpiration } from "../../utils/session";
 import DashboardCard from "./dashboardCard";
 import Loader from "../loader";
 import Sidebar from "./Sidebar"; // Sidebar component
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import DynamicChart from "./orderchart";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -81,6 +92,8 @@ export default function AdminDashboard() {
     return <Loader />;
   }
 
+  
+
   return (
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       {/* Sidebar Component */}
@@ -88,7 +101,7 @@ export default function AdminDashboard() {
 
       {/* Main Dashboard Content */}
       <div className="flex-1 bg-[#F6F4F0] p-8">
-        <div className="text-4xl sm:text-5xl font-mono md:text-6xl w-full  font-bold mb-10 mt-5 text-[#2E5077] text-center">
+        <div className="text-4xl sm:text-5xl font-mono md:text-6xl w-full font-bold mb-10 mt-5 text-[#2E5077] text-center">
           Admin Dashboard
         </div>
 
@@ -137,6 +150,8 @@ export default function AdminDashboard() {
             link="#"
           />
         </div>
+
+        <DynamicChart />
       </div>
     </div>
   );

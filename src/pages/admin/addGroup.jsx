@@ -128,7 +128,7 @@ export default function AddGroup() {
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       <Sidebar />
       <div className="flex flex-col justify-center items-center w-full text-[#2E5077] bg-[#F6F4F0]">
-        <h2 className="text-3xl font-bold font-sans text-[#2E5077]  mb-6">Add Group</h2>
+        <h2 className="text-3xl font-bold font-sans text-[#2E5077]  mb-6">Add Category</h2>
 
         <div className="w-1/3 mx-auto p-6 bg-[#79D7BE] rounded-md shadow-md mt-5 mb-5">
           <form onSubmit={handleSubmit}>

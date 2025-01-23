@@ -84,14 +84,14 @@ function Register() {
                   onChange={(e) => {
                     const value = e.target.value;
                     // Allow only letters and spaces
-                    if (/^[a-zA-Z\s]*$/.test(value)) {
+                    if (/^[a-zA-Z\s]+$/.test(value.trim())) {
                       setName(value);
                     }
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                   required
                 />
-                {name.length > 0 && !/^[a-zA-Z\s]+$/.test(name) && (
+                {name.length > 0 && !/^[a-zA-Z\s]+$/.test(name.trim()) && (
                   <p className="text-red-500 text-sm mt-1">
                     Name can only contain letters and spaces.
                   </p>
