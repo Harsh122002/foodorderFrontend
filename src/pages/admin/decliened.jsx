@@ -53,6 +53,9 @@ export default function Declined() {
                 Total Amount: Rs {order.totalAmount.toFixed(2)}
               </div>
               <div className="text-sm sm:text-base mb-2">
+                  Date: {new Date(order.added).toLocaleDateString()}
+                </div>
+              <div className="text-sm sm:text-base mb-2">
                 Address: {order.address}
               </div>
               <div className="text-sm sm:text-base mb-4">

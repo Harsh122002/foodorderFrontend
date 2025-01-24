@@ -21,7 +21,9 @@ export default function Sidebar() {
 
   const handleGoHome = () => navigate("/adminDashBoard");
   const handleProductAdd = () => navigate("/addProduct");
+
   const handleRegisterManage = () => navigate("/registeredUsers");
+  const handleDeliveryBoys = () => navigate("/deliveryBoy");
   const handleLogout = () => {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
@@ -64,6 +66,11 @@ export default function Sidebar() {
       isDropdown: true,
     },
     {
+      label: "Reg-DeliveryBoy",
+      icon: <FaUser />,
+      onClick: handleDeliveryBoys,
+    },
+    {
       label: "Register Users",
       icon: <FaUser />,
       onClick: handleRegisterManage,
@@ -87,7 +94,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="min-w-64 h-screen bg-[#2c527c] text-[#F6F4F0] flex flex-col items-center space-y-1 pt-10">
+    <div className="min-w-64 h-screen bg-[#2c527c] text-[#F6F4F0] flex flex-col items-center  space-y-1 pt-10">
       <h2 className="text-3xl font-bold font-serif text-[#F6F4F0] mb-8">
         HR FOODS
       </h2>
@@ -99,7 +106,7 @@ export default function Sidebar() {
           }`}
         >
           <button
-            className="w-full sm:w-48 h-16 flex gap-2 items-center justify-start hover:scale-105 active:scale-90 transition-all px-4"
+            className="w-full sm:w-48 h-12 flex gap-2 items-center justify-start hover:scale-105 active:scale-90 transition-all px-4"
             onClick={button.onClick}
           >
             {button.icon && <span className="text-xl">{button.icon}</span>}
@@ -107,11 +114,11 @@ export default function Sidebar() {
           </button>
           {/* Dropdown for Manage Orders */}
           {button.isDropdown && (
-            <div className="absolute ml-44 z-10 mt-0 hidden group-hover:block w-full sm:w-48 bg-[#3b6b93]  rounded-md shadow-lg">
+            <div className="absolute ml-44 z-10 mt-0 hidden group-hover:block w-full sm:w-48 bg-[#3b6b93]   rounded-md shadow-lg">
               {orderStatuses.map((order, idx) => (
                 <button
                   key={idx}
-                  className="w-full sm:w-48 h-16 flex gap-2 items-center justify-start hover:scale-105 active:scale-90 transition-all px-4"
+                  className="w-full sm:w-44 h-12 flex gap-2 items-center justify-start hover:scale-105 active:scale-90 transition-all px-4"
                   onClick={() => handleNavigate(order.status)}
                 >
                   {button.icon && (

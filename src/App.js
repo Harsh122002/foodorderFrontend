@@ -36,6 +36,7 @@ import AllGroups from "./pages/admin/allGroups";
 import AllProducts from "./pages/admin/allProducts";
 import RegisteredUsers from "./pages/admin/registeredUsers";
 import Rating from "./pages/rating";
+import Delivery from "./pages/admin/delivery";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function AppContent() {
     "/allGroups",
     "/registeredUsers",
     "/allProducts",
+    "/deliveryBoy"
   ];
 
   return (
@@ -101,6 +103,8 @@ function AppContent() {
         <Route path="/declined" element={<Declined />} />
         <Route path="/running" element={<Running />} />
         <Route path="/rating" element={<Rating />} />
+        <Route path="/deliveryBoy" element={<Delivery />} />
+
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>

@@ -225,7 +225,7 @@ export default function RegisteredUsers() {
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
-                    <option value="deliver">Deliver</option>
+                    <option value="delivery">Delivery</option>
                   </select>
                 </div>
                 <div className="flex justify-end gap-4">

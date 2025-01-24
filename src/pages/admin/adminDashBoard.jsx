@@ -5,17 +5,9 @@ import { checkSessionExpiration } from "../../utils/session";
 import DashboardCard from "./dashboardCard";
 import Loader from "../loader";
 import Sidebar from "./Sidebar"; // Sidebar component
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+
 import DynamicChart from "./orderchart";
+import AmountChart from "./amountChart";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -92,66 +84,69 @@ export default function AdminDashboard() {
     return <Loader />;
   }
 
-  
-
   return (
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       {/* Sidebar Component */}
-      <Sidebar className="fixed" />
-
+      <div className="w-64 bg-gray-800 text-white fixed z-10 h-full">
+        <Sidebar />
+      </div>
       {/* Main Dashboard Content */}
-      <div className="flex-1 bg-[#F6F4F0] p-8">
-        <div className="text-4xl sm:text-5xl font-mono md:text-6xl w-full font-bold mb-10 mt-5 text-[#2E5077] text-center">
-          Admin Dashboard
-        </div>
+      <div className="flex-1 ml-64 overflow-y-auto">
+        <div className="flex-1 bg-[#F6F4F0] p-8">
+          <div className="text-4xl sm:text-5xl font-mono md:text-6xl w-full font-bold mb-10 mt-5 text-[#2E5077] text-center">
+            Admin Dashboard
+          </div>
 
-        {/* Dashboard cards */}
-        <div className="flex flex-row flex-wrap justify-center gap-8 mb-10">
-          <DashboardCard
-            count={orderStatuses.pending}
-            title="Pending"
-            link="/pending"
-          />
-          <DashboardCard
-            count={orderStatuses.running}
-            title="Running"
-            link="/running"
-          />
-          <DashboardCard
-            count={orderStatuses.completed}
-            title="Complete"
-            link="/complete"
-          />
-          <DashboardCard
-            count={orderStatuses.declined}
-            title="Declined"
-            link="/declined"
-          />
-          <DashboardCard
-            count={groups.length}
-            title="Groups"
-            link="/allGroups"
-          />
-          <DashboardCard
-            count={products.length}
-            title="Products"
-            link="/allProducts"
-          />
-          <DashboardCard
-            count={userCount}
-            title="Registered Users"
-            link="/registeredUsers"
-          />
-          <DashboardCard
-            count={
-              typeof allAmount === "object" ? "No Earn" : `Rs. ${allAmount}`
-            }
-            title="Total Earn"
-            link="#"
-          />
+          {/* Dashboard cards */}
+          <div className="flex flex-row flex-wrap justify-center gap-8 mb-10">
+            <DashboardCard
+              count={orderStatuses.pending}
+              title="Pending"
+              link="/pending"
+            />
+            <DashboardCard
+              count={orderStatuses.running}
+              title="Running"
+              link="/running"
+            />
+            <DashboardCard
+              count={orderStatuses.completed}
+              title="Complete"
+              link="/complete"
+            />
+            <DashboardCard
+              count={orderStatuses.declined}
+              title="Declined"
+              link="/declined"
+            />
+            <DashboardCard
+              count={groups.length}
+              title="Groups"
+              link="/allGroups"
+            />
+            <DashboardCard
+              count={products.length}
+              title="Products"
+              link="/allProducts"
+            />
+            <DashboardCard
+              count={userCount}
+              title="Registered Users"
+              link="/registeredUsers"
+            />
+            <DashboardCard
+              count={
+                typeof allAmount === "object" ? "No Earn" : `Rs. ${allAmount}`
+              }
+              title="Total Earn"
+              link="#"
+            />
+          </div>
+          <div className="flex mr-3 gap-2">
+            <DynamicChart />
+            <AmountChart />
+          </div>
         </div>
-
-        <DynamicChart />
       </div>
     </div>
   );

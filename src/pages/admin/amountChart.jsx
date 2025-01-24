@@ -11,14 +11,14 @@ import {
      Legend,
 } from 'recharts';
 
-const DynamicChart = () => {
+const AmountChart = () => {
      const [data, setData] = useState([]);
 
      useEffect(() => {
           const fetchData = async () => {
                try {
                     const response = await axios.get(
-                         `${process.env.REACT_APP_API_BASE_URL}/getMonthlyComplete`
+                         `${process.env.REACT_APP_API_BASE_URL}/getMonthlyOrderAmounts`
                     );
                     setData(response.data.data);
                } catch (error) {
@@ -30,7 +30,7 @@ const DynamicChart = () => {
      }, []);
 
      return (
-          <div className='ml-19' style={{ width: '45%', height: 300 }}>
+          <div  className='ml-20' style={{ width: '45%', height: 300 }}>
                <h3 className='flex justify-center'>Show How many orders completed or declined</h3>
                <ResponsiveContainer>
                     <BarChart
@@ -39,15 +39,15 @@ const DynamicChart = () => {
                     >
                          <CartesianGrid strokeDasharray="3 3" />
                          <XAxis dataKey="month" label={{ value: 'Month', position: 'insideBottomRight', offset: -5 }} />
-                         <YAxis label={{ value: 'Orders', angle: -90, position: 'insideLeft', dy: -2 , dx:20}} />
+                         <YAxis label={{ value: 'Amount', angle: -90, position: 'insideLeft' }} />
                          <Tooltip />
                          <Legend />
-                         <Bar dataKey="completedOrders" fill="#79D7BE" />
-                         <Bar dataKey="declinedOrders" fill="#2E5077" />
+                         <Bar dataKey="completedOrderAmount" fill="#79D7BE" />
+                         <Bar dataKey="declinedOrderAmount" fill="#2E5077" />
                     </BarChart>
                </ResponsiveContainer>
           </div>
      );
 };
 
-export default DynamicChart;
+export default AmountChart;

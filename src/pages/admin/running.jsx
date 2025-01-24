@@ -101,6 +101,9 @@ export default function RunningOrders() {
                   <strong>Total Amount:</strong> Rs{" "}
                   {order.totalAmount.toFixed(2)}
                 </div>
+                <div className="text-sm sm:text-base mb-2">
+                  Date: {new Date(order.added).toLocaleDateString()}
+                </div>
                 <div className="mb-4">
                   <strong>Address:</strong> {order.address}
                 </div>
