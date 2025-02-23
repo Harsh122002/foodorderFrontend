@@ -25,10 +25,10 @@ export const CartPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 px-12">
-      <h2 className="text-2xl font-bold mb-4 mt-32">Collection of Item</h2>
+    <div className="container min-h-[100vh] py-36 mx-auto p-4 px-12">
+      <h1 className="flex justify-center items-center mb-10 text-3xl">Orders Cart</h1>
       {cart.length === 0 ? (
-        <p>Your cart is empty</p>
+        <p className="flex justify-center items-center text-lg ">Your cart is empty</p>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

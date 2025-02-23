@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { CiEdit } from "react-icons/ci";
+import { RiRadioButtonLine } from "react-icons/ri";
 
 export default function RegisteredUsers() {
   const [users, setUsers] = useState([]);
@@ -93,7 +94,7 @@ export default function RegisteredUsers() {
 
   return (
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
-      <div className="w-64 fixed h-full">
+      <div className="w-64 fixed h-full z-10">
         <Sidebar />
       </div>
       <div className="flex-1 ml-64 overflow-y-auto">
@@ -137,6 +138,7 @@ export default function RegisteredUsers() {
 
                     <div className="mb-1">Mobile: {user.mobile}</div>
                     <div className="mb-1">Role: {user.role}</div>
+                    <div className="mb-1">Status:<RiRadioButtonLine className={`${user.status === "online" ? "text-green-800" : "text-red-800"} inline-block animate-pulse`} /> {user.status}</div>
                     <div className="mb-1">
                       Registered Date:{" "}
                       {new Date(user.added).toLocaleDateString()}

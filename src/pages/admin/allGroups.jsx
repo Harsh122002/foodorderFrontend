@@ -49,10 +49,10 @@ export default function AllGroups() {
   return (
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       {/* Sidebar */}
-      <div className="w-64  text-white fixed h-full">
+      <div className="w-64  text-white fixed h-full z-10">
         <Sidebar />
       </div>{" "}
-      <div className="flex-1 ml-64 overflow-y-auto">
+      <div className="flex-1 h-screen ml-56 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 bg-[#F6F4F0]">
           <h1 className="text-4xl font-bold mb-8 text-center">Groups</h1>
           <Link

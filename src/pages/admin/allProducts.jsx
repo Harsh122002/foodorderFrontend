@@ -46,12 +46,12 @@ export default function AllProducts() {
   return (
     <div className="flex h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
+      <div className="w-64 bg-gray-800 text-white fixed h-full z-10">
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 overflow-y-auto">
+      <div className="flex-1 ml-56 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 ">
           <h1 className="text-4xl font-bold mb-8 text-center">All Products</h1>
           <Link

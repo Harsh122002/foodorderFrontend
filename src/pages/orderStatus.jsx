@@ -103,11 +103,11 @@ export default function OrderStatus() {
                     <p>Status: {order.status}</p>
                     <p>Total: Rs {order.totalAmount}</p>
                     <p>Order Date: {formatDateToIndian(order.createdAt)}</p>
-                    <ul className="flex flex-row flex-wrap gap-2">
+                    <ul className="flex flex-row flex-wrap gap-x-4 gap-y-2">
                       {order.products.map((productItem) => (
                         <li
                           key={productItem._id}
-                          className="flex items-center justify-between  py-2"
+                          className="flex items-center justify-between  py-2 "
                         >
                           <div>
                             <p className="font-medium">
@@ -120,7 +120,7 @@ export default function OrderStatus() {
                                   : ""
                               }
                               alt={productItem.name}
-                              className="w-full h-48 object-cover mb-4"
+                              className="w-64 h-48 object-cover mb-4 rounded-md mt-2"
                             />
                             <p>Quantity: {productItem.quantity}</p>
                             <p>Price: Rs {productItem.price}</p>

@@ -24,12 +24,7 @@ export default function AdminDashboard() {
   const [allAmount, setAllAmount] = useState(0);
 
   useEffect(() => {
-    const isSessionValid = checkSessionExpiration(navigate);
-    if (!isSessionValid) {
-      navigate("/admin");
-      return;
-    }
-    // Call the fetchData function when component loads
+  
     fetchData();
   }, []);
 
@@ -69,15 +64,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // // Navigation Handlers
-  // const handleGroupAdd = () => navigate("/addGroup");
-  // const handleProductAdd = () => navigate("/addProduct");
-  // const handleProductManage = () => navigate("/productManage");
-  // const handleLogout = () => {
-  //   localStorage.removeItem("token");
-  //   sessionStorage.removeItem("token");
-  //   navigate("/login");
-  // };
 
   // Show loader while fetching data
   if (loading) {
@@ -111,7 +97,7 @@ export default function AdminDashboard() {
             />
             <DashboardCard
               count={orderStatuses.completed}
-              title="Complete"
+              title="Completed"
               link="/complete"
             />
             <DashboardCard
@@ -142,7 +128,7 @@ export default function AdminDashboard() {
               link="#"
             />
           </div>
-          <div className="flex mr-3 gap-2">
+          <div className="flex flex-col gap-10">
             <DynamicChart />
             <AmountChart />
           </div>

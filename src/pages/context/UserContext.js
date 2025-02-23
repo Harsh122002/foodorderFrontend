@@ -44,13 +44,32 @@ export const UserProvider = ({ children }) => {
     fetchUserDetail();
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("tokenExpiration");
-    sessionStorage.removeItem("token");
-    setUserDetail(null);
-    setIsLoggedIn(false);
+  const logout = async () => {
+    const userId = localStorage.getItem("userId");
+  
+    if (!userId) {
+      console.error("User ID not found");
+      return;
+    }
+  
+    try {
+      // API call to log out
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/logout/${userId}`);
+  
+      // Remove stored user data
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("tokenExpiration");
+      sessionStorage.removeItem("token");
+  
+      // Update state
+      setUserDetail(null);
+      setIsLoggedIn(false);
+  
+      console.log("Logout successful");
+    } catch (error) {
+      console.error("Logout failed:", error.response ? error.response.data : error.message);
+    }
   };
 
   return (

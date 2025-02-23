@@ -52,7 +52,7 @@ export default function RunningOrders() {
 
   return (
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
-      <div className="w-64  fixed h-full">
+      <div className="w-64  fixed h-full z-10">
         <Sidebar />
       </div>
       <div className="flex-1 ml-64 overflow-y-auto">

@@ -37,7 +37,9 @@ import AllProducts from "./pages/admin/allProducts";
 import RegisteredUsers from "./pages/admin/registeredUsers";
 import Rating from "./pages/rating";
 import Delivery from "./pages/admin/delivery";
-
+import BoyLogin from "./pages/deliveyBoy/boyLogin";
+import LBResetPassword from "./pages/deliveyBoy/lbResetPassword";
+import BoyDashBoard from "./pages/deliveyBoy/boyDashBoard";
 function App() {
   return (
     <Router>
@@ -71,7 +73,10 @@ function AppContent() {
     "/allGroups",
     "/registeredUsers",
     "/allProducts",
-    "/deliveryBoy"
+    "/deliveryBoyLogin",
+    "/deliveryBoy",
+    "/lbResetPassword",
+    "/boyDashBoard",
   ];
 
   return (
@@ -104,7 +109,9 @@ function AppContent() {
         <Route path="/running" element={<Running />} />
         <Route path="/rating" element={<Rating />} />
         <Route path="/deliveryBoy" element={<Delivery />} />
-
+        <Route path="/deliveryBoyLogin" element={<BoyLogin />} />
+        <Route path="/lbResetPassword" element={<LBResetPassword />} />
+        <Route path="/boyDashBoard" element={<BoyDashBoard   />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>

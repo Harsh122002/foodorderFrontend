@@ -30,7 +30,7 @@ const DynamicChart = () => {
      }, []);
 
      return (
-          <div className='ml-19' style={{ width: '45%', height: 300 }}>
+          <div className='ml-4' style={{ width: '100%', height: 400 }}>
                <h3 className='flex justify-center'>Show How many orders completed or declined</h3>
                <ResponsiveContainer>
                     <BarChart

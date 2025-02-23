@@ -67,6 +67,8 @@ const OrderPlace = () => {
           },
         }
       );
+      removeFromCart1(); // Clear the cart after placing the order
+      navigate("/success"); // Redirect to success page
       return response; // Return the response for further processing
     } catch (error) {
       console.error("Error placing order:", error);
@@ -107,22 +109,21 @@ const OrderPlace = () => {
         if (response.status === 201) {
           const { orderId } = response.data;
           setOrderId(orderId);
-          removeFromCart1(); // Clear the cart after placing the order
-          navigate("/success"); // Redirect to success page
+         
         } else {
           console.error("Order placement failed", response);
         }
       } else if (formData.paymentMethod === "online") {
         setIsLoading(false);
         // For online payments, skip the API call and directly initiate Razorpay
-        initiateRazorpayPayment(orderData,token);
+        initiateRazorpayPayment(orderData, token);
       }
     } catch (error) {
       console.error("Error placing order:", error);
     }
   };
 
-  const initiateRazorpayPayment = async (orderData,token) => {
+  const initiateRazorpayPayment = async (orderData, token) => {
     setIsLoading(true); // Show loader
     try {
       const response = await axios.post(
@@ -142,26 +143,23 @@ const OrderPlace = () => {
         image: "/logo.png", // Replace with your company logo
         order_id: data.orderId,
 
-
         handler: async function (response) {
-           // After successful payment, verify payment on backend
-           verifyPayment(
+          // After successful payment, verify payment on backend
+          verifyPayment(
             data.orderId,
             response.razorpay_payment_id,
             response.razorpay_signature
           );
-          const res= await placeOrder(orderData, token);
+          const res = await placeOrder(orderData, token);
           if (response.status === 201) {
             const { orderId } = res.data;
             setOrderId(orderId);
             removeFromCart1();
-            setIsLoading(false);// Clear the cart after placing the order
+            setIsLoading(false); // Clear the cart after placing the order
             navigate("/success"); // Redirect to success page
           } else {
             console.error("Order placement failed", response);
           }
-
-         
         },
         prefill: {
           name: formData.name,
@@ -220,7 +218,7 @@ const OrderPlace = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 px-12">
+    <div className="container mx-auto p-4 lg:px-[15%] ">
       <h2 className="text-2xl font-bold mb-4 mt-32">Place Your Order</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -256,18 +254,63 @@ const OrderPlace = () => {
             required
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium">Products</label>
-          <ul className="border border-gray-300 rounded-md p-2">
-            {cart.map((item) => (
-              <li key={item.index} className="flex justify-between">
-                <span>{item.name}</span>
-                <span>Qty: {item.qty}</span>
-                <span>Price: Rs. {item.price}</span>
-                <span>Total: Rs. {item.price * item.qty}</span>
-              </li>
-            ))}
-          </ul>
+        <div className="overflow-x-auto">
+          <label className="block text-sm font-medium mb-2">Products</label>
+          <table className="min-w-full table-auto border border-gray-300 rounded-md">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Sr.No
+                </th>
+
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Product
+                </th>
+
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Qty
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Price (Rs.)
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Total (Rs.)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((item, index) => (
+                <tr key={index} className="border-t border-gray-200">
+                  <td className="px-4 py-2 text-sm text-gray-700">
+                    {index + 1}
+                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-700 flex flex-row gap-1 ">
+                    <span>
+                      <img
+                          src={
+                            item.image
+                              ? `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${item.image}`
+                              : "/back.png"
+                          }
+                        alt="Item"
+                        className="inline-block w-6 h-6 mr-1 rounded-full"
+                      />
+                    </span>{" "}
+                    {item.name}
+                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-700">
+                    {item.qty}
+                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-700">
+                    {item.price}
+                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-700">
+                    {item.price * item.qty}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div>
           <label className="block text-sm font-medium">Total Amount</label>

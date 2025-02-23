@@ -49,10 +49,10 @@ export default function ProductManagementPage() {
 
   return (
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077] ">
-      <div className="w-64  fixed h-full">
+      <div className="w-64  fixed h-full z-10">
         <Sidebar />
       </div>
-      <div className="flex-1 ml-64 overflow-y-auto">
+      <div className="flex-1 ml-64 overflow-y-auto ">
         <div className="min-h-screen bg-[#F6F4F0] font-mono text-[#2E5077] flex flex-col items-center justify-center pt-5">
           <div className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-serif font-bold mb-10   text-center">
             Pending Orders
@@ -67,57 +67,60 @@ export default function ProductManagementPage() {
             {orders.map((order) => (
               <div
                 key={order.orderId}
-                className="bg-[#79D7BE] shadow-lg rounded-lg p-2 flex flex-col justify-between"
+                className="bg-[#79D7BE] shadow-lg rounded-lg p-2 flex flex-col justify-between "
               >
-                <div className="text-sm sm:text-base font-semibold mb-2">
-                  <span>Order ID: {order.orderId}</span>{" "}
-                  <div>
-                    Status:
-                    <select
-                      value={order.status}
-                      onChange={(e) =>
-                        handleStatusChange(order.orderId, e.target.value)
-                      }
-                      className="border bg-transparent rounded px-2 py-1"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="running">Running</option>
-                      <option value="complete">Complete</option>
-                      <option value="declined">Declined</option>
-                    </select>
+                <div className="flex flex-col gap-1">
+                  <div className="text-sm sm:text-base font-semibold mb-2">
+                    <span>Order ID: {order.orderId}</span>{" "}
+                    <div>
+                      Status:
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          handleStatusChange(order.orderId, e.target.value)
+                        }
+                        className="border bg-transparent rounded px-2 py-1"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="running">Running</option>
+                        <option value="completed">Complete</option>
+                        <option value="declined">Declined</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div className="text-sm sm:text-base mb-2">
-                  Total Amount: Rs {order.totalAmount.toFixed(2)}
-                </div>
-                <div className="text-sm sm:text-base mb-2">
-                  Date: {new Date(order.added).toLocaleDateString()}
-                </div>
-                <div className="text-sm sm:text-base mb-2">
-                  Address: {order.address}
-                </div>
-                <div className="text-sm sm:text-base mb-4">
-                  <div className="font-semibold">Products:</div>
-                  <ul className="list-disc list-inside">
-                    {order.products.map((product, index) => (
-                      <li key={index}>
-                        <img
-                          src={`http://localhost:5000/${product.filePath}`}
-                          alt={product.name}
-                          className="w-16 h-16 object-cover inline-block mr-2"
-                        />
-                        {product.name} <div> Quantity: {product.quantity}</div>{" "}
-                        <div>
-                          Price: Rs
-                          {product.price.toFixed(2)}{" "}
-                        </div>
-                        <div>
-                          Total Price: Rs
-                          {product.totalPrice.toFixed(2)}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="text-sm sm:text-base mb-2">
+                    Total Amount: Rs {order.totalAmount.toFixed(2)}
+                  </div>
+                  <div className="text-sm sm:text-base mb-2">
+                    Date: {new Date(order.added).toLocaleDateString()}
+                  </div>
+                  <div className="text-sm sm:text-base mb-2">
+                    Address: {order.address}
+                  </div>
+                  <div className="text-sm sm:text-base mb-4">
+                    <div className="font-semibold">Products:</div>
+                    <ul className="list-disc list-inside">
+                      {order.products.map((product, index) => (
+                        <li key={index}>
+                          <img
+                            src={`http://localhost:5000/${product.filePath}`}
+                            alt={product.name}
+                            className="w-16 h-16 object-cover inline-block mr-2"
+                          />
+                          {product.name}{" "}
+                          <div> Quantity: {product.quantity}</div>{" "}
+                          <div>
+                            Price: Rs
+                            {product.price.toFixed(2)}{" "}
+                          </div>
+                          <div>
+                            Total Price: Rs
+                            {product.totalPrice.toFixed(2)}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
                 <div className="text-sm sm:text-base">
                   <div className="font-semibold">User:</div>

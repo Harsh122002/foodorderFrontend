@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-export default function AdminLogin() {
+import { Link, useNavigate } from "react-router-dom";
+
+export default function BoyLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -9,10 +10,11 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/adminLogin`,
+        `${process.env.REACT_APP_API_BASE_URL}/boyLogin`,
         {
           email,
           password,
+          role: "delivery",
         }
       );
 
@@ -32,7 +34,7 @@ export default function AdminLogin() {
         sessionStorage.setItem("token", token);
 
         // Redirect to the dashboard page
-        navigate("/adminDashBoard");
+        navigate("/boyDashBoard");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -49,11 +51,12 @@ export default function AdminLogin() {
       }
     }
   };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Delivery Boy Login
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700">
@@ -88,12 +91,12 @@ export default function AdminLogin() {
             Login
           </button>
           <div className="flex justify-between mt-4">
-            <a
-              href="/lbResetpassword"
+            <Link
+              to="/lbResetPassword"
               className="underline hover:text-indigo-500"
             >
               Resend Password
-            </a>
+            </Link>
           </div>
         </form>
       </div>

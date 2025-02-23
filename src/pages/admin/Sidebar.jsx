@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MdHome,
@@ -11,9 +11,12 @@ import { FiLogOut } from "react-icons/fi";
 import { MdOutlinePending } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
 import { AiOutlineProduct } from "react-icons/ai";
+import { UserContext } from "../context/UserContext";
 
 export default function Sidebar() {
   const navigate = useNavigate();
+
+  const { logout } = useContext(UserContext);
 
   const handleGroupAdd = () => navigate("/addGroup");
   const handleGroup = () => navigate("/allGroups");
@@ -25,6 +28,7 @@ export default function Sidebar() {
   const handleRegisterManage = () => navigate("/registeredUsers");
   const handleDeliveryBoys = () => navigate("/deliveryBoy");
   const handleLogout = () => {
+    logout();
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
     navigate("/admin");
