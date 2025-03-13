@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import { Dashboard } from "./pages/dashboard";
+import  Dashboard  from "./pages/dashboard";
 import HeaderFunction from "./Header";
 import FooterFunction from "./footer";
 import ResetPassword from "./pages/resetpassword";
@@ -94,11 +94,15 @@ function AppContent() {
         <Route path="/rating" element={<Rating />} />
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/orderPlace" element={<OrderPlace />} />
+        <Route path="/orderPlace" element={<OrderPlace />} />
+
         <Route path="/allGroups" element={<AllGroups />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/Success" element={<Success />} />
         <Route path="/about" element={<About />} />
+        <Route path="/about" element={<About />} />
+
         <Route path="/orderStatus" element={<OrderStatus />} />
         <Route path="/productManage" element={<ProductManage />} />
         <Route path="/pending" element={<ProductManagementPage />} />

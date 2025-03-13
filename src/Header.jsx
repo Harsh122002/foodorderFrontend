@@ -46,7 +46,7 @@ export default function HeaderFunction() {
   return (
     <>
       <div
-        className="fixed container max-w-full px-4 sm:px-8 md:px-12 h-28  flex  items-center justify-between rounded-bl-full "
+        className="fixed container max-w-full px-4 sm:px-8 md:px-12 h-28  flex  items-center justify-between rounded-bl-full z-30 "
         style={{
           backgroundImage: `url(/back.png)`,
           backgroundRepeat: "no-repeat",
@@ -61,7 +61,7 @@ export default function HeaderFunction() {
             className="lg:h-12 lg:w-12 lg:rounded-2xl rounded-md h-8 w-8"
           />
           <h2 className="text-lg w-36 lg:w-56 lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-300 to-violet-500">
-            Food Order
+            HR FOOD
           </h2>
         </div>
         <nav className="flex space-x-4 sm:space-x-6 md:space-x-8">

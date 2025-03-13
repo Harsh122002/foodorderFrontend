@@ -83,19 +83,22 @@ function Register() {
                   value={name}
                   onChange={(e) => {
                     const value = e.target.value;
-                    // Allow only letters and spaces
-                    if (/^[a-zA-Z\s]+$/.test(value.trim())) {
+                    // Allow only letters and spaces while typing
+                    if (/^[A-Za-z\s]*$/.test(value)) {
                       setName(value);
                     }
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                   required
                 />
-                {name.length > 0 && !/^[a-zA-Z\s]+$/.test(name.trim()) && (
-                  <p className="text-red-500 text-sm mt-1">
-                    Name can only contain letters and spaces.
-                  </p>
-                )}
+                {/* Show error only when the input is not empty and doesn't match the required format */}
+                {name.trim().length > 0 &&
+                  !/^[A-Za-z]*\s[a-z]*$/.test(name.trim()) && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Name must start with a capital letter and contain only
+                      alphabets with a single space.
+                    </p>
+                  )}
               </div>
 
               <div className="mb-4">

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FaArrowUp, FaLongArrowAltUp } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
 
 function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Show the button when the user scrolls down 20px from the top
   const toggleVisibility = () => {
     if (window.pageYOffset > 20) {
       setIsVisible(true);
@@ -13,7 +12,6 @@ function ScrollToTopButton() {
     }
   };
 
-  // Scroll to the top of the page
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -21,13 +19,10 @@ function ScrollToTopButton() {
     });
   };
 
-  useEffect(() => {
-    // Listen to scroll events
-    window.addEventListener("scroll", toggleVisibility);
-
-    // Cleanup the event listener on component unmount
-    return () => window.removeEventListener("scroll", toggleVisibility);
-  }, []);
+    useEffect(() => {
+      window.addEventListener("scroll", toggleVisibility);
+      return () => window.removeEventListener("scroll", toggleVisibility);
+    }, []);
 
   return (
     <div>
