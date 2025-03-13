@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { CartContext } from "./pages/context/CartContext";
 import { checkSessionExpiration } from "./utils/session";
 import { UserContext } from "./pages/context/UserContext";
@@ -12,7 +12,8 @@ export default function HeaderFunction() {
   const navigate = useNavigate();
   const { cart, removeFromCart1 } = useContext(CartContext);
   const { userDetail, isLoggedIn, logout } = useContext(UserContext);
-
+  const location = useLocation();
+  const currentPath = location.pathname;
   useEffect(() => {
     const sessionValid = checkSessionExpiration(navigate);
     setIsDropdownOpen(sessionValid);
@@ -24,9 +25,9 @@ export default function HeaderFunction() {
 
   const toggleDropdown = (e) => {
     console.log(e.target);
-    
+
     setIsDropdownOpen(!isDropdownOpen);
-  
+
   };
 
   const handleLogin = () => {
@@ -46,13 +47,7 @@ export default function HeaderFunction() {
   return (
     <>
       <div
-        className="fixed container max-w-full px-4 sm:px-8 md:px-12 h-28  flex  items-center justify-between rounded-bl-full z-30 "
-        style={{
-          backgroundImage: `url(/back.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        className="fixed container max-w-full px-4 sm:px-8 md:px-12 h-28 bg-[#343a40] flex items-center justify-between rounded-bl-full z-30"
       >
         <div className="flex items-center space-x-4">
           <img
@@ -67,30 +62,48 @@ export default function HeaderFunction() {
         <nav className="flex space-x-4 sm:space-x-6 md:space-x-8">
           <Link
             to="/dashboard"
-            className="hidden lg:block text-lg text-white hover:text-blue-500"
+            className="hidden relative group lg:block text-lg text-white"
           >
             Home
+            <span
+              className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/dashboard' ? 'w-12' : 'w-0'
+                } group-hover:w-12 group-focus:w-12`}
+            ></span>
           </Link>
           {isLoggedIn && (
             <Link
               to="/orderStatus"
-              className="hidden lg:block text-lg text-white hover:text-blue-500"
+              className="hidden relative group lg:block text-lg text-white "
             >
-              Order Status
+              Status
+              <span
+              className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/orderStatus' ? 'w-[51px]' : 'w-0'
+                } group-hover:w-[51px] group-focus:w-[51px]
+              
+                `}
+            ></span>
             </Link>
           )}
           <Link
             to="/about"
-            className="hidden lg:block text-lg text-white hover:text-blue-500"
+            className="hidden relative group lg:block text-lg text-white "
           >
             About
+            <span
+              className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/about' ? 'w-12' : 'w-0'
+                } group-hover:w-12 group-focus:w-12`}
+            ></span>
           </Link>
           {isLoggedIn && (
             <Link
               to="/profile"
-              className="hidden lg:block text-lg text-white hover:text-blue-500"
+              className="hidden relative group lg:block text-lg text-white "
             >
               Profile
+              <span
+              className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/profile' ? 'w-[51px]' : 'w-0'
+                } group-hover:w-[51px] group-focus:w-[51px]`}
+            ></span>
             </Link>
           )}
         </nav>
@@ -101,7 +114,7 @@ export default function HeaderFunction() {
               <img
                 src="/cart.png"
                 alt="Shopping Cart"
-                className=" lg:w-9 lg:h-9 w-5 h-5 rounded cursor-pointer"
+                className="lg:w-9 lg:h-9 w-5 h-5 rounded cursor-pointer"
                 onClick={handleCartClick}
               />
               {cartLength > 0 && (
@@ -116,24 +129,24 @@ export default function HeaderFunction() {
           {!isLoggedIn ? (
             <button
               onClick={handleLogin}
-              className="bg-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded hover:bg-blue-700"
+              className="bg-blue-500 border-2 border-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-blue-500 duration-500 ease-in-out"
             >
               Login
             </button>
           ) : (
             <button
               onClick={handleLogout}
-              className="bg-red-500 text-white text-[10px] lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded hover:bg-red-700"
+              className="bg-red-500 border-2 border-red-500 text-white text-[10px] lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded hover:text-red-500 hover:bg-white duration-500 ease-in-out"
             >
               Logout
             </button>
           )}
-        <button
-          onClick={(e)=>toggleDropdown(e)}
-          className="block lg:hidden text-white text-2xl "
-        >
-          <IoMenu  className="lg:text-4xl"/>
-        </button>
+          <button
+            onClick={(e) => toggleDropdown(e)}
+            className="block lg:hidden text-white text-2xl"
+          >
+            <IoMenu className="lg:text-4xl" />
+          </button>
         </div>
 
         {isDropdownOpen && (

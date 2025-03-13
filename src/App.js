@@ -40,6 +40,7 @@ import Delivery from "./pages/admin/delivery";
 import BoyLogin from "./pages/deliveyBoy/boyLogin";
 import LBResetPassword from "./pages/deliveyBoy/lbResetPassword";
 import BoyDashBoard from "./pages/deliveyBoy/boyDashBoard";
+import PageNot from "./pages/pageNot";
 function App() {
   return (
     <Router>
@@ -94,13 +95,11 @@ function AppContent() {
         <Route path="/rating" element={<Rating />} />
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/orderPlace" element={<OrderPlace />} />
-        <Route path="/orderPlace" element={<OrderPlace />} />
 
         <Route path="/allGroups" element={<AllGroups />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/Success" element={<Success />} />
-        <Route path="/about" element={<About />} />
         <Route path="/about" element={<About />} />
 
         <Route path="/orderStatus" element={<OrderStatus />} />
@@ -115,7 +114,8 @@ function AppContent() {
         <Route path="/deliveryBoy" element={<Delivery />} />
         <Route path="/deliveryBoyLogin" element={<BoyLogin />} />
         <Route path="/lbResetPassword" element={<LBResetPassword />} />
-        <Route path="/boyDashBoard" element={<BoyDashBoard   />} />
+        <Route path="/boyDashBoard" element={<BoyDashBoard />} /> 
+        <Route path="*" element={<PageNot />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
       </Routes>
