@@ -218,8 +218,8 @@ const OrderPlace = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 lg:px-[15%] ">
-      <h2 className="text-2xl font-bold mb-4 mt-32">Place Your Order</h2>
+    <div className="container mx-auto p-4 lg:px-[15%] bg-[#c4b4a5] text-white ">
+      <h2 className="text-3xl flex justify-center font-bold mb-4 mt-32 text-[#343a40]">Place Your Order</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium">Name</label>
@@ -228,7 +228,7 @@ const OrderPlace = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full  p-2  bg-[#a19182] focus:ring-[#343a40] rounded-md"
             required
           />
         </div>
@@ -239,7 +239,7 @@ const OrderPlace = () => {
             name="address"
             value={formData.address}
             onChange={handleChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full p-2 bg-[#a19182] focus:ring-[#343a40] rounded-md"
             required
           />
         </div>
@@ -250,30 +250,30 @@ const OrderPlace = () => {
             name="mobileNumber"
             value={formData.mobileNumber}
             onChange={handleChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full p-2 bg-[#a19182] focus:ring-[#343a40] rounded-md"
             required
           />
         </div>
         <div className="overflow-x-auto">
           <label className="block text-sm font-medium mb-2">Products</label>
-          <table className="min-w-full table-auto border border-gray-300 rounded-md">
-            <thead className="bg-gray-100">
+          <table className="min-w-full table-auto bg-[#a19182] focus:ring-[#343a40] rounded-md">
+            <thead className="bg-[#a19182]">
               <tr>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                <th className="px-4 py-2 text-left text-sm font-medium ">
                   Sr.No
                 </th>
 
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                <th className="px-4 py-2 text-left text-sm font-medium ">
                   Product
                 </th>
 
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                <th className="px-4 py-2 text-left text-sm font-medium ">
                   Qty
                 </th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                <th className="px-4 py-2 text-left text-sm font-medium ">
                   Price (Rs.)
                 </th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                <th className="px-4 py-2 text-left text-sm font-medium ">
                   Total (Rs.)
                 </th>
               </tr>
@@ -281,10 +281,10 @@ const OrderPlace = () => {
             <tbody>
               {cart.map((item, index) => (
                 <tr key={index} className="border-t border-gray-200">
-                  <td className="px-4 py-2 text-sm text-gray-700">
+                  <td className="px-4 py-2 text-sm ">
                     {index + 1}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-700 flex flex-row gap-1 ">
+                  <td className="px-4 py-2 text-sm  flex flex-wrap gap-1 ">
                     <span>
                       <img
                           src={
@@ -298,13 +298,13 @@ const OrderPlace = () => {
                     </span>{" "}
                     {item.name}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-700">
+                  <td className="px-4 py-2 text-sm ">
                     {item.qty}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-700">
+                  <td className="px-4 py-2 text-sm ">
                     {item.price}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-700">
+                  <td className="px-4 py-2 text-sm ">
                     {item.price * item.qty}
                   </td>
                 </tr>
@@ -314,7 +314,7 @@ const OrderPlace = () => {
         </div>
         <div>
           <label className="block text-sm font-medium">Total Amount</label>
-          <p className="mt-1 p-2 border border-gray-300 rounded-md">
+          <p className="mt-1 p-2 focus:ring-[#343a40] bg-[#a19182] rounded-md">
             Rs. {totalAmount.toFixed(2)}
           </p>
         </div>
@@ -339,7 +339,7 @@ const OrderPlace = () => {
                 value="online"
                 checked={formData.paymentMethod === "online"}
                 onChange={handleChange}
-                className="form-radio"
+                className="form-radio "
               />
               <span className="ml-2">Online</span>
             </label>
@@ -348,7 +348,7 @@ const OrderPlace = () => {
         {isLoading && <div className="loader">Loading...</div>} {/* Loader */}
         <button
           type="submit"
-          className="mt-4 bg-green-500 text-white py-2 px-4 rounded-md"
+          className="bg-green-500 border-2 border-green-500 mt-4 text-white text-[10px] lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded hover:text-green-500 hover:bg-white duration-500 ease-in-out"
           disabled={cart.length === 0}
         >
           Place Order

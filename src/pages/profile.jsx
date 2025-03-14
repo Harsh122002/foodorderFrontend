@@ -66,13 +66,13 @@ export default function Profile() {
   };
 
   return (
-    <div className="container flex flex-col align-items-center justify-center h-[100vh] mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4 text-center text-blue-600 mt-44">Profile</h1>
-      <div className="bg-white shadow-lg rounded-lg p-6">
+    <div className="container flex flex-col  items-center justify-center h-[100vh] bg-[#c4b4a5] mx-auto p-4">
+      <h1 className="text-3xl font-bold text-center text-[#343a40] mt-10 ">Profile</h1>
+      <div className=" shadow-lg w-[90%] lg:w-[60%] lg:my-5 rounded-lg p-6 text-white bg-[#a19182]">
         {editMode ? (
-          <form onSubmit={handleSubmit} className="space-y-4 ">
-            <div className="mb-2">
-              <label className="block text-gray-700 font-semibold mb-1">
+          <form onSubmit={handleSubmit} className="space-y-4  ">
+            <div className="mb-2 ">
+              <label className="block  font-semibold mb-1">
                 Name:
               </label>
               <input
@@ -85,7 +85,7 @@ export default function Profile() {
                     handleChange(e);
                   }
                 }}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-[#a19182] p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
               />
               {formData.name?.length === 0 && (
@@ -96,7 +96,7 @@ export default function Profile() {
             </div>
 
             <div className="mb-2">
-              <label className="block text-gray-700 font-semibold mb-1">
+              <label className="block  font-semibold mb-1">
                 Email:
               </label>
               <input
@@ -104,7 +104,7 @@ export default function Profile() {
                 name="email"
                 value={formData.email || ""}
                 onChange={handleChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border bg-[#a19182] rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
                 readOnly
               />
@@ -116,7 +116,7 @@ export default function Profile() {
             </div>
 
             <div className="mb-2">
-              <label className="block text-gray-700 font-semibold mb-1">
+              <label className="block  font-semibold mb-1">
                 Phone:
               </label>
               <input
@@ -130,7 +130,7 @@ export default function Profile() {
                   }
                 }}
                 maxLength={10}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 bg-[#a19182] border rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
               />
               {formData.mobile?.length > 0 && formData.mobile.length !== 10 && (
@@ -141,7 +141,7 @@ export default function Profile() {
             </div>
 
             <div className="mb-2">
-              <label className="block text-gray-700 font-semibold mb-1">
+              <label className="block  font-semibold mb-1">
                 Address:
               </label>
               <input
@@ -149,7 +149,7 @@ export default function Profile() {
                 name="address"
                 value={formData.address || ""}
                 onChange={handleChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border bg-[#a19182] rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
               />
               {formData.address?.length === 0 && (
@@ -161,14 +161,14 @@ export default function Profile() {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              >
+                className="bg-gray-500 border-2 w-21 border-gray-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-gray-500 duration-500 ease-in-out"
+                >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+                className="bg-blue-500 border-2 w-21 border-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-blue-500 duration-500 ease-in-out"
+                >
                 Update
               </button>
             </div>
@@ -194,8 +194,8 @@ export default function Profile() {
             <div className="flex justify-end">
               <button
                 onClick={handleEdit}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+                className="bg-blue-500 border-2 w-20 border-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-blue-500 duration-500 ease-in-out"
+                >
                 Edit
               </button>
             </div>

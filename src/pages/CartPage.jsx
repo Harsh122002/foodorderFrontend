@@ -25,15 +25,15 @@ export const CartPage = () => {
   };
 
   return (
-    <div className="container min-h-[100vh] py-36 mx-auto p-4 px-12">
-      <h1 className="flex justify-center items-center mb-10 text-3xl">Orders Cart</h1>
+    <div className="container min-h-[100vh] py-36 mx-auto p-4 px-12 bg-[#c4b4a5] text-white">
+      <h1 className="flex justify-center  mb-10 text-3xl font-bold text-[#343a40]">Orders Cart</h1>
       {cart.length === 0 ? (
         <p className="flex justify-center items-center text-lg ">Your cart is empty</p>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid  grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {cart.map((item, index) => (
-              <div key={index} className="p-4 border rounded shadow-lg">
+              <div key={index} className="p-4 w-64 bg-[#a19182] rounded-md shadow-lg">
                 <img
                   src={
                     item.image
@@ -41,7 +41,7 @@ export const CartPage = () => {
                       : "/back.png"
                   }
                   alt={item.name}
-                  className="w-full h-32 object-cover mb-4"
+                  className="w-full h-40 rounded-md object-cover mb-4"
                 />
                 <h3 className="text-xl font-semibold">{item.name}</h3>
                 <p className="mt-2 text-xs">Price: Rs.{item.price}</p>
@@ -53,8 +53,8 @@ export const CartPage = () => {
                         Math.max(item.qty - 1, 1)
                       )
                     }
-                    className="bg-blue-500 hover:bg-blue-600 active:bg-blue-800 text-white px-[13px] py-1 rounded-md  transition duration-200"
-                  >
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    >
                     -
                   </button>
                   <span className="mx-2">{item.qty}</span>
@@ -65,8 +65,8 @@ export const CartPage = () => {
                         Math.min(item.qty + 1, 4)
                       )
                     }
-                    className="bg-blue-500 hover:bg-blue-600 active:bg-blue-800 text-white px-2 py-1  rounded-md transition duration-200"
-                  >
+                    className="bg-green-500 text-white px-2 py-1 rounded"
+                    >
                     +
                   </button>
                 </div>
@@ -75,20 +75,20 @@ export const CartPage = () => {
                 </p>
                 <button
                   onClick={() => removeFromCart(item.name)}
-                  className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition"
-                >
+                  className="bg-red-500 border-2 mt-1 border-red-500 text-white text-[10px] lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded hover:text-red-500 hover:bg-white duration-500 ease-in-out"
+                  >
                   Remove
                 </button>
               </div>
             ))}
           </div>
           <div className="mt-8 text-center">
-            <h3 className="text-xl font-bold">
+            <h3 className="text-xl font-bold text-[#343a40]">
               Total Order Amount: Rs.{totalAmount.toFixed(2)}
             </h3>
             <button
               onClick={handleOrder}
-              className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+              className="bg-green-700 border-2 border-green-700 text-white text-[10px] lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded hover:text-green-700 hover:bg-white duration-500 ease-in-out"
             >
               Order Now
             </button>

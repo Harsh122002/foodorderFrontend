@@ -38,9 +38,9 @@ export default function Success() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen bg-[#c4b4a5]">
       <img src="/isuccess.png" alt="Success" className="max-w-full mb-4" />
-      <p className="text-xl mb-4">You have placed your order successfully!</p>
+      <p className="text-xl mb-4 text-white">You have placed your order successfully!</p>
 
       {orderId && (
         <div className="mb-2">
@@ -48,7 +48,7 @@ export default function Success() {
         </div>
       )}
 
-      <Link to="/" className="text-blue-500 mb-2">
+      <Link to="/" className="text-blue-900 mb-2 hover:underline duration-300 ease-in-out">
         Home
       </Link>
 
@@ -58,8 +58,8 @@ export default function Success() {
       ) : (
         <button
           onClick={() => handleGeneratePdf(orderId)} // Pass a function reference here
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300"
-        >
+          className="bg-blue-500 border-2  border-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-blue-500 duration-500 ease-in-out"
+          >
           Generate PDF
         </button>
       )}

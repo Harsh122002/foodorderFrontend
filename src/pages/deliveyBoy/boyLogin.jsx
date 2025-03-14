@@ -1,8 +1,10 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 export default function BoyLogin() {
+  const { setBoyLogin } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -23,16 +25,16 @@ export default function BoyLogin() {
       const token = res.data.token;
       const userId = res.data.userId;
       if (token) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("userId", userId);
+        localStorage.setItem("BoyToken", token);
+        localStorage.setItem("BoyUserId", userId);
 
         // Set token expiration (e.g., 1 hour from now)
         const tokenExpiration = new Date();
         tokenExpiration.setHours(tokenExpiration.getHours() + 1); // 1 hour expiry
-        localStorage.setItem("tokenExpiration", tokenExpiration);
+        localStorage.setItem("BoyTokenExpiration", tokenExpiration);
 
-        sessionStorage.setItem("token", token);
-
+        sessionStorage.setItem("BoyToken", token);
+        setBoyLogin(true);
         // Redirect to the dashboard page
         navigate("/boyDashBoard");
       }
@@ -52,13 +54,13 @@ export default function BoyLogin() {
     }
   };
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className="h-screen flex items-center justify-center bg-[#c4b4a5]">
+      <div className=" p-8 rounded-lg shadow-lg w-full max-w-md bg-[#af9b88] text-white">
         <h2 className="text-2xl font-bold mb-6 text-center">
           Delivery Boy Login
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className="mb-4 ">
             <label htmlFor="email" className="block text-gray-700">
               Email
             </label>
@@ -76,7 +78,7 @@ export default function BoyLogin() {
               Password
             </label>
             <input
-              id="password"
+              id="password" 
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -86,7 +88,7 @@ export default function BoyLogin() {
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
+            className="bg-blue-500 border-2 w-full border-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-blue-500 duration-500 ease-in-out"
           >
             Login
           </button>

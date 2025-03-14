@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "./context/CartContext";
+import { UserContext } from "./context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
      const { addToCart } = useContext(CartContext);
+     const { userDetail } = useContext(UserContext);
 
      const [groups, setGroups] = useState([]);
      const [selectedGroup, setSelectedGroup] = useState(null);
@@ -11,7 +14,7 @@ export default function Dashboard() {
      const [products, setProducts] = useState([]);
      const [currentPage, setCurrentPage] = useState(1);
      const [totalPages, setTotalPages] = useState(0);
-
+     const navigate = useNavigate();
      useEffect(() => {
           const fetchGroups = async () => {
                try {
@@ -53,7 +56,11 @@ export default function Dashboard() {
      const handleAddToCart = (index) => {
           const product = products[index];
           const qty = quantities[index];
-
+          if (!userDetail) {
+               alert("Please Login to add product to cart");
+               navigate("/login");
+               return;
+          }
           if (qty > 0) {
                addToCart({
                     id: product.id,
@@ -113,9 +120,8 @@ export default function Dashboard() {
                     <div className="flex flex-wrap justify-evenly">
                          <div className="mb-2 inline-block">
                               <button
-                                   className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
-                                        selectedGroup === null ? "border-2 border-blue-500" : ""
-                                   }`}
+                                   className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${selectedGroup === null ? "border-2 border-blue-500" : ""
+                                        }`}
                                    onClick={resetProducts}
                                    style={{ cursor: "pointer" }}
                               >
@@ -125,16 +131,15 @@ export default function Dashboard() {
                                         alt="All"
                                    />
                               </button>
-                              <div className="text-sm font-semibold text-center">All</div>
+                              <div className="text-lg text-[#343a40] text-center">All</div>
                          </div>
                          {groups.map((group, groupIndex) => (
                               <div key={groupIndex} className="mb-2 ">
                                    <button
-                                        className={`w-16 h-16 bg-white cursor-pointer rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${
-                                             selectedGroup === group._id
+                                        className={`w-16 h-16 bg-white cursor-pointer rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${selectedGroup === group._id
                                                   ? "bg-gray-200 border-2 border-blue-500"
                                                   : ""
-                                        }`}
+                                             }`}
                                         onClick={() => fetchProductsByGroup(group._id)}
                                    >
                                         <img
@@ -146,7 +151,7 @@ export default function Dashboard() {
                                              alt={group.groupName}
                                         />
                                    </button>
-                                   <div className="text-lg capitalize font-medium text-center">
+                                   <div className="text-lg capitalize text-[#343a40] font-medium text-center">
                                         {group.groupName}
                                    </div>
                               </div>
@@ -163,7 +168,7 @@ export default function Dashboard() {
                                         key={index}
                                         className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 mx-auto "
                                    >
-                                        <div className="w-60 h-60 rounded overflow-hidden shadow-lg bg-[#a19182] mx-auto">
+                                        <div className="w-60 h-60 rounded overflow-hidden text-white shadow-lg bg-[#a19182] mx-auto">
                                              <img
                                                   className="w-full h-32 p-4"
                                                   src={
@@ -193,6 +198,7 @@ export default function Dashboard() {
                                                   <button
                                                        onClick={() => handleAddToCart(index)}
                                                        className="bg-blue-500 text-white px-4 py-2 rounded ml-10 hover:bg-blue-700 hover:translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 transition"
+                                                  disabled={quantities[index] === 0}
                                                   >
                                                        Add to Cart
                                                   </button>
@@ -208,11 +214,10 @@ export default function Dashboard() {
                                         <li key={number}>
                                              <button
                                                   onClick={() => paginate(number)}
-                                                  className={`px-4 py-2 border rounded ${
-                                                       currentPage === number
+                                                  className={`px-4 py-2 border rounded ${currentPage === number
                                                             ? "bg-blue-500 text-white"
-                                                            : "bg-white text-blue-500"
-                                                  }`}
+                                                            : "bg-gray-300"
+                                                       }`}
                                              >
                                                   {number}
                                              </button>
