@@ -63,7 +63,7 @@ export default function ProductManagementPage() {
           >
             Back
           </Link>
-          <div className="pl-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="pl-1 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {orders.map((order) => (
               <div
                 key={order.orderId}

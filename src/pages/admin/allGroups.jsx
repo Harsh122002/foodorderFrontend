@@ -52,7 +52,7 @@ export default function AllGroups() {
       <div className="w-64  text-white fixed h-full z-10">
         <Sidebar />
       </div>{" "}
-      <div className="flex-1 h-screen ml-56 overflow-y-auto">
+      <div className="flex-1 ml-60 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 bg-[#F6F4F0]">
           <h1 className="text-4xl font-bold mb-8 text-center">Groups</h1>
           <Link
@@ -61,7 +61,7 @@ export default function AllGroups() {
           >
             Back
           </Link>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="ml-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {groups.map((group, index) => (
               <div
                 key={index}

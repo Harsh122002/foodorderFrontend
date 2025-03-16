@@ -17,7 +17,7 @@ export default function AllProducts() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/getAllProduct`
+        `${process.env.REACT_APP_API_BASE_URL}/getAllProductForAdmin`
       );
       setProducts(response.data);
     } catch (error) {
@@ -51,7 +51,7 @@ export default function AllProducts() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-56 overflow-y-auto">
+      <div className="flex-1 ml-64 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 ">
           <h1 className="text-4xl font-bold mb-8 text-center">All Products</h1>
           <Link
@@ -67,7 +67,7 @@ export default function AllProducts() {
           ) : products.length === 0 ? (
             <p className="text-center">No products available.</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product) => (
                 <div
                   key={product._id}
