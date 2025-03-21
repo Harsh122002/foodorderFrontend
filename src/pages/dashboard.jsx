@@ -7,15 +7,24 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
      const { addToCart } = useContext(CartContext);
      const { userDetail } = useContext(UserContext);
+     console.log(userDetail);
 
      const [groups, setGroups] = useState([]);
      const [selectedGroup, setSelectedGroup] = useState(null);
      const [quantities, setQuantities] = useState([]);
      const [products, setProducts] = useState([]);
      const [currentPage, setCurrentPage] = useState(1);
+     const [discounts, setDiscount] = useState([]);
      const [totalPages, setTotalPages] = useState(0);
      const navigate = useNavigate();
+     discounts.forEach(discount => {
+          console.log(`${process.env.REACT_APP_API_BASE_URL_IMAGE}/${discount.imagePath || "back.png"}`);
+     });
+
      useEffect(() => {
+          if (userDetail?.role && userDetail.role === 'admin') {
+               navigate("/login");
+          }
           const fetchGroups = async () => {
                try {
                     const response = await axios.get(
@@ -28,8 +37,10 @@ export default function Dashboard() {
           };
 
           fetchGroups();
-          fetchProducts();
+          fetchDiscount();
      }, []);
+
+
 
      useEffect(() => {
           fetchProducts();
@@ -105,19 +116,100 @@ export default function Dashboard() {
           setSelectedGroup(null);
      };
 
+     const fetchDiscount = async () => {
+          try {
+               const response = await axios.get(
+                    `${process.env.REACT_APP_API_BASE_URL}/allDiscount`
+               );
+               setDiscount(response.data);
+          } catch (error) {
+               console.error("Error fetching discount:", error);
+          }
+     }
+
      return (
           <div className="pt-32 w-full bg-[#c4b4a5] ">
-               <div className="max-w-[90%] mx-auto bg-[#c4b4a5] flex flex-col gap-8">
+               <div className="max-w-[90%] mx-auto  bg-[#c4b4a5] rounded-md flex flex-col gap-8">
                     <img
                          src="../Group.png"
                          alt="Group 1"
-                         className="w-[80%] rounded-md mx-auto h-96 p-4"
+                         className="w-full rounded-lg  h-96 mx-4 my-4 "
                     />
+                    {discounts.length > 0 && (
+                         <>
+                              {/* Section Title */}
+                              <h1 className="relative text-2xl pl-4 pb-1 font-medium group bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-violet-500">
+                                   Discount
+                                   <span className="absolute left-4 bottom-0 w-0 h-1 rounded-md bg-gradient-to-r from-gray-600 to-violet-500 transition-all duration-300 group-hover:w-16"></span>
+                              </h1>
+
+                              {/* Discount Cards */}
+                              <div className="flex flex-row h-96 px-5 overflow-x-auto space-x-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                                   {discounts.map((discount, index) => {
+                                        const currentDate = new Date();
+                                        const endDate = new Date(discount.endDate);
+
+                                        if (endDate >= currentDate) {
+                                             return (
+                                                  <div
+                                                       key={index}
+                                                       className="w-full rounded-lg overflow-hidden shadow-lg text-white relative"
+                                                  >
+                                                       <img
+                                                            src={`${process.env.REACT_APP_API_BASE_URL_IMAGE}/${discount.imagePath || "back.png"}`}
+                                                            alt=""
+                                                            className="w-full h-[26rem]"
+                                                       />
+                                                       <div className="absolute top-5 left-2 flex flex-col gap-5 w-[95%] text-[#343a40]">
+                                                            <p className="capitalize text-end">
+                                                                 <span className="bg-white/50 px-2 py-2 rounded-md text-4xl backdrop: font-bold">
+                                                                      {discount.discountName}
+                                                                 </span>
+                                                            </p>
+                                                            <p className="w-48">
+                                                                 <span className="bg-white/50 rounded-md px-1 py-1 font-medium flex flex-col gap-1">
+                                                                      <span className="text-xl font-bold">Product:</span>
+                                                                      {discount.productName.map((val, index) => (
+                                                                           <span key={index} className="text-center">{val}</span>
+                                                                      ))}
+                                                                 </span>
+                                                            </p>
+                                                            <p className="text-center">
+                                                                 <span className="bg-white/50 px-2 py-2 rounded-md text-xl font-bold">
+                                                                      Coupon Code: {discount.couponCode}
+                                                                 </span>
+                                                            </p>
+                                                            <p className="mt-5">
+                                                                 <span className="bg-white/50 px-2 py-2 rounded-md">
+                                                                      Start Date: {new Date(discount.startDate).toLocaleDateString()}
+                                                                 </span>
+                                                            </p>
+                                                            <p className="mt-5">
+                                                                 <span className="bg-white/50 px-2 py-2 rounded-md">
+                                                                      End Date: {new Date(discount.endDate).toLocaleDateString()}
+                                                                 </span>
+                                                            </p>
+                                                       </div>
+                                                  </div>
+                                             );
+                                        }
+                                        return null;
+                                   })}
+                              </div>
+
+                         </>
+                    )}
+
+
+
+
+
                     <h1 className="relative  text-2xl pl-4 pb-1 font-medium group bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-violet-500">
                          Select Categories
                          <span className="absolute   left-4 bottom-0 w-0 h-1 rounded-md bg-gradient-to-r from-gray-600 to-violet-500 transition-all duration-300 group-hover:w-32"></span>
                     </h1>
-                    <div className="flex flex-wrap justify-evenly">
+
+                    <div className="flex flex-row overflow-auto justify-evenly">
                          <div className="mb-2 inline-block">
                               <button
                                    className={`w-16 h-16 bg-white rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${selectedGroup === null ? "border-2 border-blue-500" : ""
@@ -131,14 +223,14 @@ export default function Dashboard() {
                                         alt="All"
                                    />
                               </button>
-                              <div className="text-lg text-[#343a40] text-center">All</div>
+                              <div className="text-lg capitalize text-[#343a40] font-medium text-center">All</div>
                          </div>
                          {groups.map((group, groupIndex) => (
                               <div key={groupIndex} className="mb-2 ">
                                    <button
                                         className={`w-16 h-16 bg-white cursor-pointer rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center ${selectedGroup === group._id
-                                                  ? "bg-gray-200 border-2 border-blue-500"
-                                                  : ""
+                                             ? "bg-gray-200 border-2 border-blue-500"
+                                             : ""
                                              }`}
                                         onClick={() => fetchProductsByGroup(group._id)}
                                    >
@@ -198,7 +290,7 @@ export default function Dashboard() {
                                                   <button
                                                        onClick={() => handleAddToCart(index)}
                                                        className="bg-blue-500 text-white px-4 py-2 rounded ml-10 hover:bg-blue-700 hover:translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 transition"
-                                                  disabled={quantities[index] === 0}
+                                                       disabled={quantities[index] === 0}
                                                   >
                                                        Add to Cart
                                                   </button>
@@ -215,8 +307,8 @@ export default function Dashboard() {
                                              <button
                                                   onClick={() => paginate(number)}
                                                   className={`px-4 py-2 border rounded ${currentPage === number
-                                                            ? "bg-blue-500 text-white"
-                                                            : "bg-gray-300"
+                                                       ? "bg-blue-500 text-white"
+                                                       : "bg-gray-300"
                                                        }`}
                                              >
                                                   {number}
