@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "./context/CartContext";
 import { UserContext } from "./context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import ImageSlider from "./imageSlider";
 
 export default function Dashboard() {
      const { addToCart } = useContext(CartContext);
@@ -118,23 +120,57 @@ export default function Dashboard() {
 
      const fetchDiscount = async () => {
           try {
-               const response = await axios.get(
-                    `${process.env.REACT_APP_API_BASE_URL}/allDiscount`
-               );
-               setDiscount(response.data);
+            const response = await axios.get(
+              `${process.env.REACT_APP_API_BASE_URL}/allDiscount`
+            );
+        
+            const currentDate = new Date();
+            const filteredDiscounts = response.data.filter((discount) => {
+              return new Date(discount.endDate) >= currentDate;
+            });
+        
+            setDiscount(filteredDiscounts);
           } catch (error) {
-               console.error("Error fetching discount:", error);
+            console.error("Error fetching discount:", error);
           }
-     }
+        };
+     const [currentIndex, setCurrentIndex] = useState(0);
+     const nextSlide = () => {
+          setCurrentIndex((prev) => {
+               console.log("Next Slide: ", (prev + 1) % discounts.length);
+               return (prev + 1) % discounts.length;
+          });
+     };
+
+     const prevSlide = () => {
+          setCurrentIndex((prev) => {
+               console.log("Previous Slide: ", (prev - 1 + discounts.length) % discounts.length);
+               return (prev - 1 + discounts.length) % discounts.length;
+          });
+     };
+
 
      return (
           <div className="pt-32 w-full bg-[#c4b4a5] ">
                <div className="max-w-[90%] mx-auto  bg-[#c4b4a5] rounded-md flex flex-col gap-8">
-                    <img
-                         src="../Group.png"
-                         alt="Group 1"
-                         className="w-full rounded-lg  h-96 mx-4 my-4 "
-                    />
+                    {/* <div className="relative w-full">
+                         <img
+                              src="../Group.png"
+                              alt="Group 1"
+                              className="w-full rounded-lg h-[32rem] mx-4 my-4 z-0"
+                         />
+                         <p className="absolute top-10 left-10 capitalize z-10 max-w-96 text-[#2dd343] font-bold bg-black/30 px-4 py-2 text-3xl rounded-md">
+                              Quality food delivery by HR Food
+                         </p>
+                         <p className="absolute bottom-10 left-10 capitalize z-10 max-w-96 text-[#343a40] font-bold bg-white/30 px-4 py-2 text-lg rounded-md">
+                             - Since-2016
+                         </p>
+                         <p className="absolute bottom-10 right-10 capitalize z-10 max-w-96 text-[#343a40] font-bold bg-black/20 px-4 py-2 text-xl rounded-md">
+                             - Manage by:HR GROUP
+                         </p>
+                    </div> */}
+                    <ImageSlider/>
+
                     {discounts.length > 0 && (
                          <>
                               {/* Section Title */}
@@ -144,57 +180,82 @@ export default function Dashboard() {
                               </h1>
 
                               {/* Discount Cards */}
-                              <div className="flex flex-row h-96 px-5 overflow-x-auto space-x-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-                                   {discounts.map((discount, index) => {
-                                        const currentDate = new Date();
-                                        const endDate = new Date(discount.endDate);
+                              <div className="relative  m-auto lg:ml-7 w-full h-[32rem] overflow-hidden">
+                                   <AnimatePresence>
+                                        <motion.div
+                                             key={currentIndex}
+                                             initial={{ opacity: 0, x: 100 }}
+                                             animate={{ opacity: 1, x: 0 }}
+                                             exit={{ opacity: 0, x: -100 }}
+                                             transition={{ duration: 0.5 }}
+                                             className="absolute w-full h-full"
+                                        >
+                                             <img
+                                                  src={`${process.env.REACT_APP_API_BASE_URL_IMAGE}/${discounts[currentIndex]?.imagePath || "back.png"}`}
+                                                  alt=""
+                                                  className="w-full h-full"
+                                             />
+                                             <div className="absolute top-5 left-2 flex flex-col gap-5 w-[95%] text-white">
+                                                  <p className="capitalize text-end">
+                                                       <span className="bg-black/80 px-2 py-2 rounded-md text-4xl backdrop: font-bold">
+                                                            {discounts[currentIndex]?.discountName}
+                                                       </span>
+                                                  </p>
+                                                  <p className="w-48">
+                                                       <span className="bg-black/80 rounded-md px-1 py-1 font-medium flex flex-col gap-1">
+                                                            <span className="text-xl font-bold">Product:</span>
+                                                            {discounts[currentIndex]?.productName.map((val, index) => (
+                                                                 <span key={index} className="text-center">{val}</span>
+                                                            ))}
+                                                       </span>
+                                                  </p>
+                                                  <p className="text-center mt-5 ">
+                                                       <span className="bg-black/80 px-2 py-2 rounded-md text-xl font-bold">
+                                                            Coupon Code: {discounts[currentIndex]?.couponCode}
+                                                       </span>
+                                                  </p>
+                                                  <p className="text-center mt-5">
+                                                       <span className="bg-black/80 px-2 py-2 rounded-md text-xl font-bold">
+                                                            Discount: {discounts[currentIndex]?.discountPercentage}%
+                                                       </span>
+                                                  </p>
+                                                  <p className="mt-3">
+                                                       <span className="bg-black/80 px-2 py-2 rounded-md">
+                                                            Start Date: {new Date(discounts[currentIndex]?.startDate).toLocaleDateString()}
+                                                       </span>
+                                                  </p>
+                                                  <p className="mt-3">
+                                                       <span className="bg-black/80 px-2 py-2 rounded-md">
+                                                            End Date: {new Date(discounts[currentIndex]?.endDate).toLocaleDateString()}
+                                                       </span>
+                                                  </p>
+                                                  <p className="mt-3">
+                                                       <span className="bg-black/80 px-2 text-base py-2 rounded-md">
+                                                            Note: {(discounts[currentIndex]?.couponDescription)}
+                                                       </span>
+                                                  </p>
+                                             </div>
+                                        </motion.div>
+                                   </AnimatePresence>
 
-                                        if (endDate >= currentDate) {
-                                             return (
-                                                  <div
-                                                       key={index}
-                                                       className="w-full rounded-lg overflow-hidden shadow-lg text-white relative"
-                                                  >
-                                                       <img
-                                                            src={`${process.env.REACT_APP_API_BASE_URL_IMAGE}/${discount.imagePath || "back.png"}`}
-                                                            alt=""
-                                                            className="w-full h-[26rem]"
-                                                       />
-                                                       <div className="absolute top-5 left-2 flex flex-col gap-5 w-[95%] text-[#343a40]">
-                                                            <p className="capitalize text-end">
-                                                                 <span className="bg-white/50 px-2 py-2 rounded-md text-4xl backdrop: font-bold">
-                                                                      {discount.discountName}
-                                                                 </span>
-                                                            </p>
-                                                            <p className="w-48">
-                                                                 <span className="bg-white/50 rounded-md px-1 py-1 font-medium flex flex-col gap-1">
-                                                                      <span className="text-xl font-bold">Product:</span>
-                                                                      {discount.productName.map((val, index) => (
-                                                                           <span key={index} className="text-center">{val}</span>
-                                                                      ))}
-                                                                 </span>
-                                                            </p>
-                                                            <p className="text-center">
-                                                                 <span className="bg-white/50 px-2 py-2 rounded-md text-xl font-bold">
-                                                                      Coupon Code: {discount.couponCode}
-                                                                 </span>
-                                                            </p>
-                                                            <p className="mt-5">
-                                                                 <span className="bg-white/50 px-2 py-2 rounded-md">
-                                                                      Start Date: {new Date(discount.startDate).toLocaleDateString()}
-                                                                 </span>
-                                                            </p>
-                                                            <p className="mt-5">
-                                                                 <span className="bg-white/50 px-2 py-2 rounded-md">
-                                                                      End Date: {new Date(discount.endDate).toLocaleDateString()}
-                                                                 </span>
-                                                            </p>
-                                                       </div>
-                                                  </div>
-                                             );
-                                        }
-                                        return null;
-                                   })}
+                                   {/* Navigation Buttons */}
+                                   {discounts.length > 1 && (
+                                        <>
+                                             <button
+                                                  onClick={prevSlide}
+                                                  className="absolute top-1/2  left-5 transform -translate-y-1/2 text-white text-3xl bg-gray-800/50 p-2 rounded-full"
+                                             >
+                                                  ❮
+                                             </button>
+                                             <button
+                                                  onClick={nextSlide}
+                                                  className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white text-3xl bg-gray-800/50 p-2 rounded-full"
+                                             >
+                                                  ❯
+                                             </button>
+                                        </>
+                                   )}
+
                               </div>
 
                          </>

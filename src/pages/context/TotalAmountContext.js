@@ -8,16 +8,15 @@ export const TotalAmountProvider = ({ children }) => {
   const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
-    const calculateTotalAmount = () => {
-      const total = cart.reduce((acc, item) => acc + item.qty * item.price, 0);
-      setTotalAmount(total);
-    };
-
-    calculateTotalAmount();
+    // Calculate the total amount using reduce
+    const total = cart?.reduce((acc, item) => acc + (item.qty * item.price), 0) || 0;
+    console.log("Total", total);
+    
+    setTotalAmount(total);
   }, [cart]);
 
   return (
-    <TotalAmountContext.Provider value={totalAmount}>
+    <TotalAmountContext.Provider value={{ totalAmount, setTotalAmount }}>
       {children}
     </TotalAmountContext.Provider>
   );

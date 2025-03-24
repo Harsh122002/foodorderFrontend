@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [otp, setOtp] = useState("");
   const [showOtpField, setShowOtpField] = useState(false);
   const [timeLeft, setTimeLeft] = useState(600);
   const navigate = useNavigate();
@@ -25,52 +22,76 @@ function Register() {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (!showOtpField) {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/register`,
-          {
-            name,
-            email,
-            password,
-            mobile,
-          }
-        );
-        alert(response.data.msg || "Otp Sent In Email");
-        setShowOtpField(true);
-      } else {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/verify-otp`,
-          {
-            email,
-            otp,
-          }
-        );
-        console.log(response.data);
-        alert(
-          response.data.msg ||
-            "OTP verified successfully & Registered successfully"
-        );
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .matches(/^[A-Za-z\s]*$/, "Name must contain only alphabets and spaces")
+      .required("Name is required"),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
+    password: Yup.string().min(6, "Password must be at least 6 characters long").required("Password is required"),
+    mobile: Yup.string()
+      .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
+      .required("Mobile number is required"),
+    otp: Yup.string().when("showOtpField", {
+      is: true,
+      then: Yup.string().required("OTP is required"),
+    }),
+  });
 
-        const token = response.data.token;
-        if (token) {
-          localStorage.setItem("token", token);
-          navigate("/login");
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      mobile: "",
+      otp: "",
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        if (!showOtpField) {
+          const response = await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL}/register`,
+            {
+              name: values.name,
+              email: values.email,
+              password: values.password,
+              mobile: values.mobile,
+            }
+          );
+          alert(response.data.msg || "Otp Sent In Email");
+          setShowOtpField(true);
+        } else {
+          const response = await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL}/verify-otp`,
+            {
+              email: values.email,
+              otp: values.otp,
+            }
+          );
+          console.log(response.data);
+          alert(
+            response.data.msg ||
+              "OTP verified successfully & Registered successfully"
+          );
+
+          const token = response.data.token;
+          if (token) {
+            localStorage.setItem("token", token);
+            navigate("/login");
+          }
         }
+      } catch (error) {
+        console.error("Error:", error);
+        alert(error.response.data.msg || "User Already Exists");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert(error.response.data.msg || "User Already Exists");
-    }
-  };
+    },
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#c4b4a5]">
       <div className="bg-[#a19182] text-white p-8 rounded-lg shadow-lg w-full max-w-md mt-36  mb-20">
         <h2 className="text-3xl text-[#343a40] font-bold mb-6 text-center">Register</h2>
-        <form onSubmit={handleSubmit} method="post">
+        <form onSubmit={formik.handleSubmit} method="post">
           {!showOtpField ? (
             <>
               <div className="mb-4 ">
@@ -80,24 +101,14 @@ function Register() {
                 <input
                   id="name"
                   type="text"
-                  value={name}
+                  {...formik.getFieldProps('name')}
                   placeholder="Full Name"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (/^[A-Za-z\s]*$/.test(value)) {
-                      setName(value);
-                    }
-                  }}
                   className="w-full px-3 placeholder:text-white py-2 bg-[#a19182] border border-gray-300 rounded-lg focus:ring-[#343a40]"
                   required
                 />
-                {name.trim().length > 0 &&
-                  !/^[A-Za-z]*\s[a-z]*$/.test(name.trim()) && (
-                    <p className="text-red-500 text-sm mt-1">
-                      Name must start with a capital letter and contain only
-                      alphabets with a single space.
-                    </p>
-                  )}
+                {formik.touched.name && formik.errors.name ? (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.name}</p>
+                ) : null}
               </div>
 
               <div className="mb-4">
@@ -107,19 +118,14 @@ function Register() {
                 <input
                   id="email"
                   type="email"
-                  value={email}
-
-                placeholder="Enter Email"
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...formik.getFieldProps('email')}
+                  placeholder="Enter Email"
                   className="w-full px-3 py-2 placeholder:text-white bg-[#a19182] border border-gray-300 rounded-lg focus:ring-[#343a40]"
                   required
                 />
-                {email.length > 0 &&
-                  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
-                    <p className="text-red-500 text-sm mt-1">
-                      Please enter a valid email address.
-                    </p>
-                  )}
+                {formik.touched.email && formik.errors.email ? (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
+                ) : null}
               </div>
 
               <div className="mb-4">
@@ -129,18 +135,15 @@ function Register() {
                 <input
                   id="password"
                   type="password"
-                  value={password}
+                  {...formik.getFieldProps('password')}
                   placeholder="password"
-                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-3 py-2 placeholder:text-white bg-[#a19182] border border-gray-300 rounded-lg focus:ring-[#343a40]"
                   minLength={6}
                   required
                 />
-                {password.length > 0 && password.length < 6 && (
-                  <p className="text-red-500 text-sm mt-1">
-                    Password must be at least 6 characters long.
-                  </p>
-                )}
+                {formik.touched.password && formik.errors.password ? (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.password}</p>
+                ) : null}
               </div>
               <div className="mb-4">
                 <label htmlFor="mobile" className="block ">
@@ -149,24 +152,15 @@ function Register() {
                 <input
                   id="mobile"
                   type="text"
-                  value={mobile}
+                  {...formik.getFieldProps('mobile')}
                   placeholder="Mobile Number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    
-                    if (/^\d*$/.test(value)) {
-                      setMobile(value); 
-                    }
-                  }}
                   className="w-full px-3 py-2 placeholder:text-white bg-[#a19182] border border-gray-300 rounded-lg focus:ring-[#343a40]"
                   maxLength={10} 
                   required
                 />
-                {mobile.length > 0 && mobile.length !== 10 && (
-                  <p className="text-red-500 text-sm mt-1">
-                    Mobile number must be exactly 10 digits.
-                  </p>
-                )}
+                {formik.touched.mobile && formik.errors.mobile ? (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.mobile}</p>
+                ) : null}
               </div>
 
               <button
@@ -185,12 +179,14 @@ function Register() {
                 <input
                   id="otp"
                   type="text"
-                    value={otp}
-                    placeholder="Enter OTP"
-                  onChange={(e) => setOtp(e.target.value)}
+                  {...formik.getFieldProps('otp')}
+                  placeholder="Enter OTP"
                   className="w-full text-white placeholder:text-white bg-[#a19182]  px-3 py-2 border border-gray-300 rounded-lg  focus:ring-[#343a40]"
                   required
                 />
+                {formik.touched.otp && formik.errors.otp ? (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.otp}</p>
+                ) : null}
               </div>
               <div className="mb-4">
                 <p>

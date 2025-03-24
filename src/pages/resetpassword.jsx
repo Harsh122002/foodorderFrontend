@@ -47,11 +47,11 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mt-32">
-        <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
+    <div className="min-h-screen flex items-center justify-center bg-[#c4b4a5]">
+      <div className=" p-8 rounded-lg shadow-lg w-full max-w-md bg-[#a19182] mt-32">
+        <h2 className="text-3xl font-bold mb-6 text-center text-[#343a40]">Reset Password</h2>
         <form onSubmit={handleRequest}>
-          <div className="mb-4">
+          <div className="mb-4 text-white">
             <label htmlFor="email" className="block text-gray-700">
               Email
             </label>
@@ -60,7 +60,7 @@ export default function ResetPassword() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+              className="w-full px-3 py-2 bg-[#a19182] border border-gray-300 rounded-lg focus:ring-[#343a40]"
               required
             />
             {email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
@@ -81,7 +81,7 @@ export default function ResetPassword() {
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 bg-[#a19182] py-2 border border-gray-300 rounded-lg focus:ring-[#343a40]"
                   required
                 />
               </div>
@@ -99,7 +99,7 @@ export default function ResetPassword() {
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 border bg-[#a19182] border-gray-300 rounded-lg focus:ring-[#343a40]"
                   minLength={6}
                   required
                 />
@@ -113,7 +113,7 @@ export default function ResetPassword() {
           )}
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
+            className="bg-blue-500 border-2 w-full border-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-blue-500 duration-500 ease-in-out"
           >
             {showOtp ? "Submit" : "Send OTP"}
           </button>

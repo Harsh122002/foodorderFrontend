@@ -48,7 +48,7 @@ export default function AdminDashboard() {
         axios.get(`${process.env.REACT_APP_API_BASE_URL}/order-statuses`),
         axios.get(`${process.env.REACT_APP_API_BASE_URL}/user-count`),
         axios.get(`${process.env.REACT_APP_API_BASE_URL}/getAllGroup`),
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/getAllProduct`),
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/getAllProductForAdmin  `),
         axios.get(`${process.env.REACT_APP_API_BASE_URL}/getTotalAmount`),
       ]);
 

@@ -4,20 +4,15 @@ import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { CiEdit } from "react-icons/ci";
 import { RiRadioButtonLine } from "react-icons/ri";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function RegisteredUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [update, setUpdate] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null); // To store the selected user's data
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    address: "",
-    mobile: "",
-    role: "",
-  });
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -44,9 +39,7 @@ export default function RegisteredUsers() {
   const handleEditClick = (user, userId) => {
     setUpdate(true);
     setCurrentUser(userId);
-    console.log(currentUser);
-
-    setFormData({
+    formik.setValues({
       name: user.name,
       email: user.email,
       address: user.address,
@@ -55,40 +48,53 @@ export default function RegisteredUsers() {
     });
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
+    address: Yup.string().required("Address is required"),
+    mobile: Yup.string().required("Mobile number is required"),
+    role: Yup.string().required("Role is required"),
+  });
 
-  const handleUpdate = async () => {
-    try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/update-user/${currentUser}`,
-        formData
-      );
-      if (response.status === 200) {
-        alert("User updated successfully!");
-        fetchUsers(); // Refresh the user list
-        setUpdate(false); // Close the modal
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      address: "",
+      mobile: "",
+      role: "",
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.put(
+          `${process.env.REACT_APP_API_BASE_URL}/update-user/${currentUser}`,
+          values
+        );
+        if (response.status === 200) {
+          alert("User updated successfully!");
+          fetchUsers();
+          setUpdate(false);
+        }
+      } catch (error) {
+        console.error("Error updating user:", error);
+        alert("Failed to update user.");
       }
-    } catch (error) {
-      console.error("Error updating user:", error);
-      alert("Failed to update user.");
-    }
-  };
+    },
+  });
+
   const handleDelete = async (userId) => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_BASE_URL}/delete-user/${userId}`,
-        
+        `${process.env.REACT_APP_API_BASE_URL}/delete-user/${userId}`
       );
       if (response.status === 200) {
         alert("User Deleted successfully!");
-        fetchUsers(); // Refresh the user list
+        fetchUsers();
       }
     } catch (error) {
-      console.error("Error updating user:", error);
-      alert("Failed to update user.");
+      console.error("Error deleting user:", error);
+      alert("Failed to delete user.");
     }
   };
 
@@ -98,8 +104,8 @@ export default function RegisteredUsers() {
         <Sidebar />
       </div>
       <div className="flex-1 ml-64 overflow-y-auto">
-      <div className="min-h-screen bg-[#F6F4F0] font-mono text-[#2E5077] flex flex-col items-center pt-14">
-      <h1 className="text-4xl font-bold mb-8 text-center">
+        <div className="min-h-screen bg-[#F6F4F0] font-mono text-[#2E5077] flex flex-col items-center pt-14">
+          <h1 className="text-4xl font-bold mb-8 text-center">
             Registered Users
           </h1>
           <Link
@@ -135,7 +141,6 @@ export default function RegisteredUsers() {
                     ) : (
                       <div className="mb-1">Address: N/A</div>
                     )}
-
                     <div className="mb-1">Mobile: {user.mobile}</div>
                     <div className="mb-1">Role: {user.role}</div>
                     <div className="mb-1">Status:<RiRadioButtonLine className={`${user.status === "online" ? "text-green-800" : "text-red-800"} inline-block animate-pulse`} /> {user.status}</div>
@@ -170,16 +175,20 @@ export default function RegisteredUsers() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-[#f6f4f0] p-8 rounded-lg w-96">
               <h2 className="text-2xl font-bold mb-4">Update User</h2>
-              <form>
+              <form onSubmit={formik.handleSubmit}>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">Name</label>
                   <input
                     type="text"
                     name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 border rounded"
                   />
+                  {formik.touched.name && formik.errors.name ? (
+                    <div className="text-red-500 text-sm">{formik.errors.name}</div>
+                  ) : null}
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">
@@ -188,10 +197,14 @@ export default function RegisteredUsers() {
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 border rounded"
                   />
+                  {formik.touched.email && formik.errors.email ? (
+                    <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                  ) : null}
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">
@@ -200,10 +213,14 @@ export default function RegisteredUsers() {
                   <input
                     type="text"
                     name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 border rounded"
                   />
+                  {formik.touched.address && formik.errors.address ? (
+                    <div className="text-red-500 text-sm">{formik.errors.address}</div>
+                  ) : null}
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">
@@ -212,23 +229,31 @@ export default function RegisteredUsers() {
                   <input
                     type="text"
                     name="mobile"
-                    value={formData.mobile}
-                    onChange={handleInputChange}
+                    value={formik.values.mobile}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 border rounded"
                   />
+                  {formik.touched.mobile && formik.errors.mobile ? (
+                    <div className="text-red-500 text-sm">{formik.errors.mobile}</div>
+                  ) : null}
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">Role</label>
                   <select
                     name="role"
-                    value={formData.role}
-                    onChange={handleInputChange}
+                    value={formik.values.role}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 border rounded"
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                     <option value="delivery">Delivery</option>
                   </select>
+                  {formik.touched.role && formik.errors.role ? (
+                    <div className="text-red-500 text-sm">{formik.errors.role}</div>
+                  ) : null}
                 </div>
                 <div className="flex justify-end gap-4">
                   <button
@@ -239,8 +264,7 @@ export default function RegisteredUsers() {
                     Cancel
                   </button>
                   <button
-                    type="button"
-                    onClick={handleUpdate}
+                    type="submit"
                     className="px-4 py-2 bg-blue-600 text-white rounded"
                   >
                     Update

@@ -3,12 +3,47 @@ import { UserContext } from "./context/UserContext";
 import axios from "axios";
 import { checkSessionExpiration } from "../utils/session";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function Profile() {
   const { userDetail, setUserDetail } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({ ...userDetail });
   const navigate = useNavigate();
+
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required").matches(/^[a-zA-Z\s]*$/, "Name must contain only letters"),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
+    mobile: Yup.string().matches(/^\d{10}$/, "Mobile number must be exactly 10 digits").required("Mobile number is required"),
+    address: Yup.string().required("Address is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: { name: '', email: '', mobile: '', address: '' },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.put(
+          `${process.env.REACT_APP_API_BASE_URL}/updateUserDetail`,
+          values,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setUserDetail(response.data);
+        setEditMode(false);
+      } catch (error) {
+        console.error(
+          "Error updating user details:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    },
+  });
 
   useEffect(() => {
     const isSessionValid = checkSessionExpiration(navigate);
@@ -18,6 +53,12 @@ export default function Profile() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    if (userDetail) {
+      formik.setValues(userDetail);
+    }
+  }, [userDetail]);
+
   if (!userDetail) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -26,43 +67,13 @@ export default function Profile() {
     );
   }
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const handleEdit = () => {
     setEditMode(true);
   };
 
   const handleCancel = () => {
     setEditMode(false);
-    setFormData({ ...userDetail });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/updateUserDetail`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUserDetail(response.data);
-      setEditMode(false);
-    } catch (error) {
-      console.error(
-        "Error updating user details:",
-        error.response ? error.response.data : error.message
-      );
-    }
+    formik.resetForm();
   };
 
   return (
@@ -70,7 +81,7 @@ export default function Profile() {
       <h1 className="text-3xl font-bold text-center text-[#343a40] mt-10 ">Profile</h1>
       <div className=" shadow-lg w-[90%] lg:w-[60%] lg:my-5 rounded-lg p-6 text-white bg-[#a19182]">
         {editMode ? (
-          <form onSubmit={handleSubmit} className="space-y-4  ">
+          <form onSubmit={formik.handleSubmit} className="space-y-4  ">
             <div className="mb-2 ">
               <label className="block  font-semibold mb-1">
                 Name:
@@ -78,19 +89,15 @@ export default function Profile() {
               <input
                 type="text"
                 name="name"
-                value={formData.name || ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^[a-zA-Z\s]*$/.test(value)) {
-                    handleChange(e);
-                  }
-                }}
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 className="w-full bg-[#a19182] p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
               />
-              {formData.name?.length === 0 && (
+              {formik.touched.name && formik.errors.name && (
                 <p className="text-red-500 text-sm mt-1">
-                  Name is required and must contain only letters.
+                  {formik.errors.name}
                 </p>
               )}
             </div>
@@ -102,15 +109,16 @@ export default function Profile() {
               <input
                 type="email"
                 name="email"
-                value={formData.email || ""}
-                onChange={handleChange}
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 className="w-full p-2 border bg-[#a19182] rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
                 readOnly
               />
-              {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email || "") && (
+              {formik.touched.email && formik.errors.email && (
                 <p className="text-red-500 text-sm mt-1">
-                  Please provide a valid email address.
+                  {formik.errors.email}
                 </p>
               )}
             </div>
@@ -122,20 +130,16 @@ export default function Profile() {
               <input
                 type="text"
                 name="mobile"
-                value={formData.mobile || ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^\d*$/.test(value)) {
-                    handleChange(e);
-                  }
-                }}
+                value={formik.values.mobile}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 maxLength={10}
                 className="w-full p-2 bg-[#a19182] border rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
               />
-              {formData.mobile?.length > 0 && formData.mobile.length !== 10 && (
+              {formik.touched.mobile && formik.errors.mobile && (
                 <p className="text-red-500 text-sm mt-1">
-                  Mobile number must be exactly 10 digits.
+                  {formik.errors.mobile}
                 </p>
               )}
             </div>
@@ -147,13 +151,16 @@ export default function Profile() {
               <input
                 type="text"
                 name="address"
-                value={formData.address || ""}
-                onChange={handleChange}
+                value={formik.values.address}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 className="w-full p-2 border bg-[#a19182] rounded focus:outline-none focus:ring-2 focus:ring-[#343a40]"
                 required
               />
-              {formData.address?.length === 0 && (
-                <p className="text-red-500 text-sm mt-1">Address is required.</p>
+              {formik.touched.address && formik.errors.address && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formik.errors.address}
+                </p>
               )}
             </div>
 

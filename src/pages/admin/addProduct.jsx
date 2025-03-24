@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function AddProduct() {
-  const [groupName, setGroupName] = useState("");
-  const [imageFile, setImageFile] = useState(null);
-  const [productName, setProductName] = useState("");
-  const [price, setPrice] = useState(""); // New state for price
   const [groupOptions, setGroupOptions] = useState([]);
-  const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
   const useQuery = () => {
@@ -25,8 +22,7 @@ export default function AddProduct() {
         const response = await axios.get(
           `${process.env.REACT_APP_API_BASE_URL}/getAllGroup`
         );
-        // Assuming response.data is an array of group objects
-        setGroupOptions(response.data); // Set all group options
+        setGroupOptions(response.data);
       } catch (error) {
         console.error("Error fetching group items", error);
       }
@@ -34,6 +30,77 @@ export default function AddProduct() {
 
     fetchGroupItems();
   }, []);
+
+  const formik = useFormik({
+    initialValues: {
+      productName: "",
+      groupName: "",
+      price: "",
+      description: "",
+      imageFile: null,
+    },
+    validationSchema: Yup.object({
+      productName: Yup.string().required("Product Name is required"),
+      groupName: Yup.string().required("Group Name is required"),
+      price: Yup.number()
+        .required("Price is required")
+        .min(0, "Price must be greater than or equal to 0"),
+      description: Yup.string().required("Description is required"),
+      imageFile: productId
+        ? Yup.mixed()
+        : Yup.mixed()
+            .required("Image is required")
+            .test(
+              "fileType",
+              "Unsupported File Format",
+              (value) =>
+                !value ||
+                (value &&
+                  ["image/jpeg", "image/png", "image/jpg"].includes(value.type))
+            ),
+    }),
+    onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("productName", values.productName);
+      formData.append("groupName", values.groupName);
+      formData.append("price", values.price);
+      formData.append("description", values.description);
+      formData.append("imageFile", values.imageFile);
+
+      try {
+        if (productId) {
+          formData.append("productId", productId);
+          await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL}/updateProduct`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          alert("Product updated successfully!");
+        } else {
+          await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL}/addProduct`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          alert("Product added successfully!");
+        }
+        navigate("/adminDashBoard");
+      } catch (error) {
+        console.error("Error submitting product", error);
+        alert("Failed to submit product. Please try again.");
+      }
+    },
+  });
 
   useEffect(() => {
     const fetchProductItems = async (productId) => {
@@ -44,11 +111,13 @@ export default function AddProduct() {
             { productId }
           );
           const data = response.data;
-          setProductName(data.productName || "");
-          setPrice(data.price || "");
-          setGroupName(data.groupName || "");
-          setDescription(data.description || "");
-          setImageFile(data.filePath || null);
+          formik.setValues({
+            productName: data.productName || "",
+            groupName: data.groupName || "",
+            price: data.price || "",
+            description: data.description || "",
+            imageFile: data.filePath || null,
+          });
         } catch (error) {
           console.error("Error fetching group:", error);
           alert("Failed to fetch group. Please try again.");
@@ -56,83 +125,12 @@ export default function AddProduct() {
       }
     };
     fetchProductItems(productId);
-  }, []);
-
-  const handleProductNameChange = (e) => {
-    setProductName(e.target.value);
-  };
+  }, [productId]);
 
   const handleImageFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(URL.createObjectURL(file));
-    }
-  };
-
-  const handleGroupChange = (e) => {
-    setGroupName(e.target.value); // Update selected group name
-  };
-
-  const handlePriceChange = (e) => {
-    setPrice(e.target.value); // Update price
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (productId) {
-      const formData = new FormData();
-      formData.append("productId", productId);
-
-      formData.append("productName", productName);
-
-      if (imageFile) {
-        formData.append("imageFile", imageFile);
-      }
-      formData.append("groupName", groupName); // Include selected group name in form data
-      formData.append("price", price); // Include price in form data
-      formData.append("description", description); //
-      try {
-        await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/update-Proudct`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        alert("Product added successfully!");
-        navigate("/adminDashBoard");
-      } catch (error) {
-        console.error("Error adding product", error);
-        alert("Failed to add product. Please try again.");
-      }
-    } else {
-      const formData = new FormData();
-      formData.append("productName", productName);
-      formData.append("imageFile", imageFile);
-      formData.append("groupName", groupName); // Include selected group name in form data
-      formData.append("price", price); // Include price in form data
-      formData.append("description", description); // Include description in form data
-      try {
-        await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/addProduct`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        alert("Product added successfully!");
-        navigate("/adminDashBoard");
-      } catch (error) {
-        console.error("Error adding product", error);
-        alert("Failed to add product. Please try again.");
-      }
+      formik.setFieldValue("imageFile", file);
     }
   };
 
@@ -140,12 +138,12 @@ export default function AddProduct() {
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
       <Sidebar />
       <div className="flex flex-col justify-center items-center w-full text-[#2E5077] bg-[#F6F4F0]">
-        <h2 className="text-3xl font-bold font-mono text-[#2E5077]  mb-6">
+        <h2 className="text-3xl font-bold font-mono text-[#2E5077] mb-6">
           Add Product
         </h2>
 
         <div className="w-1/3 mx-auto p-6 bg-[#79D7BE] rounded-md shadow-md mt-5 mb-5">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
             <div className="mb-4">
               <label
                 htmlFor="productName"
@@ -157,10 +155,13 @@ export default function AddProduct() {
                 type="text"
                 id="productName"
                 className="mt-1 block w-full px-3 bg-transparent py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                value={productName !== null ? productName : productName}
-                onChange={handleProductNameChange}
-                required
+                {...formik.getFieldProps("productName")}
               />
+              {formik.touched.productName && formik.errors.productName ? (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.productName}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -172,9 +173,7 @@ export default function AddProduct() {
               <select
                 id="groupName"
                 className="mt-1 block w-full px-3 bg-transparent py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                onChange={handleGroupChange}
-                value={groupName !== null ? groupName : groupName} // Ensure `groupName` is a single value
-                required
+                {...formik.getFieldProps("groupName")}
               >
                 <option value="">Select a Group</option>
                 {groupOptions.map((item) => (
@@ -183,6 +182,11 @@ export default function AddProduct() {
                   </option>
                 ))}
               </select>
+              {formik.touched.groupName && formik.errors.groupName ? (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.groupName}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -195,12 +199,15 @@ export default function AddProduct() {
                 type="number"
                 id="price"
                 className="mt-1 block w-full px-3 py-2 bg-transparent border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                value={price !== null ? price : price}
-                onChange={handlePriceChange}
-                required
+                {...formik.getFieldProps("price")}
                 min="0"
                 step="1"
               />
+              {formik.touched.price && formik.errors.price ? (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.price}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -212,78 +219,58 @@ export default function AddProduct() {
               <textarea
                 id="description"
                 className="mt-1 block w-full px-3 py-2 bg-transparent border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                value={description !== null ? description : description}
-                onChange={(e) => setDescription(e.target.value)}
+                {...formik.getFieldProps("description")}
               />
+              {formik.touched.description && formik.errors.description ? (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.description}
+                </div>
+              ) : null}
             </div>
-            {productId ? (
-              <div className="mb-4">
-                <label
-                  htmlFor="imageFile"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Upload Image
-                </label>
-                <input
-                  type="file"
-                  id="imageFile"
-                  accept="image/*"
-                  onChange={handleImageFileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-            ) : (
-              <div className="mb-4">
-                <label
-                  htmlFor="imageFile"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Upload Image
-                </label>
-                <input
-                  type="file"
-                  id="imageFile"
-                  accept="image/*"
-                  onChange={handleImageFileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  required
-                />
-              </div>
-            )}
-            {imageFile && productId && (
+            <div className="mb-4">
+              <label
+                htmlFor="imageFile"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Upload Image
+              </label>
+              <input
+                type="file"
+                id="imageFile"
+                accept="image/*"
+                onChange={handleImageFileChange}
+                className="mt-1 block w-full px-3 py-2 border border-[#2E5077] rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              {formik.touched.imageFile && formik.errors.imageFile ? (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.imageFile}
+                </div>
+              ) : null}
+            </div>
+            {formik.values.imageFile && productId && (
               <div className="mt-4 flex justify-center">
                 <img
-                  src={`${process.env.REACT_APP_API_BASE_URL_IMAGE}/${imageFile}`}
+                  src={`${process.env.REACT_APP_API_BASE_URL_IMAGE}/${formik.values.imageFile}`}
                   alt="Uploaded Preview"
                   className="w-28 h-16 object-cover rounded-md mb-3"
                 />
               </div>
             )}
-            {imageFile && !productId && (
+            {formik.values.imageFile && !productId && (
               <div className="mt-4 flex justify-center">
                 <img
-                  src={imageFile}
+                  src={URL.createObjectURL(formik.values.imageFile)}
                   alt="Uploaded Preview"
                   className="w-28 h-16 object-cover rounded-md mb-3"
                 />
               </div>
             )}
-            {productId ? (
-              <button
-                type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-              >
-                Update
-              </button>
-            ) : (
-              <button
-                type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-              >
-                Submit
-              </button>
-            )}
-
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              {productId ? "Update" : "Submit"}
+            </button>
             {"  "}
             <Link
               to="/adminDashBoard"

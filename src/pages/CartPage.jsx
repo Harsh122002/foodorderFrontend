@@ -31,7 +31,7 @@ export const CartPage = () => {
         <p className="flex justify-center items-center text-lg ">Your cart is empty</p>
       ) : (
         <>
-          <div className="grid  grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {cart.map((item, index) => (
               <div key={index} className="p-4 w-64 bg-[#a19182] rounded-md shadow-lg">
                 <img

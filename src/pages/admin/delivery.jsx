@@ -1,64 +1,60 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function Delivery() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    password: "",
-  });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
+  // Validation schema
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
+    phone: Yup.string().required("Phone number is required"),
+    address: Yup.string().required("Address is required"),
+    password: Yup.string().required("Password is required"),
+  });
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-    setError("");
+  // Formik setup
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      setLoading(true);
+      setMessage("");
+      setError("");
 
-    try {
-      const res = await axios.post(
-        `${
-          process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"
-        }/deliveryBoyRegister`,
-        formData
-      );
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"}/deliveryBoyRegister`,
+          values
+        );
 
-      // Set success message
-      setMessage("Registration successful!");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        password: "",
-      });
-    } catch (error) {
-      // Handle errors
-      const errorMessage =
-        error.response?.data?.message || "An error occurred!";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+        // Set success message
+        setMessage("Registration successful!");
+        resetForm();
+      } catch (error) {
+        // Handle errors
+        const errorMessage = error.response?.data?.message || "An error occurred!";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+        setSubmitting(false);
+      }
+    },
+  });
 
   // Clear message or error after a delay
-useEffect(() => {
+  useEffect(() => {
     if (message || error) {
       const timer = setTimeout(() => {
         setMessage("");
@@ -94,7 +90,7 @@ useEffect(() => {
           {/* Form */}
           <div className="flex justify-center">
             <div className="bg-[#79d7be] w-[40%] p-4 rounded-md">
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form className="space-y-6" onSubmit={formik.handleSubmit}>
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium">
@@ -103,12 +99,13 @@ useEffect(() => {
                   <input
                     type="text"
                     id="name"
-                    value={formData.name}
-                    onChange={handleChange}
+                    {...formik.getFieldProps('name')}
                     className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-[#2E5077]"
                     placeholder="Enter name"
-                    required
                   />
+                  {formik.touched.name && formik.errors.name ? (
+                    <div className="text-red-600">{formik.errors.name}</div>
+                  ) : null}
                 </div>
 
                 {/* Email */}
@@ -119,12 +116,13 @@ useEffect(() => {
                   <input
                     type="email"
                     id="email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    {...formik.getFieldProps('email')}
                     className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-[#2E5077]"
                     placeholder="Enter email"
-                    required
                   />
+                  {formik.touched.email && formik.errors.email ? (
+                    <div className="text-red-600">{formik.errors.email}</div>
+                  ) : null}
                 </div>
 
                 {/* Phone */}
@@ -135,49 +133,46 @@ useEffect(() => {
                   <input
                     type="tel"
                     id="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
+                    {...formik.getFieldProps('phone')}
                     className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-[#2E5077]"
                     placeholder="Enter phone number"
-                    required
                   />
+                  {formik.touched.phone && formik.errors.phone ? (
+                    <div className="text-red-600">{formik.errors.phone}</div>
+                  ) : null}
                 </div>
 
                 {/* Address */}
                 <div>
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium"
-                  >
+                  <label htmlFor="address" className="block text-sm font-medium">
                     Address
                   </label>
                   <textarea
                     id="address"
-                    value={formData.address}
-                    onChange={handleChange}
+                    {...formik.getFieldProps('address')}
                     className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-[#2E5077]"
                     placeholder="Enter address"
-                    required
                   />
+                  {formik.touched.address && formik.errors.address ? (
+                    <div className="text-red-600">{formik.errors.address}</div>
+                  ) : null}
                 </div>
 
                 {/* Password */}
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium"
-                  >
+                  <label htmlFor="password" className="block text-sm font-medium">
                     Password
                   </label>
                   <input
                     type="password"
                     id="password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    {...formik.getFieldProps('password')}
                     className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-[#2E5077]"
                     placeholder="Enter password"
-                    required
                   />
+                  {formik.touched.password && formik.errors.password ? (
+                    <div className="text-red-600">{formik.errors.password}</div>
+                  ) : null}
                 </div>
 
                 {/* Submit */}

@@ -4,25 +4,22 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
 import Loader from "./loader";
 import { FcGoogle } from "react-icons/fc";
-
-import { Link } from "react-router-dom";
+import { Link,  } from "react-router-dom";
 import { FaGithub } from "react-icons/fa";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const hasAutoLoggedIn = useRef(false);
 
   const autoLogin = async (email, password) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/login`,
         { email, password }
       );
-
-      // alert(res.data.msg || "Login Successfully");
 
       const token = res.data.token;
       const userId = res.data.userId;
@@ -37,10 +34,9 @@ function Login() {
         sessionStorage.setItem("token", token);
         window.location.href = "/dashboard";
       }
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false)
-
+      setIsLoading(false);
       console.error("Error:", error);
       if (error.response) {
         alert(`Error: ${error.response.data.msg || error.response.statusText}`);
@@ -106,22 +102,31 @@ function Login() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    autoLogin(email, password);
-  };
+  const validationSchema = Yup.object({
+    email: Yup.string().email('Invalid email address').required('Required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters long').required('Required'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      autoLogin(values.email, values.password);
+    },
+  });
 
   if (isLoading) {
-    return (
-      <Loader />
-    )
+    return <Loader />;
   }
 
   return (
-    <div className=" min-h-screen flex bg-[#c4b4a5] items-center justify-center">
-      <div className=" p-8 rounded-lg bg-[#a19182] shadow-lg sm:w-full md:w-96 mt-20">
+    <div className="min-h-screen flex bg-[#c4b4a5] items-center justify-center">
+      <div className="p-8 rounded-lg bg-[#a19182] shadow-lg sm:w-full md:w-96 mt-20">
         <h2 className="text-3xl font-bold mb-6 text-[#343a40] text-center">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 text-white">
+        <form onSubmit={formik.handleSubmit} className="space-y-4 text-white">
           <div>
             <label htmlFor="email" className="block text-gray-700">
               Email
@@ -129,16 +134,12 @@ function Login() {
             <input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border-2 border-white bg-[#a19182]  rounded-lg  focus:ring-[#343a40] "
-              required
+              {...formik.getFieldProps('email')}
+              className="w-full px-3 py-2 border-2 border-white bg-[#a19182] rounded-lg focus:ring-[#343a40]"
             />
-            {email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
-              <p className="text-red-500 text-sm mt-1">
-                Please enter a valid email address.
-              </p>
-            )}
+            {formik.touched.email && formik.errors.email ? (
+              <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
+            ) : null}
           </div>
           <div>
             <label htmlFor="password" className="block text-gray-700">
@@ -147,17 +148,12 @@ function Login() {
             <input
               id="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2  rounded-lg border-2 border-white bg-[#a19182] focus:ring-[#343a40] "
-              minLength={6}
-              required
+              {...formik.getFieldProps('password')}
+              className="w-full px-3 py-2 rounded-lg border-2 border-white bg-[#a19182] focus:ring-[#343a40]"
             />
-            {password.length > 0 && password.length < 6 && (
-              <p className="text-red-500 text-sm mt-1">
-                Password must be at least 6 characters long.
-              </p>
-            )}
+            {formik.touched.password && formik.errors.password ? (
+              <p className="text-red-500 text-sm mt-1">{formik.errors.password}</p>
+            ) : null}
           </div>
           <button
             type="submit"
@@ -178,29 +174,25 @@ function Login() {
             >
               Register
             </Link>
-           
           </div>
         </form>
         <div className="flex justify-center mt-4">
           <button
             onClick={handleGoogleLogin}
-            className=" text-white px-4 bg-[#9d836a] flex items-center py-2 rounded-lg hover:bg-gray-700 transition duration-200"
+            className="text-white px-4 bg-[#9d836a] flex items-center py-2 rounded-lg hover:bg-gray-700 transition duration-200"
             disabled={isLoading}
           >
-            <FcGoogle className="w-6 h-6" />{" "}Google
-
+            <FcGoogle className="w-6 h-6" /> Google
           </button>&nbsp;&nbsp;
           <button
             onClick={handleGitHubLogin}
-            className=" text-white px-4 bg-black py-2 flex items-center rounded-lg hover:bg-gray-700 transition duration-200"
+            className="text-white px-4 bg-black py-2 flex items-center rounded-lg hover:bg-gray-700 transition duration-200"
             disabled={isLoading}
           >
-            <FaGithub className="w-6 h-6"/>
-            {" "}GitHub
+            <FaGithub className="w-6 h-6" /> GitHub
           </button>
         </div>
-      </div>
-    </div>
+      </div></div>
   );
 }
 

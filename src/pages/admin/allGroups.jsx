@@ -54,7 +54,7 @@ export default function AllGroups() {
       </div>{" "}
       <div className="flex-1 ml-60 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 bg-[#F6F4F0]">
-          <h1 className="text-4xl font-bold mb-8 text-center">Groups</h1>
+          <h1 className="text-4xl font-bold mb-8 text-center">Categories</h1>
           <Link
             to="/adminDashBoard"
             className="mb-3 flex justify-center text-center hover:text-xl"

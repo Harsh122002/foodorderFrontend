@@ -9,9 +9,11 @@ import { IoMdAdd } from "react-icons/io";
 import { FaList, FaUser, FaRunning } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { MdOutlinePending } from "react-icons/md";
-import { BiCategory } from "react-icons/bi";
+import { BiCategory, BiSolidShow } from "react-icons/bi";
 import { AiOutlineProduct } from "react-icons/ai";
 import { UserContext } from "../context/UserContext";
+import { TbRosetteDiscount } from "react-icons/tb";
+
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -37,6 +39,12 @@ export default function Sidebar() {
   const handleNavigate = (status) => {
     navigate(`/${status}`); // Adjust your routes accordingly
   };
+  const handleAddDiscount = () => {
+    navigate("/discount")
+  }
+  const handleAllDiscount = () => {
+    navigate("/allDiscount")
+  }
 
   const buttons = [
     {
@@ -80,6 +88,17 @@ export default function Sidebar() {
       onClick: handleRegisterManage,
     },
     {
+      label: "Discount-Add",
+      icon: <TbRosetteDiscount />,
+      onClick: handleAddDiscount,
+    },
+    {
+      label: "AllDiscount",
+      icon: <BiSolidShow />
+      ,
+      onClick: handleAllDiscount,
+    },
+    {
       label: "Logout",
       icon: <FiLogOut />,
       onClick: handleLogout,
@@ -95,6 +114,7 @@ export default function Sidebar() {
       icon: <MdOutlineIncompleteCircle />,
     },
     { label: "Declined", status: "declined", icon: <MdOutlineDeleteOutline /> },
+
   ];
 
   return (
@@ -105,9 +125,8 @@ export default function Sidebar() {
       {buttons.map((button, index) => (
         <div
           key={index}
-          className={`w-full ml-16 ${
-            button.isDropdown ? "relative group" : ""
-          }`}
+          className={`w-full ml-16 ${button.isDropdown ? "relative group" : ""
+            }`}
         >
           <button
             className="w-full sm:w-48 h-12 flex gap-2 items-center justify-start hover:scale-105 active:scale-90 transition-all px-4"

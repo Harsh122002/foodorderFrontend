@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import  Dashboard  from "./pages/dashboard";
+import Dashboard from "./pages/dashboard";
 import HeaderFunction from "./Header";
 import FooterFunction from "./footer";
 import ResetPassword from "./pages/resetpassword";
@@ -41,6 +41,9 @@ import BoyLogin from "./pages/deliveyBoy/boyLogin";
 import LBResetPassword from "./pages/deliveyBoy/lbResetPassword";
 import BoyDashBoard from "./pages/deliveyBoy/boyDashBoard";
 import PageNot from "./pages/pageNot";
+import Discount from "./pages/admin/discount";
+import ShowDiscount from "./pages/admin/showDiscount";
+import { ProtectedRoute, PublicRoute } from "./protect";
 function App() {
   return (
     <Router>
@@ -78,6 +81,8 @@ function AppContent() {
     "/deliveryBoy",
     "/lbResetPassword",
     "/boyDashBoard",
+    "/discount",
+    "/allDiscount",
   ];
 
   return (
@@ -85,36 +90,238 @@ function AppContent() {
       {/* Conditionally render the header */}
       {!noHeaderFooterRoutes.includes(location.pathname) && <HeaderFunction />}
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/addGroup" element={<AddGroup />} />
-        <Route path="/addProduct" element={<AddProduct />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/rating" element={<Rating />} />
-        <Route path="/adminDashboard" element={<AdminDashboard />} />
-        <Route path="/orderPlace" element={<OrderPlace />} />
-
-        <Route path="/allGroups" element={<AllGroups />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/Success" element={<Success />} />
-        <Route path="/about" element={<About />} />
-
-        <Route path="/orderStatus" element={<OrderStatus />} />
-        <Route path="/productManage" element={<ProductManage />} />
-        <Route path="/pending" element={<ProductManagementPage />} />
-        <Route path="/complete" element={<Complete />} />
-        <Route path="/allProducts" element={<AllProducts />} />
-        <Route path="/registeredUsers" element={<RegisteredUsers />} />
-        <Route path="/declined" element={<Declined />} />
-        <Route path="/running" element={<Running />} />
-        <Route path="/rating" element={<Rating />} />
-        <Route path="/deliveryBoy" element={<Delivery />} />
-        <Route path="/deliveryBoyLogin" element={<BoyLogin />} />
-        <Route path="/lbResetPassword" element={<LBResetPassword />} />
-        <Route path="/boyDashBoard" element={<BoyDashBoard />} /> 
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/resetpassword"
+          element={
+            <PublicRoute>
+              <ResetPassword />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <PublicRoute>
+              <AdminLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/deliveryBoyLogin"
+          element={
+            <PublicRoute>
+              <BoyLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+              <Dashboard />
+          }
+        />
+        {/* admin */}
+        <Route
+          path="/adminDashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/addGroup"
+          element={
+            <ProtectedRoute>
+              <AddGroup />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/addProduct"
+          element={
+            <ProtectedRoute>
+              <AddProduct />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/allDiscount"
+          element={
+            <ProtectedRoute>
+              <ShowDiscount />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/discount"
+          element={
+            <ProtectedRoute>
+              <Discount />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/productManage"
+          element={
+            <ProtectedRoute>
+              <ProductManage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pending"
+          element={
+            <ProtectedRoute>
+              <ProductManagementPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/complete"
+          element={
+            <ProtectedRoute>
+              <Complete />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/declined"
+          element={
+            <ProtectedRoute>
+              <Declined />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/running"
+          element={
+            <ProtectedRoute>
+              <Running />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/registeredUsers"
+          element={
+            <ProtectedRoute>
+              <RegisteredUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/allProducts"
+          element={
+            <ProtectedRoute>
+              <AllProducts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/allGroups"
+          element={
+            <ProtectedRoute>
+              <AllGroups />
+            </ProtectedRoute>
+          }
+        />
+        {/** */}
+        <Route
+          path="/rating"
+          element={
+            <ProtectedRoute>
+              <Rating />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orderPlace"
+          element={
+            <ProtectedRoute>
+              <OrderPlace />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Success"
+          element={
+            <ProtectedRoute>
+              <Success />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <About />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orderStatus"
+          element={
+            <ProtectedRoute>
+              <OrderStatus />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/deliveryBoy"
+          element={
+            <ProtectedRoute>
+              <Delivery />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lbResetPassword"
+          element={
+            <ProtectedRoute>
+              <LBResetPassword />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/boyDashBoard"
+          element={
+            <ProtectedRoute>
+              <BoyDashBoard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<PageNot />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
         {/* Default to dashboard */}
