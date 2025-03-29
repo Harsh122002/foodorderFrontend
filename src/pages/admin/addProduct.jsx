@@ -71,7 +71,7 @@ export default function AddProduct() {
         if (productId) {
           formData.append("productId", productId);
           await axios.post(
-            `${process.env.REACT_APP_API_BASE_URL}/updateProduct`,
+            `${process.env.REACT_APP_API_BASE_URL}/update-Product`,
             formData,
             {
               headers: {

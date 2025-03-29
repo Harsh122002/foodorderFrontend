@@ -1,10 +1,8 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
 
 export default function BoyLogin() {
-  const { setBoyLogin } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -25,30 +23,24 @@ export default function BoyLogin() {
       const token = res.data.token;
       const userId = res.data.userId;
       if (token) {
-        localStorage.setItem("BoyToken", token);
-        localStorage.setItem("BoyUserId", userId);
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", userId);
 
-        // Set token expiration (e.g., 1 hour from now)
         const tokenExpiration = new Date();
         tokenExpiration.setHours(tokenExpiration.getHours() + 1); // 1 hour expiry
-        localStorage.setItem("BoyTokenExpiration", tokenExpiration);
+        localStorage.setItem("tokenExpiration", tokenExpiration);
 
-        sessionStorage.setItem("BoyToken", token);
-        setBoyLogin(true);
-        // Redirect to the dashboard page
-        navigate("/boyDashBoard");
+        sessionStorage.setItem("token", token);
+        window.location.href = "/boyDashBoard"
       }
     } catch (error) {
       console.error("Error:", error);
 
       if (error.response) {
-        // Server responded with a status other than 200 range
         alert(`Error: ${error.response.data.msg || error.response.statusText}`);
       } else if (error.request) {
-        // Request was made but no response was received
         alert("Error: No response from server. Please try again later.");
       } else {
-        // Something happened in setting up the request
         alert("Error: " + error.message);
       }
     }
@@ -78,7 +70,7 @@ export default function BoyLogin() {
               Password
             </label>
             <input
-              id="password" 
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

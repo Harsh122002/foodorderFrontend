@@ -32,7 +32,7 @@ export default function AdminLogin() {
         sessionStorage.setItem("token", token);
 
         // Redirect to the dashboard page
-        navigate("/adminDashBoard");
+        window.location.href = "/adminDashBoard";
       }
     } catch (error) {
       console.error("Error:", error);

@@ -38,8 +38,11 @@ export default function AddGroup() {
     if (groupId) {
       fetchGroup(groupId).then((data) => {
         if (data) {
-          formik.setFieldValue("groupName", data.groupName || "");
-          setExistingImage(data.filePath || null);
+          formik.setValues({
+            groupName: data.groupName || "",
+            imageFile: data.filePath || null,
+          });          // setExistingImage(data.filePath || null);
+          setImagePreview(`http://localhost:5000/${data.filePath}`);
         }
       });
     }
@@ -72,7 +75,7 @@ export default function AddGroup() {
       try {
         const endpoint = groupId
           ? `${process.env.REACT_APP_API_BASE_URL}/update-Group`
-          : `${process.env.REACT_APP_API_BASE_URL}/addGroupItem`;
+          : `${process.env.REACT_APP_API_BASE_URL}/addGroup`;
 
         const response = await axios.post(endpoint, formData, {
           headers: {
@@ -150,7 +153,7 @@ export default function AddGroup() {
             {(imagePreview || existingImage) && (
               <div className="mt-4 flex justify-center">
                 <img
-                  src={imagePreview || `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${existingImage}`}
+                  src={imagePreview || `${process.env.REACT_APP_API_BASE_URL_IMAGE}/${imagePreview}`}
                   alt="Preview"
                   className="w-28 h-16 object-cover rounded-md mb-3"
                 />

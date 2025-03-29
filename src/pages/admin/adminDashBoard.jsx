@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { checkSessionExpiration } from "../../utils/session";
@@ -8,10 +8,12 @@ import Sidebar from "./Sidebar"; // Sidebar component
 
 import DynamicChart from "./orderchart";
 import AmountChart from "./amountChart";
+import { UserContext } from "../context/UserContext";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const { userDetail } = useContext(UserContext);
   const [orderStatuses, setOrderStatuses] = useState({
     pending: 0,
     running: 0,
@@ -24,9 +26,15 @@ export default function AdminDashboard() {
   const [allAmount, setAllAmount] = useState(0);
 
   useEffect(() => {
-  
+    
+    if (userDetail?.role === 'user' || userDetail?.role === 'delivery') {
+      navigate("/login");
+      return; 
+    }
+    
     fetchData();
   }, []);
+  
 
   const fetchData = async () => {
     setLoading(true);

@@ -4,20 +4,16 @@ import { UserContext } from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function BoyDashBoard() {
-  const { boyLogin, setBoyLogin } = useContext(UserContext);
+  const { isLoggedIn, logout } = useContext(UserContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const handleLogin = () => {
     navigate("/deliveryBoyLogin")
   };
   const handleLogout = () => {
-    setBoyLogin(false)
-    localStorage.removeItem("BoyToken");
-    localStorage.removeItem("BoyUserId");
-    localStorage.removeItem("BoyTokenExpiration");
-
-    sessionStorage.removeItem("BoyToken");
+    logout();
     navigate("/deliveryBoyLogin")
+
   };
 
   const toggleDrawer = () => {
@@ -29,7 +25,7 @@ export default function BoyDashBoard() {
         <IoMenu className="text-4xl cursor-pointer   " onClick={toggleDrawer} />
 
         <h1 className="lg:text-4xl text-xl font-bold font-mono">Boy Dashboard</h1>
-        {!boyLogin ? (
+        {!isLoggedIn ? (
           <button
             onClick={handleLogin}
             className="bg-blue-500 border-2 border-blue-500 text-white text-sm lg:text-base px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-white hover:text-blue-500 duration-500 ease-in-out"

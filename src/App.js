@@ -44,6 +44,7 @@ import PageNot from "./pages/pageNot";
 import Discount from "./pages/admin/discount";
 import ShowDiscount from "./pages/admin/showDiscount";
 import { ProtectedRoute, PublicRoute } from "./protect";
+import { AnimatePresence } from "framer-motion";
 function App() {
   return (
     <Router>
@@ -88,246 +89,223 @@ function AppContent() {
   return (
     <div className="App">
       {/* Conditionally render the header */}
-      {!noHeaderFooterRoutes.includes(location.pathname) && <HeaderFunction />}
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/resetpassword"
-          element={
-            <PublicRoute>
-              <ResetPassword />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
+      <AnimatePresence mode="wait">
+        {!noHeaderFooterRoutes.includes(location.pathname) && (
+          <HeaderFunction />
+        )}
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/resetpassword"
+            element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
+          <Route path="/admin" element={
             <PublicRoute>
               <AdminLogin />
             </PublicRoute>
-          }
-        />
-        <Route
-          path="/deliveryBoyLogin"
-          element={
-            <PublicRoute>
-              <BoyLogin />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-              <Dashboard />
-          }
-        />
-        {/* admin */}
-        <Route
-          path="/adminDashboard"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/addGroup"
-          element={
-            <ProtectedRoute>
-              <AddGroup />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/addProduct"
-          element={
-            <ProtectedRoute>
-              <AddProduct />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/allDiscount"
-          element={
-            <ProtectedRoute>
-              <ShowDiscount />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/discount"
-          element={
-            <ProtectedRoute>
-              <Discount />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/productManage"
-          element={
-            <ProtectedRoute>
-              <ProductManage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/pending"
-          element={
-            <ProtectedRoute>
-              <ProductManagementPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/complete"
-          element={
-            <ProtectedRoute>
-              <Complete />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/declined"
-          element={
-            <ProtectedRoute>
-              <Declined />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/running"
-          element={
-            <ProtectedRoute>
-              <Running />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/registeredUsers"
-          element={
-            <ProtectedRoute>
-              <RegisteredUsers />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/allProducts"
-          element={
-            <ProtectedRoute>
-              <AllProducts />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/allGroups"
-          element={
-            <ProtectedRoute>
-              <AllGroups />
-            </ProtectedRoute>
-          }
-        />
-        {/** */}
-        <Route
-          path="/rating"
-          element={
-            <ProtectedRoute>
-              <Rating />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/orderPlace"
-          element={
-            <ProtectedRoute>
-              <OrderPlace />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <CartPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Success"
-          element={
-            <ProtectedRoute>
-              <Success />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <ProtectedRoute>
-              <About />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/orderStatus"
-          element={
-            <ProtectedRoute>
-              <OrderStatus />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/deliveryBoy"
-          element={
-            <ProtectedRoute>
-              <Delivery />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/lbResetPassword"
-          element={
-            <ProtectedRoute>
-              <LBResetPassword />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/boyDashBoard"
-          element={
-            <ProtectedRoute>
-              <BoyDashBoard />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<PageNot />} />
-        <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
-        {/* Default to dashboard */}
-      </Routes>
-      {/* Conditionally render the footer */}
-      {!noHeaderFooterRoutes.includes(location.pathname) && <FooterFunction />}
+          } />
+          <Route path="/deliveryBoyLogin" element={<BoyLogin />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          {/* admin */}
+          <Route path="/adminDashboard" element={<AdminDashboard />} />
+          <Route
+            path="/addGroup"
+            element={
+              <ProtectedRoute>
+                <AddGroup />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/addProduct"
+            element={
+              <ProtectedRoute>
+                <AddProduct />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/allDiscount"
+            element={
+              <ProtectedRoute>
+                <ShowDiscount />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/discount"
+            element={
+              <ProtectedRoute>
+                <Discount />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/productManage"
+            element={
+              <ProtectedRoute>
+                <ProductManage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pending"
+            element={
+              <ProtectedRoute>
+                <ProductManagementPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/complete"
+            element={
+              <ProtectedRoute>
+                <Complete />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/declined"
+            element={
+              <ProtectedRoute>
+                <Declined />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/running"
+            element={
+              <ProtectedRoute>
+                <Running />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/registeredUsers"
+            element={
+              <ProtectedRoute>
+                <RegisteredUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/allProducts"
+            element={
+              <ProtectedRoute>
+                <AllProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/allGroups"
+            element={
+              <ProtectedRoute>
+                <AllGroups />
+              </ProtectedRoute>
+            }
+          />
+          {/** */}
+          <Route
+            path="/rating"
+            element={
+              <ProtectedRoute>
+                <Rating />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orderPlace"
+            element={
+              <ProtectedRoute>
+                <OrderPlace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Success"
+            element={
+              <ProtectedRoute>
+                <Success />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <ProtectedRoute>
+                <About />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orderStatus"
+            element={
+              <ProtectedRoute>
+                <OrderStatus />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/deliveryBoy"
+            element={
+              <ProtectedRoute>
+                <Delivery />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/lbResetPassword"
+            element={
+              <PublicRoute>
+                <LBResetPassword />
+              </PublicRoute>
+            }
+          />
+          <Route path="/boyDashBoard" element={<BoyDashBoard />} />
+          <Route path="*" element={<PageNot />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
+          {/* Default to dashboard */}
+        </Routes>
+        {/* Conditionally render the footer */}
+        {!noHeaderFooterRoutes.includes(location.pathname) && (
+          <FooterFunction />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

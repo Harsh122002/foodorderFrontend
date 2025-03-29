@@ -24,7 +24,7 @@ export default function Dashboard() {
      });
 
      useEffect(() => {
-          if (userDetail?.role && userDetail.role === 'admin') {
+          if (userDetail?.role && (userDetail.role === 'admin' ||userDetail.role === 'delivery')) {
                navigate("/login");
           }
           const fetchGroups = async () => {

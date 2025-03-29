@@ -7,27 +7,22 @@ import ScrollToTopButton from "./utils/scroll";
 import { IoMenu } from "react-icons/io5";
 
 export default function HeaderFunction() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [cartLength, setCartLength] = useState(0);
   const navigate = useNavigate();
   const { cart, removeFromCart1 } = useContext(CartContext);
   const { userDetail, isLoggedIn, logout } = useContext(UserContext);
   const location = useLocation();
   const currentPath = location.pathname;
-  useEffect(() => {
-    const sessionValid = checkSessionExpiration(navigate);
-    setIsDropdownOpen(sessionValid);
-  }, [navigate]);
+ 
 
   useEffect(() => {
     setCartLength(cart.length);
   }, [cart]);
 
-  const toggleDropdown = (e) => {
-    console.log(e.target);
-
-    setIsDropdownOpen(!isDropdownOpen);
-
+ 
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
   };
 
   const handleLogin = () => {
@@ -141,15 +136,45 @@ export default function HeaderFunction() {
               Logout
             </button>
           )}
-          <button
-            onClick={(e) => toggleDropdown(e)}
-            className="block lg:hidden text-white text-2xl"
-          >
-            <IoMenu className="lg:text-4xl" />
-          </button>
+         
         </div>
 
-        {isDropdownOpen && (
+              <div
+                className={`fixed top-0 left-0 w-64 h-full bg-[#c4b4a5] text-white shadow-lg transform ${isDrawerOpen ? "translate-x-0" : "-translate-x-64"
+                  } transition-transform duration-300 ease-in-out`}
+              >
+                {/* Sidebar Header */}
+                <div className="flex justify-between items-center p-4 bg-[#343a40] text-white">
+                  <h2 className="text-lg font-semibold">Menu</h2>
+                  <button onClick={toggleDrawer} className="text-2xl">
+                    ✖
+                  </button>
+                </div>
+        
+                {/* Sidebar Links */}
+                <nav className="flex flex-col p-4 space-y-4">
+                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+                    Home
+                  </Link>
+                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+                    Profile
+                  </Link>
+                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+                    Settings
+                  </Link>
+                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+                    Logout
+                  </Link>
+                </nav>
+        </div>
+        {isDrawerOpen && (
+        <div
+          className="fixed inset-0 "
+          onClick={toggleDrawer}
+        ></div>
+      )}
+
+        {/* {isDropdownOpen && (
           <div className="absolute top-16 right-4 mt-5 w-48 bg-white rounded-md shadow-lg z-10 lg:hidden">
             <Link
               to="/dashboard"
@@ -180,7 +205,7 @@ export default function HeaderFunction() {
               </Link>
             )}
           </div>
-        )}
+        )} */}
       </div>
       <ScrollToTopButton />
     </>

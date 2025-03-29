@@ -47,8 +47,8 @@ export default function LBResetPassword() {
   };
 
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md ">
+    <div className="h-screen w-full flex items-center justify-center bg-[#c4b4a5]">
+      <div className="bg-[#af9b88] p-8 rounded-lg shadow-lg w-full max-w-md ">
         <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
         <form onSubmit={handleRequest}>
           <div className="mb-4">
