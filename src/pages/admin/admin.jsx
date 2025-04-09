@@ -1,11 +1,19 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { userDetail } = useContext(UserContext);
+
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
+   useEffect(() => {
+        if (userDetail?.status === "online" && userDetail.role ==="admin") {
+          navigate("/adminDashBoard");
+        }
+      }, [userDetail, navigate]);
+  const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
       const res = await axios.post(

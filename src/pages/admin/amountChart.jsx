@@ -42,8 +42,8 @@ const AmountChart = () => {
                          <YAxis label={{ value: 'Amount', angle: -90, position: 'insideLeft' }} />
                          <Tooltip />
                          <Legend />
-                         <Bar dataKey="completedOrderAmount" fill="#79D7BE" />
-                         <Bar dataKey="declinedOrderAmount" fill="#2E5077" />
+                         <Bar dataKey="completedOrderAmount" fill="#79D7BE" barSize={150} />
+                         <Bar dataKey="declinedOrderAmount" fill="#2E5077" barSize={150}/>
                     </BarChart>
                </ResponsiveContainer>
           </div>

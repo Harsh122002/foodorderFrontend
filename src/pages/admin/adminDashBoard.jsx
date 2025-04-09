@@ -26,14 +26,17 @@ export default function AdminDashboard() {
   const [allAmount, setAllAmount] = useState(0);
 
   useEffect(() => {
-    
-    if (userDetail?.role === 'user' || userDetail?.role === 'delivery') {
-      navigate("/login");
-      return; 
-    }
-    
+    const handleNavigation = () => {
+      if (userDetail?.role === "delivery") {
+        navigate("/boyDashBoard");
+      } else if (userDetail?.role === "user") {
+        navigate("/");
+      }
+    };
+
+    handleNavigation();
     fetchData();
-  }, []);
+  }, [userDetail, navigate]);
   
 
   const fetchData = async () => {

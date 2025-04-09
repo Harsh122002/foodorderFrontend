@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-
 import { AiOutlineEdit } from "react-icons/ai";
 import Sidebar from "./Sidebar";
 
 export default function AllGroups() {
   const [groups, setGroups] = useState([]);
+  const [visibleProductsGroupId, setVisibleProductsGroupId] = useState(null);
+  const [productsByGroup, setProductsByGroup] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchGroups();
@@ -22,16 +24,39 @@ export default function AllGroups() {
       console.error("Error fetching groups:", error);
     }
   };
-  const navigate = useNavigate();
+
+  const handleShowProducts = async (groupId) => {
+    // Toggle logic
+    if (visibleProductsGroupId === groupId) {
+      setVisibleProductsGroupId(null);
+      return;
+    }
+
+    // If products already fetched, just toggle
+    if (productsByGroup[groupId]) {
+      setVisibleProductsGroupId(groupId);
+    } else {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/getProductsByGroupId/${groupId}`
+        );
+        setProductsByGroup((prev) => ({
+          ...prev,
+          [groupId]: response.data,
+        }));
+        setVisibleProductsGroupId(groupId);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    }
+  };
 
   const handleDelete = async (groupId) => {
     try {
-      console.log(groupId);
       const response = await axios.delete(
         `${process.env.REACT_APP_API_BASE_URL}/deleteGroup/${groupId}`
       );
       if (response.status === 200) {
-        // If deletion is successful, fetch updated groups
         fetchGroups();
         alert("Group deleted successfully.");
       } else {
@@ -42,17 +67,18 @@ export default function AllGroups() {
       alert("Failed to delete group.");
     }
   };
-  const handleUpdate = async (groupId) => {
+
+  const handleUpdate = (groupId) => {
     navigate(`/addGroup?groupId=${groupId}`);
   };
 
   return (
     <div className="flex max-h-screen bg-[#F6F4F0] font-mono text-[#2E5077]">
-      {/* Sidebar */}
-      <div className="w-64  text-white fixed h-full z-10">
+      <div className="w-64 fixed h-full z-10">
         <Sidebar />
-      </div>{" "}
-      <div className="flex-1 ml-60 overflow-y-auto">
+      </div>
+
+      <div className="flex-1 ml-64 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 bg-[#F6F4F0]">
           <h1 className="text-4xl font-bold mb-8 text-center">Categories</h1>
           <Link
@@ -61,7 +87,8 @@ export default function AllGroups() {
           >
             Back
           </Link>
-          <div className="ml-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {groups.map((group, index) => (
               <div
                 key={index}
@@ -73,25 +100,51 @@ export default function AllGroups() {
                 >
                   X
                 </button>
+
                 <img
                   className="w-full h-64 object-cover"
                   src={`http://localhost:5000/${group.filePath}`}
                   alt={group.groupName}
                 />
+
                 <div className="p-4">
                   <div className="flex flex-row justify-between items-center">
-                    <h2 className="text-xl font-semibold mb-2">
-                      {group.groupName}
-                    </h2>
+                    <div className="flex flex-col">
+                      <h2 className="text-xl font-semibold mb-2">
+                        {group.groupName}
+                      </h2>
+                      <button
+                        className="text-sm text-blue-900 underline hover:text-blue-600"
+                        onClick={() => handleShowProducts(group._id)}
+                      >
+                        {visibleProductsGroupId === group._id
+                          ? "Hide Products"
+                          : "Show Products"}
+                      </button>
+                    </div>
                     <AiOutlineEdit
-                      className="text-[#2E5077] h-8 w-8 hover:text-blue-500"
+                      className="text-[#2E5077] h-8 w-8 hover:text-blue-500 cursor-pointer"
                       title="Edit"
                       onClick={() => handleUpdate(group._id)}
                     />
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">{group.description}</span>
-                    {/* Add additional details or actions as needed */}
+
+                  {(visibleProductsGroupId === group._id &&
+                    productsByGroup[group._id] &&
+                    productsByGroup[group._id].length > 0) ? (
+                    <div className="mt-4 p-3 bg-white bg-opacity-80 rounded shadow">
+                      <h3 className="text-lg font-semibold mb-2">Products:</h3>
+                      <ul className="list-disc list-inside text-gray-800">
+                        {productsByGroup[group._id].map((product, idx) => (
+                          <li key={idx}>{product.productName}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+
+
+                  <div className="mt-4 text-sm text-gray-700">
+                    {group.description}
                   </div>
                 </div>
               </div>

@@ -42,8 +42,8 @@ const DynamicChart = () => {
                          <YAxis label={{ value: 'Orders', angle: -90, position: 'insideLeft', dy: -2 , dx:20}} />
                          <Tooltip />
                          <Legend />
-                         <Bar dataKey="completedOrders" fill="#79D7BE" />
-                         <Bar dataKey="declinedOrders" fill="#2E5077" />
+                         <Bar dataKey="completedOrders" fill="#79D7BE" barSize={150}/>
+                         <Bar dataKey="declinedOrders" fill="#2E5077" barSize={150} />
                     </BarChart>
                </ResponsiveContainer>
           </div>

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { CartContext } from "./context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { checkSessionExpiration } from "../utils/session";
+import { CartContext } from "./context/CartContext";
 
 export const CartPage = () => {
   const { cart, removeFromCart, updateCartItemQuantity } =

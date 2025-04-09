@@ -2,7 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "./context/UserContext";
 import { Link } from "react-router-dom";
-
+export const formatDateToIndian = (dateString) => {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 export default function OrderStatus() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,13 +69,7 @@ export default function OrderStatus() {
     }
   };
 
-  const formatDateToIndian = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

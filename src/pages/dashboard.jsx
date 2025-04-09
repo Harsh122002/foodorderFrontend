@@ -24,23 +24,28 @@ export default function Dashboard() {
      });
 
      useEffect(() => {
-          if (userDetail?.role && (userDetail.role === 'admin' ||userDetail.role === 'delivery')) {
-               navigate("/login");
+          // Check user role and navigate accordingly
+          if (userDetail?.role === "admin") {
+            navigate("/adminDashboard");
+          } else if (userDetail?.role === "delivery") {
+            navigate("/boyDashBoard");
           }
+      
+          // Fetch groups data
           const fetchGroups = async () => {
-               try {
-                    const response = await axios.get(
-                         `${process.env.REACT_APP_API_BASE_URL}/getAllGroup`
-                    );
-                    setGroups(response.data);
-               } catch (error) {
-                    console.error("Error fetching groups:", error);
-               }
+            try {
+              const response = await axios.get(
+                `${process.env.REACT_APP_API_BASE_URL}/getAllGroup`
+              );
+              setGroups(response.data);
+            } catch (error) {
+              console.error("Error fetching groups:", error);
+            }
           };
-
+      
           fetchGroups();
           fetchDiscount();
-     }, []);
+        }, [userDetail, navigate, setGroups]);
 
 
 

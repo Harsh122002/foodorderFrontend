@@ -10,7 +10,7 @@ import * as Yup from "yup";
 const OrderPlace = () => {
   const { totalAmount, setTotalAmount } = useContext(TotalAmountContext);
   const { cart, removeFromCart1 } = useContext(CartContext);
-  const { setOrderId } = useOrder();
+  const setOrderId  = useOrder();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [discount, setDiscountData] = useState([]);

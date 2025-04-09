@@ -1,17 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
 import Loader from "./loader";
 import { FcGoogle } from "react-icons/fc";
-import { Link,  } from "react-router-dom";
+import { Link, useNavigate, } from "react-router-dom";
 import { FaGithub } from "react-icons/fa";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { UserContext } from "./context/UserContext";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const hasAutoLoggedIn = useRef(false);
+  const { userDetail } = useContext(UserContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (userDetail?.status === "online" && userDetail.role ==="user") {
+      navigate("/");
+    }
+  }, [userDetail, navigate]);
 
   const autoLogin = async (email, password) => {
     try {
@@ -20,7 +28,7 @@ function Login() {
         `${process.env.REACT_APP_API_BASE_URL}/login`,
         { email, password }
       );
-
+    
       const token = res.data.token;
       const userId = res.data.userId;
       if (token) {
@@ -39,7 +47,7 @@ function Login() {
       setIsLoading(false);
       console.error("Error:", error);
       if (error.response) {
-        alert(`Error: ${error.response.data.msg || error.response.statusText}`);
+        alert(`Error: ${error.response.data.message || error.response.statusText}`);
       } else if (error.request) {
         alert("Error: No response from server. Please try again later.");
       } else {

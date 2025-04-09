@@ -1,9 +1,28 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { UserContext } from "./UserContext";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const { userDetail } = useContext(UserContext);
   const [cart, setCart] = useState([]);
+
+  // Load cart from localStorage when userDetail is available
+  useEffect(() => {
+    if (userDetail?.name) {
+      const storedCart = localStorage.getItem(`cart_${userDetail.name}`);
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      }
+    }
+  }, [userDetail]);
+
+  // Save cart to localStorage whenever cart changes
+  useEffect(() => {
+    if (userDetail?.name) {
+      localStorage.setItem(`cart_${userDetail.name}`, JSON.stringify(cart));
+    }
+  }, [cart, userDetail]);
 
   const addToCart = (product) => {
     setCart((prevCart) => {
@@ -12,23 +31,23 @@ export const CartProvider = ({ children }) => {
       );
 
       if (existingProductIndex !== -1) {
-        // Product with the same name exists in cart, update its quantity
         const updatedCart = [...prevCart];
         updatedCart[existingProductIndex].qty += product.qty;
         return updatedCart;
       } else {
-        // Product with the same name does not exist in cart, add it
         return [...prevCart, product];
       }
     });
   };
 
   const removeFromCart = (productName) => {
-    setCart((prevCart) => prevCart.filter((item) => item.name !== productName));
+    setCart((prevCart) =>
+      prevCart.filter((item) => item.name !== productName)
+    );
   };
 
   const removeFromCart1 = () => {
-    setCart([]); // Clear the cart by setting it to an empty array
+    setCart([]);
   };
 
   const updateCartItemQuantity = (itemName, newQuantity) => {
