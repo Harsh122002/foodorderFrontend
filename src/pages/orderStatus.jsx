@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "./context/UserContext";
 import { Link } from "react-router-dom";
+import { getCoordinatesFromAddress } from "../utils/session";
 export const formatDateToIndian = (dateString) => {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -68,8 +69,36 @@ export default function OrderStatus() {
       setError(error.response ? error.response.data.message : "Server error");
     }
   };
-
-
+  const[customerCoords, setCustomerCoords] = useState(null);
+  const handleView = async (address, boylatitude, boylongitude) => {
+    try {
+      const result = await getCoordinatesFromAddress(address);
+      console.log("Coordinates from API:", result);
+  
+      // Validate coordinates
+      if (!result || !result.latitude || !result.longitude) {
+        console.log("Invalid coordinates from API:", result);
+        alert("Could not fetch valid coordinates for the address.");
+        return;
+      }
+  
+      // Set customer coordinates
+      const coords = { latitude: result.latitude, longitude: result.longitude };
+      setCustomerCoords(coords);
+  
+      // Ensure both user and customer coordinates are available
+      if ( coords) {
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${boylatitude},${boylongitude}&destination=${coords.latitude},${coords.longitude}&travelmode=driving`;
+        window.open(url, "_blank");
+      } else {
+        alert("Coordinates not available yet!");
+      }
+    } catch (error) {
+      console.error("Error getting coordinates:", error);
+      alert("Something went wrong while fetching location.");
+    }
+  };
+  
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -98,6 +127,7 @@ export default function OrderStatus() {
                   <h2 className="text-xl font-bold">Order ID: {order._id}</h2>
                   <p>Status: {order.status}</p>
                   <p>Total: Rs {order.totalAmount}</p>
+                  <p>Address:{order.address}</p>
                   <p>Order Date: {formatDateToIndian(order.createdAt)}</p>
                   <ul className="flex flex-row flex-wrap gap-x-4 gap-y-2">
                     {order.products.map((productItem) => (
@@ -145,9 +175,17 @@ export default function OrderStatus() {
                         </>
                       )}
                       {order.status.toLowerCase() === "running" && (
-                        <p className="text-green-900">
-                          You are delivering successfully!
-                        </p>
+                        <article className="flex flex-row justify-between">
+                          <p className="text-green-900">
+                            You are delivering successfully!
+                          </p>
+                          <button 
+  onClick={() => handleView(order.address, order.boylatitude, order.boylongitude)} 
+  className="bg-blue-500 border-2 border-blue-500 hover:text-blue-500 hover:bg-white text-white duration-300 ease-in   px-4 py-1 rounded"
+>
+  Map
+</button>
+                        </article>
                       )}
                       {order.status.toLowerCase() === "completed" && (
                         <div className="flex justify-between items-center">
@@ -155,52 +193,52 @@ export default function OrderStatus() {
                             Order completed successfully!
                           </p>
                           {order.rating === null && (
-                        <p>
-                          Please rate this order{" "}
-                          <Link
-                            to={`/rating?orderId=${order._id}`}
-                            className="text-blue-900 underline"
-                          >
-                            Rating
-                          </Link>
-                        </p>
+                            <p>
+                              Please rate this order{" "}
+                              <Link
+                                to={`/rating?orderId=${order._id}`}
+                                className="text-blue-900 underline"
+                              >
+                                Rating
+                              </Link>
+                            </p>
+                          )}
+                        </div>
                       )}
-                    </div>
+                      {order.status.toLowerCase() === "declined" && (
+                        <>
+                          <p className="text-red-600">Order declined.</p>
+                          <p className="text-blue-900 capitalize text-sm">
+                            Any payment made will be refunded to your account
+                            within 7 business days.
+                          </p>
+                        </>
                       )}
-                    {order.status.toLowerCase() === "declined" && (
-                      <>
-                        <p className="text-red-600">Order declined.</p>
-                        <p className="text-blue-900 capitalize text-sm">
-                          Any payment made will be refunded to your account
-                          within 7 business days.
-                        </p>
-                      </>
-                    )}
-                  </li>
-                </ul>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              </div>
-        ))
-        ) : (
-        <div className="text-center mt-4">No orders found.</div>
+            ))
+          ) : (
+            <div className="text-center mt-4">No orders found.</div>
           )}
-        {/* Pagination Controls */}
-        <div className="flex justify-center mt-4">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => paginate(index + 1)}
-              className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => paginate(index + 1)}
+                className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
                   ? "bg-blue-500 text-white"
                   : "bg-gray-300"
-                }`}
-            >
-              {index + 1}
-            </button>
-          ))}
+                  }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
     </div >
   );
 }

@@ -1,11 +1,40 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import io from "socket.io-client";
+
+const socket = io(process.env.REACT_APP_API_BASE_URL);
 
 export default function BoyLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { userDetail } = useContext(UserContext);
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userDetail?.status === "online" && userDetail.role === "delivery") {
+      navigate("/boyDashBoard");
+    }
+  }, [userDetail, navigate]);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error fetching location:", error);
+        }
+      );
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -15,6 +44,8 @@ export default function BoyLogin() {
           email,
           password,
           role: "delivery",
+          latitude: location.latitude,
+          longitude: location.longitude,
         }
       );
 
@@ -27,15 +58,14 @@ export default function BoyLogin() {
         localStorage.setItem("userId", userId);
 
         const tokenExpiration = new Date();
-        tokenExpiration.setHours(tokenExpiration.getHours() + 1); // 1 hour expiry
+        tokenExpiration.setHours(tokenExpiration.getHours() + 1);
         localStorage.setItem("tokenExpiration", tokenExpiration);
 
         sessionStorage.setItem("token", token);
-        window.location.href = "/boyDashBoard"
+        window.location.href = "/boyDashBoard";
       }
     } catch (error) {
       console.error("Error:", error);
-
       if (error.response) {
         alert(`Error: ${error.response.data.msg || error.response.statusText}`);
       } else if (error.request) {
@@ -45,17 +75,46 @@ export default function BoyLogin() {
       }
     }
   };
+
+  useEffect(() => {
+    const socket = io("http://localhost:5000"); // or your backend URL
+
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+    
+      const userId = localStorage.getItem("userId");
+    
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+    
+            socket.emit("updateLocation", { userId, latitude, longitude });
+            console.log("Sent location to backend:", latitude, longitude);
+          },
+          (error) => {
+            console.error("Error getting location", error);
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 5000,
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    });
+  }, []);
+
   return (
     <div className="h-screen flex items-center justify-center bg-[#c4b4a5]">
       <div className=" p-8 rounded-lg shadow-lg w-full max-w-md bg-[#af9b88] text-white">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Delivery Boy Login
-        </h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Delivery Boy Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4 ">
-            <label htmlFor="email" className="block text-gray-700">
-              Email
-            </label>
+            <label htmlFor="email" className="block text-gray-700">Email</label>
             <input
               id="email"
               type="email"
@@ -66,9 +125,7 @@ export default function BoyLogin() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700">
-              Password
-            </label>
+            <label htmlFor="password" className="block text-gray-700">Password</label>
             <input
               id="password"
               type="password"
@@ -85,10 +142,7 @@ export default function BoyLogin() {
             Login
           </button>
           <div className="flex justify-between mt-4">
-            <Link
-              to="/lbResetPassword"
-              className="underline hover:text-indigo-500"
-            >
+            <Link to="/lbResetPassword" className="underline hover:text-indigo-500">
               Resend Password
             </Link>
           </div>

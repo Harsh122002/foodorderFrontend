@@ -78,10 +78,10 @@ export default function RunningOrders() {
                 className="bg-[#79D7BE] shadow-lg rounded-lg p-6"
               >
                 <div className="mb-4">
-                  <div className="font-bold text-gray-700">
+                  <div className="font-bold">
                     Order ID: {order.orderId}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  {/* <div className="text-sm text-gray-600">
                     Status:
                     <select
                       value={order.status}
@@ -90,13 +90,17 @@ export default function RunningOrders() {
                       }
                       className="mt-2 border bg-transparent rounded px-2 py-1"
                     >
-                      {/* <option value="pending">Pending</option> */}
+                      <option value="pending">Pending</option>
                       <option value="running">Running</option>
                       <option value="completed">Complete</option>
                       <option value="declined">Declined</option>
                     </select>
+                  </div>*/}
+                  <div className="font-bold">
+                    Status: {order.status}
                   </div>
-                </div>
+                </div> 
+                   
                 <div className="mb-4">
                   <strong>Total Amount:</strong> Rs{" "}
                   {order.totalAmount.toFixed(2)}

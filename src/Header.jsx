@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { CartContext } from "./pages/context/CartContext";
-import { checkSessionExpiration } from "./utils/session";
 import { UserContext } from "./pages/context/UserContext";
 import ScrollToTopButton from "./utils/scroll";
-import { IoMenu } from "react-icons/io5";
+import { CartContext } from "./pages/context/CartContext";
 
 export default function HeaderFunction() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

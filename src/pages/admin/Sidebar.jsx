@@ -137,7 +137,7 @@ export default function Sidebar() {
           </button>
           {/* Dropdown for Manage Orders */}
           {button.isDropdown && (
-            <div className="absolute ml-44 z-10 mt-0 hidden group-hover:block w-full sm:w-48 bg-[#3b6b93]   rounded-md shadow-lg">
+            <div className="absolute ml-44 z-10 -mt-8 hidden group-hover:block w-full sm:w-48 bg-[#3b6b93]   rounded-md shadow-lg">
               {orderStatuses.map((order, idx) => (
                 <button
                   key={idx}

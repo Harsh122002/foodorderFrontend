@@ -1,12 +1,5 @@
 import React from "react";
-
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
@@ -18,12 +11,8 @@ import AdminDashboard from "./pages/admin/adminDashBoard";
 import AddGroup from "./pages/admin/addGroup";
 import AddProduct from "./pages/admin/addProduct";
 import { CartPage } from "./pages/CartPage";
-import { CartProvider } from "./pages/context/CartContext";
 import OrderPlace from "./pages/orderPlace";
-import { TotalAmountProvider } from "./pages/context/TotalAmountContext";
 import Success from "./pages/success";
-import { OrderProvider } from "./pages/context/OrderContext";
-import { UserProvider } from "./pages/context/UserContext";
 import Profile from "./pages/profile";
 import About from "./pages/about";
 import OrderStatus from "./pages/orderStatus";
@@ -43,20 +32,14 @@ import BoyDashBoard from "./pages/deliveyBoy/boyDashBoard";
 import PageNot from "./pages/pageNot";
 import Discount from "./pages/admin/discount";
 import ShowDiscount from "./pages/admin/showDiscount";
-import { ProtectedRoute, PublicRoute } from "./protect";
-import { AnimatePresence } from "framer-motion";
+import BoyProfile from "./pages/deliveyBoy/boyProfile";
+import MapView from "./pages/viewMap";
+import AllCompletedOrders from "./pages/deliveyBoy/AllCompletedOrders";
+
 function App() {
   return (
     <Router>
-      <CartProvider>
-        <TotalAmountProvider>
-          <OrderProvider>
-            <UserProvider>
-              <AppContent />
-            </UserProvider>
-          </OrderProvider>
-        </TotalAmountProvider>
-      </CartProvider>
+      <AppContent />
     </Router>
   );
 }
@@ -64,7 +47,6 @@ function App() {
 function AppContent() {
   const location = useLocation();
 
-  // Define routes where the header and footer should not be shown
   const noHeaderFooterRoutes = [
     "/admin",
     "/adminDashBoard",
@@ -84,228 +66,52 @@ function AppContent() {
     "/boyDashBoard",
     "/discount",
     "/allDiscount",
+    "/boyProfile",
+    "/map",
+    "/AllCompletedOrders",
   ];
 
   return (
     <div className="App">
-      {/* Conditionally render the header */}
-      <AnimatePresence mode="wait">
-        {!noHeaderFooterRoutes.includes(location.pathname) && (
-          <HeaderFunction />
-        )}
-        <Routes>
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/resetpassword"
-            element={
-              <PublicRoute>
-                <ResetPassword />
-              </PublicRoute>
-            }
-          />
-          <Route path="/admin" element={
-            <PublicRoute>
-              <AdminLogin />
-            </PublicRoute>
-          } />
-          <Route path="/deliveryBoyLogin" element={<BoyLogin />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* admin */}
-          <Route path="/adminDashboard" element={<AdminDashboard />} />
-          <Route
-            path="/addGroup"
-            element={
-              <ProtectedRoute>
-                <AddGroup />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/addProduct"
-            element={
-              <ProtectedRoute>
-                <AddProduct />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/allDiscount"
-            element={
-              <ProtectedRoute>
-                <ShowDiscount />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/discount"
-            element={
-              <ProtectedRoute>
-                <Discount />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/productManage"
-            element={
-              <ProtectedRoute>
-                <ProductManage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/pending"
-            element={
-              <ProtectedRoute>
-                <ProductManagementPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/complete"
-            element={
-              <ProtectedRoute>
-                <Complete />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/declined"
-            element={
-              <ProtectedRoute>
-                <Declined />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/running"
-            element={
-              <ProtectedRoute>
-                <Running />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/registeredUsers"
-            element={
-              <ProtectedRoute>
-                <RegisteredUsers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/allProducts"
-            element={
-              <ProtectedRoute>
-                <AllProducts />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/allGroups"
-            element={
-              <ProtectedRoute>
-                <AllGroups />
-              </ProtectedRoute>
-            }
-          />
-          {/** */}
-          <Route
-            path="/rating"
-            element={
-              <ProtectedRoute>
-                <Rating />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/orderPlace"
-            element={
-              <ProtectedRoute>
-                <OrderPlace />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <ProtectedRoute>
-                <CartPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Success"
-            element={
-              <ProtectedRoute>
-                <Success />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <ProtectedRoute>
-                <About />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/orderStatus"
-            element={
-              <ProtectedRoute>
-                <OrderStatus />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/deliveryBoy"
-            element={
-              <ProtectedRoute>
-                <Delivery />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/lbResetPassword"
-            element={
-              <PublicRoute>
-                <LBResetPassword />
-              </PublicRoute>
-            }
-          />
-          <Route path="/boyDashBoard" element={<BoyDashBoard />} />
-          <Route path="*" element={<PageNot />} />
-          <Route path="/" element={<Navigate to="/dashboard" />} />{" "}
-          {/* Default to dashboard */}
-        </Routes>
-        {/* Conditionally render the footer */}
-        {!noHeaderFooterRoutes.includes(location.pathname) && (
-          <FooterFunction />
-        )}
-      </AnimatePresence>
+      {!noHeaderFooterRoutes.includes(location.pathname) && <HeaderFunction />}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
+        <Route path="/addGroup" element={<AddGroup />} />
+        <Route path="/addProduct" element={<AddProduct />} />
+        <Route path="/allDiscount" element={<ShowDiscount />} />
+        <Route path="/discount" element={<Discount />} />
+        <Route path="/productManage" element={<ProductManage />} />
+        <Route path="/pending" element={<ProductManagementPage />} />
+        <Route path="/complete" element={<Complete />} />
+        <Route path="/declined" element={<Declined />} />
+        <Route path="/running" element={<Running />} />
+        <Route path="/registeredUsers" element={<RegisteredUsers />} />
+        <Route path="/allProducts" element={<AllProducts />} />
+        <Route path="/allGroups" element={<AllGroups />} />
+        <Route path="/rating" element={<Rating />} />
+        <Route path="/orderPlace" element={<OrderPlace />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/Success" element={<Success />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/orderStatus" element={<OrderStatus />} />
+        <Route path="/deliveryBoy" element={<Delivery />} />
+        <Route path="/lbResetPassword" element={<LBResetPassword />} />
+        <Route path="/boyDashBoard" element={<BoyDashBoard />} />
+        <Route path="/deliveryBoyLogin" element={<BoyLogin />} />
+        <Route path="/boyProfile" element={<BoyProfile />} />
+        <Route path="*" element={<PageNot />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/map" element={<MapView />} />
+        <Route path="/AllCompletedOrders" element={<AllCompletedOrders />} />
+
+      </Routes>
+      {!noHeaderFooterRoutes.includes(location.pathname) && <FooterFunction />}
     </div>
   );
 }
