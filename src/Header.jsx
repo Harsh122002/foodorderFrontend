@@ -12,13 +12,13 @@ export default function HeaderFunction() {
   const { userDetail, isLoggedIn, logout } = useContext(UserContext);
   const location = useLocation();
   const currentPath = location.pathname;
- 
+
 
   useEffect(() => {
     setCartLength(cart.length);
   }, [cart]);
 
- 
+
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
@@ -70,11 +70,11 @@ export default function HeaderFunction() {
             >
               Status
               <span
-              className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/orderStatus' ? 'w-[51px]' : 'w-0'
-                } group-hover:w-[51px] group-focus:w-[51px]
+                className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/orderStatus' ? 'w-[51px]' : 'w-0'
+                  } group-hover:w-[51px] group-focus:w-[51px]
               
                 `}
-            ></span>
+              ></span>
             </Link>
           )}
           <Link
@@ -87,6 +87,19 @@ export default function HeaderFunction() {
                 } group-hover:w-12 group-focus:w-12`}
             ></span>
           </Link>
+          <button
+            onClick={(e) => {
+              document.getElementById("footer-section")?.scrollIntoView({ behavior: "smooth" });
+              setTimeout(() => e.target.blur(), 600);
+            }}
+            className="hidden relative group lg:block text-lg text-white"
+          >
+            Contact
+            <span
+              className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 group-hover:w-16 group-focus:w-16 w-0`}
+            ></span>
+          </button>
+
           {isLoggedIn && (
             <Link
               to="/profile"
@@ -94,9 +107,9 @@ export default function HeaderFunction() {
             >
               Profile
               <span
-              className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/profile' ? 'w-[51px]' : 'w-0'
-                } group-hover:w-[51px] group-focus:w-[51px]`}
-            ></span>
+                className={`absolute left-0 bottom-0 h-1 rounded-md bg-[#affc41] transition-all duration-300 ${currentPath === '/profile' ? 'w-[51px]' : 'w-0'
+                  } group-hover:w-[51px] group-focus:w-[51px]`}
+              ></span>
             </Link>
           )}
         </nav>
@@ -134,43 +147,43 @@ export default function HeaderFunction() {
               Logout
             </button>
           )}
-         
+
         </div>
 
-              <div
-                className={`fixed top-0 left-0 w-64 h-full bg-[#c4b4a5] text-white shadow-lg transform ${isDrawerOpen ? "translate-x-0" : "-translate-x-64"
-                  } transition-transform duration-300 ease-in-out`}
-              >
-                {/* Sidebar Header */}
-                <div className="flex justify-between items-center p-4 bg-[#343a40] text-white">
-                  <h2 className="text-lg font-semibold">Menu</h2>
-                  <button onClick={toggleDrawer} className="text-2xl">
-                    ✖
-                  </button>
-                </div>
-        
-                {/* Sidebar Links */}
-                <nav className="flex flex-col p-4 space-y-4">
-                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
-                    Home
-                  </Link>
-                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
-                    Profile
-                  </Link>
-                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
-                    Settings
-                  </Link>
-                  <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
-                    Logout
-                  </Link>
-                </nav>
+        <div
+          className={`fixed top-0 left-0 w-64 h-full bg-[#c4b4a5] text-white shadow-lg transform ${isDrawerOpen ? "translate-x-0" : "-translate-x-64"
+            } transition-transform duration-300 ease-in-out`}
+        >
+          {/* Sidebar Header */}
+          <div className="flex justify-between items-center p-4 bg-[#343a40] text-white">
+            <h2 className="text-lg font-semibold">Menu</h2>
+            <button onClick={toggleDrawer} className="text-2xl">
+              ✖
+            </button>
+          </div>
+
+          {/* Sidebar Links */}
+          <nav className="flex flex-col p-4 space-y-4">
+            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+              Home
+            </Link>
+            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+              Profile
+            </Link>
+            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+              Settings
+            </Link>
+            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+              Logout
+            </Link>
+          </nav>
         </div>
         {isDrawerOpen && (
-        <div
-          className="fixed inset-0 "
-          onClick={toggleDrawer}
-        ></div>
-      )}
+          <div
+            className="fixed inset-0 "
+            onClick={toggleDrawer}
+          ></div>
+        )}
 
         {/* {isDropdownOpen && (
           <div className="absolute top-16 right-4 mt-5 w-48 bg-white rounded-md shadow-lg z-10 lg:hidden">

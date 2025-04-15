@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export default function FooterFunction() {
   return (
-<footer className="bg-[#343a40] text-white p-6 lg:py-20 lg:px-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+<footer id="footer-section"  className="bg-[#343a40] text-white p-6 lg:py-20 lg:px-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 {/* Logo Section */}
       <article className="flex flex-row items-center gap-4">
         <img
