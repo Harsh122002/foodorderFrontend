@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { UserContext } from "./pages/context/UserContext";
 import ScrollToTopButton from "./utils/scroll";
 import { CartContext } from "./pages/context/CartContext";
+import { BiMenu } from "react-icons/bi";
 
 export default function HeaderFunction() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -147,12 +148,16 @@ export default function HeaderFunction() {
               Logout
             </button>
           )}
-
+          <button
+            onClick={toggleDrawer}
+            className="block lg:hidden   text-white text-2xl focus:outline-none"
+          >
+            <BiMenu className="h-10 w-10" />
+          </button>
         </div>
 
         <div
-          className={`fixed top-0 left-0 w-64 h-full bg-[#c4b4a5] text-white shadow-lg transform ${isDrawerOpen ? "translate-x-0" : "-translate-x-64"
-            } transition-transform duration-300 ease-in-out`}
+          className={`fixed top-0 right-0 w-64 h-full bg-[#c4b4a5] text-white shadow-lg transform transition-transform duration-300 ease-in-out ${isDrawerOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out`}
         >
           {/* Sidebar Header */}
           <div className="flex justify-between items-center p-4 bg-[#343a40] text-white">
@@ -178,12 +183,7 @@ export default function HeaderFunction() {
             </Link>
           </nav>
         </div>
-        {isDrawerOpen && (
-          <div
-            className="fixed inset-0 "
-            onClick={toggleDrawer}
-          ></div>
-        )}
+
 
         {/* {isDropdownOpen && (
           <div className="absolute top-16 right-4 mt-5 w-48 bg-white rounded-md shadow-lg z-10 lg:hidden">
