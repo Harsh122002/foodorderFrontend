@@ -37,7 +37,9 @@ export default function HeaderFunction() {
   const handleCartClick = () => {
     navigate("/cart");
   };
-
+  const handleLinkClick = () => {
+    setIsDrawerOpen(false);
+  };
   return (
     <>
       <div
@@ -169,19 +171,45 @@ export default function HeaderFunction() {
 
           {/* Sidebar Links */}
           <nav className="flex flex-col p-4 space-y-4">
-            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
+            <Link to="/" onClick={handleLinkClick} className="text-white hover:text-gray-300 cursor-pointer">
               Home
             </Link>
-            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
-              Profile
+
+            {isLoggedIn && (
+              <Link to="/profile" onClick={handleLinkClick} className="text-white hover:text-gray-300 cursor-pointer">
+                Profile
+              </Link>
+            )}
+
+            {isLoggedIn && (
+              <Link to="/orderStatus" onClick={handleLinkClick} className="text-white hover:text-gray-300 cursor-pointer">
+                Status
+              </Link>
+            )}
+
+            <Link to="/about" onClick={handleLinkClick} className="text-white hover:text-gray-300 cursor-pointer">
+              About
             </Link>
-            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
-              Settings
+
+            <Link
+              to="#"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("footer-section")?.scrollIntoView({ behavior: "smooth" });
+                handleLinkClick(); // close drawer after scrolling
+              }}
+              className="text-white hover:text-gray-300 cursor-pointer"
+            >
+              Contact
             </Link>
-            <Link to="#" className="text-white hover:text-gray-300 cursor-pointer">
-              Logout
-            </Link>
+
+            {isLoggedIn && (
+              <Link to="#" onClick={handleLinkClick} className="text-white hover:text-gray-300 cursor-pointer">
+                Logout
+              </Link>
+            )}
           </nav>
+
         </div>
 
 

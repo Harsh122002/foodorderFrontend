@@ -5,6 +5,7 @@ import { UserContext } from "./context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import ImageSlider from "./imageSlider";
+import Alert from "./alert";
 
 export default function Dashboard() {
      const { addToCart } = useContext(CartContext);
@@ -12,6 +13,7 @@ export default function Dashboard() {
      console.log(userDetail);
 
      const [groups, setGroups] = useState([]);
+     const[alertMessage, setAlertMessage] = useState(null);
      const [selectedGroup, setSelectedGroup] = useState(null);
      const [quantities, setQuantities] = useState([]);
      const [products, setProducts] = useState([]);
@@ -71,11 +73,18 @@ export default function Dashboard() {
 
      const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+     const handleAlert = (message) => {
+          setAlertMessage(message);
+          setTimeout(() => {
+               setAlertMessage(null);
+          },5000); // hide alert after 5 seconds
+     };
+
      const handleAddToCart = (index) => {
           const product = products[index];
           const qty = quantities[index];
           if (!userDetail) {
-               alert("Please Login to add product to cart");
+               handleAlert("Please Login to add product to cart");
                navigate("/login");
                return;
           }
@@ -87,9 +96,11 @@ export default function Dashboard() {
                     image: product.filePath,
                     price: product.price,
                });
-               alert(`Added ${qty} ${product.productName}(s) to cart!`);
+               handleAlert(`Added ${qty} ${product.productName}(s) to cart!`);
           }
      };
+     console.log("alertMessage: ", alertMessage);
+     
 
      const fetchProductsByGroup = async (groupId) => {
           try {
@@ -156,8 +167,12 @@ export default function Dashboard() {
 
 
      return (
-          <div className="pt-32 w-full bg-[#c4b4a5] ">
+          <div className="pt-32 w-full bg-[#c4b4a5] relative ">
                <div className="max-w-[90%] mx-auto  bg-[#c4b4a5] rounded-md flex flex-col gap-8">
+                    {alertMessage && (
+
+                         <Alert message={alertMessage}  />
+                    )}
                     {/* <div className="relative w-full">
                          <img
                               src="../Group.png"

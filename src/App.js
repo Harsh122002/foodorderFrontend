@@ -35,6 +35,7 @@ import ShowDiscount from "./pages/admin/showDiscount";
 import BoyProfile from "./pages/deliveyBoy/boyProfile";
 import MapView from "./pages/viewMap";
 import AllCompletedOrders from "./pages/deliveyBoy/AllCompletedOrders";
+import Alert from "./pages/alert";
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function AppContent() {
     "/boyProfile",
     "/map",
     "/AllCompletedOrders",
+    "/alert",
   ];
 
   return (
@@ -109,6 +111,7 @@ function AppContent() {
         <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/map" element={<MapView />} />
         <Route path="/AllCompletedOrders" element={<AllCompletedOrders />} />
+        <Route path="/alert" element={<Alert />} />
 
       </Routes>
       {!noHeaderFooterRoutes.includes(location.pathname) && <FooterFunction />}

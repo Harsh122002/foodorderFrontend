@@ -4,7 +4,7 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
 import Loader from "./loader";
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate, } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaGithub } from "react-icons/fa";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -12,14 +12,23 @@ import { UserContext } from "./context/UserContext";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(null);
   const hasAutoLoggedIn = useRef(false);
   const { userDetail } = useContext(UserContext);
   const navigate = useNavigate();
+
   useEffect(() => {
-    if (userDetail?.status === "online" && userDetail.role ==="user") {
+    if (userDetail?.status === "online" && userDetail.role === "user") {
       navigate("/");
     }
   }, [userDetail, navigate]);
+
+  const showAlert = (message) => {
+    setAlertMessage(message);
+    setTimeout(() => {
+      setAlertMessage(null);
+    }, 5000); // hide alert after 5 seconds
+  };
 
   const autoLogin = async (email, password) => {
     try {
@@ -28,9 +37,10 @@ function Login() {
         `${process.env.REACT_APP_API_BASE_URL}/login`,
         { email, password }
       );
-    
+
       const token = res.data.token;
       const userId = res.data.userId;
+
       if (token) {
         localStorage.setItem("token", token);
         localStorage.setItem("userId", userId);
@@ -47,11 +57,11 @@ function Login() {
       setIsLoading(false);
       console.error("Error:", error);
       if (error.response) {
-        alert(`Error: ${error.response.data.message || error.response.statusText}`);
+        showAlert(`Error: ${error.response.data.message || error.response.statusText}`);
       } else if (error.request) {
-        alert("Error: No response from server. Please try again later.");
+        showAlert("Error: No response from server. Please try again later.");
       } else {
-        alert("Error: " + error.message);
+        showAlert("Error: " + error.message);
       }
     }
   };
@@ -84,28 +94,22 @@ function Login() {
 
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/googleRegister`,
-        {
-          name: displayName,
-          email: email,
-        }
+        { name: displayName, email: email }
       );
 
       if (res.data) {
         const email = res.data.data;
-        const password = "GoogleUser"; // You can set a default password for Google users
-        console.log(email);
-        window.location.href = `/login?email=${encodeURIComponent(
-          email
-        )}&password=${encodeURIComponent(password)}`;
+        const password = "GoogleUser"; // default password for Google users
+        window.location.href = `/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
       }
     } catch (error) {
       console.error("Error:", error);
       if (error.response) {
-        alert(`Error: ${error.response.data.msg || error.response.statusText}`);
+        showAlert(`Error: ${error.response.data.msg || error.response.statusText}`);
       } else if (error.request) {
-        alert("Error: No response from server. Please try again later.");
+        showAlert("Error: No response from server. Please try again later.");
       } else {
-        alert("Error: " + error.message);
+        showAlert("Error: " + error.message);
       }
     }
   };
@@ -133,35 +137,36 @@ function Login() {
   return (
     <div className="min-h-screen flex bg-[#c4b4a5] items-center justify-center">
       <div className="p-8 rounded-lg bg-[#a19182] shadow-lg sm:w-full md:w-96 mt-20">
+        {alertMessage && (
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-center">
+            {alertMessage}
+          </div>
+        )}
         <h2 className="text-3xl font-bold mb-6 text-[#343a40] text-center">Login</h2>
         <form onSubmit={formik.handleSubmit} className="space-y-4 text-white">
           <div>
-            <label htmlFor="email" className="block text-gray-700">
-              Email
-            </label>
+            <label htmlFor="email" className="block text-gray-700">Email</label>
             <input
               id="email"
               type="email"
               {...formik.getFieldProps('email')}
               className="w-full px-3 py-2 border-2 border-white bg-[#a19182] rounded-lg focus:ring-[#343a40]"
             />
-            {formik.touched.email && formik.errors.email ? (
+            {formik.touched.email && formik.errors.email && (
               <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
-            ) : null}
+            )}
           </div>
           <div>
-            <label htmlFor="password" className="block text-gray-700">
-              Password
-            </label>
+            <label htmlFor="password" className="block text-gray-700">Password</label>
             <input
               id="password"
               type="password"
               {...formik.getFieldProps('password')}
               className="w-full px-3 py-2 rounded-lg border-2 border-white bg-[#a19182] focus:ring-[#343a40]"
             />
-            {formik.touched.password && formik.errors.password ? (
+            {formik.touched.password && formik.errors.password && (
               <p className="text-red-500 text-sm mt-1">{formik.errors.password}</p>
-            ) : null}
+            )}
           </div>
           <button
             type="submit"
@@ -169,17 +174,11 @@ function Login() {
           >
             Login
           </button>
-          <div className="sm:flex-auto md:flex lg:flex justify-between">
-            <Link
-              to="/resetpassword"
-              className="text-sm text-indigo-900 hover:underline block sm:inline-block mb-2 sm:mb-0"
-            >
+          <div className="sm:flex-auto md:flex lg:flex justify-between mt-2">
+            <Link to="/resetpassword" className="text-sm text-indigo-900 hover:underline block sm:inline-block mb-2 sm:mb-0">
               Resend Password
             </Link>
-            <Link
-              to="/register"
-              className="text-sm text-indigo-900 hover:underline block sm:inline-block mb-2 sm:mb-0"
-            >
+            <Link to="/register" className="text-sm text-indigo-900 hover:underline block sm:inline-block mb-2 sm:mb-0">
               Register
             </Link>
           </div>
@@ -190,17 +189,19 @@ function Login() {
             className="text-white px-4 bg-[#9d836a] flex items-center py-2 rounded-lg hover:bg-gray-700 transition duration-200"
             disabled={isLoading}
           >
-            <FcGoogle className="w-6 h-6" /> Google
-          </button>&nbsp;&nbsp;
+            <FcGoogle className="w-6 h-6 mr-2" /> Google
+          </button>
+          &nbsp;&nbsp;
           <button
             onClick={handleGitHubLogin}
-            className="text-white px-4 bg-black py-2 flex items-center rounded-lg hover:bg-gray-700 transition duration-200"
+            className="text-white px-4 bg-black flex items-center py-2 rounded-lg hover:bg-gray-700 transition duration-200"
             disabled={isLoading}
           >
-            <FaGithub className="w-6 h-6" /> GitHub
+            <FaGithub className="w-6 h-6 mr-2" /> GitHub
           </button>
         </div>
-      </div></div>
+      </div>
+    </div>
   );
 }
 
