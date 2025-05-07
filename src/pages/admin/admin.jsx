@@ -8,13 +8,19 @@ export default function AdminLogin() {
   const { userDetail } = useContext(UserContext);
 
   const navigate = useNavigate();
-   useEffect(() => {
-        if (userDetail?.status === "online" && userDetail.role ==="admin") {
-          navigate("/adminDashBoard");
-        }
-      }, [userDetail, navigate]);
-  const handleSubmit = async (e) => { 
+  useEffect(() => {
+    if (userDetail?.status === "online" && userDetail.role === "admin") {
+      navigate("/adminDashBoard");
+    }
+  }, [userDetail, navigate]);
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const tokens = localStorage.getItem("token");
+    if (tokens) {
+      alert("You are already logged in.");
+      navigate("/admin")
+      return;
+    }
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/adminLogin`,

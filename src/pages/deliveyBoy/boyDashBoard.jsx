@@ -9,25 +9,25 @@ export default function BoyDashBoard() {
   const { userDetail } = useContext(UserContext);
   const [accessOrder, setAccessOrder] = useState([]);
   const navigate = useNavigate();
-    const [customerCoords, setCustomerCoords] = useState(null);
-    const [userCoords, setUserCoords] = useState(null);
-    useEffect(() => {
-      if (userDetail?.role === "admin") {
-        navigate("/adminDashboard");
-      } else if (userDetail?.role === "user") {
-        navigate("/");
-      }
-    }, [userDetail, navigate]);
+  const [customerCoords, setCustomerCoords] = useState(null);
+  const [userCoords, setUserCoords] = useState(null);
+  useEffect(() => {
+    if (userDetail?.role === "admin") {
+      navigate("/adminDashboard");
+    } else if (userDetail?.role === "user") {
+      navigate("/");
+    }
+  }, [userDetail, navigate]);
 
-    // initial fetch
+  // initial fetch
 
-    //   intervalId = setInterval(() => {
-    //     fetchAccessOrder();
-    //   }, 30000); // fetch every 30 seconds
-    // }
+  //   intervalId = setInterval(() => {
+  //     fetchAccessOrder();
+  //   }, 30000); // fetch every 30 seconds
+  // }
 
-    // return () => {
-    //   if (intervalId) clearInterval(intervalId); 
+  // return () => {
+  //   if (intervalId) clearInterval(intervalId); 
 
   useEffect(() => {
     if (userDetail?.name) {
@@ -41,7 +41,7 @@ export default function BoyDashBoard() {
   }, [userDetail?.name]);
 
 
- 
+
 
   const fetchAccessOrder = async () => {
     try {
@@ -101,18 +101,18 @@ export default function BoyDashBoard() {
     try {
       const result = await getCoordinatesFromAddress(address);
       console.log("Coordinates from API:", result);
-  
+
       // Validate coordinates
       if (!result || !result.latitude || !result.longitude) {
         console.log("Invalid coordinates from API:", result);
         alert("Could not fetch valid coordinates for the address.");
         return;
       }
-  
+
       // Set customer coordinates
       const coords = { latitude: result.latitude, longitude: result.longitude };
       setCustomerCoords(coords);
-  
+
       // Ensure both user and customer coordinates are available
       if (userCoords && coords) {
         const url = `https://www.google.com/maps/dir/?api=1&origin=${userCoords.lat},${userCoords.lng}&destination=${coords.latitude},${coords.longitude}&travelmode=driving`;
@@ -120,13 +120,13 @@ export default function BoyDashBoard() {
       } else {
         alert("Coordinates not available yet!");
       }
-  
+
     } catch (error) {
       console.error("Error getting coordinates:", error);
       alert("Something went wrong while fetching location.");
     }
   };
-  
+
   return (
     <div className="min-h-screen w-full bg-[#f3f0eb]">
       <DeliveryHeader />
@@ -136,7 +136,7 @@ export default function BoyDashBoard() {
           All Running Orders
         </h1>
 
-        {accessOrder.length > 0 ? (
+        {accessOrder.length > 0 && userDetail.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 m-auto justify-center items-center md:items-start w-[95%]">
             {accessOrder.map((order) => (
               <div

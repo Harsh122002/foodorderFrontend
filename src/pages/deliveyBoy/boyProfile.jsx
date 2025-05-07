@@ -68,7 +68,7 @@ const BoyProfile = () => {
      return (
           <div className= ' min-h-lvh bg-[#c4b4a5]'>
                <DeliveryHeader />
-               <div className="max-w-md mx-auto text-white p-8 pt-36 shadow-lg rounded-lg bg-[#af9b88]">
+               <div className="max-w-md  mx-auto text-white p-8    pt-28 shadow-lg rounded-lg bg-[#af9b88]">
                     <h2 className="text-2xl font-semibold mb-6 text-center ">
                          Update Profile
                     </h2>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import io from "socket.io-client";
 
@@ -37,6 +37,13 @@ export default function BoyLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token= localStorage.getItem("token");
+    if (token) {
+      alert("You are already logged in.");
+      navigate("/boyLogin");
+      return;
+    }
+
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/boyLogin`,
@@ -49,7 +56,7 @@ export default function BoyLogin() {
         }
       );
 
-      alert(res.data.msg || "Login Successfully");
+      // alert(res.data.msg || "Login Successfully");
 
       const token = res.data.token;
       const userId = res.data.userId;

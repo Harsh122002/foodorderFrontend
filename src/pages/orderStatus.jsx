@@ -69,25 +69,25 @@ export default function OrderStatus() {
       setError(error.response ? error.response.data.message : "Server error");
     }
   };
-  const[customerCoords, setCustomerCoords] = useState(null);
+  const [customerCoords, setCustomerCoords] = useState(null);
   const handleView = async (address, boylatitude, boylongitude) => {
     try {
       const result = await getCoordinatesFromAddress(address);
       console.log("Coordinates from API:", result);
-  
+
       // Validate coordinates
       if (!result || !result.latitude || !result.longitude) {
         console.log("Invalid coordinates from API:", result);
         alert("Could not fetch valid coordinates for the address.");
         return;
       }
-  
+
       // Set customer coordinates
       const coords = { latitude: result.latitude, longitude: result.longitude };
       setCustomerCoords(coords);
-  
+
       // Ensure both user and customer coordinates are available
-      if ( coords) {
+      if (coords) {
         const url = `https://www.google.com/maps/dir/?api=1&origin=${boylatitude},${boylongitude}&destination=${coords.latitude},${coords.longitude}&travelmode=driving`;
         window.open(url, "_blank");
       } else {
@@ -98,7 +98,7 @@ export default function OrderStatus() {
       alert("Something went wrong while fetching location.");
     }
   };
-  
+
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -107,11 +107,11 @@ export default function OrderStatus() {
   }
 
   if (error) {
-    return <div className="text-center mt-4">Error: {error}</div>;
+    return <div className="text-center h-lvh pt-10 flex items-center justify-center text-2xl"> {error || "No Orders Found"}</div>;
   }
 
   return (
-    <div className="container mx-auto bg-[#c4b4a5]">
+    <div className="container  mx-auto bg-[#c4b4a5]">
       <div className="p-4 rounded-lg">
         <div className="mt-32 flex flex-col justify-center">
           <h1 className="text-center font-bold text-4xl text-[#343a40]">
@@ -179,12 +179,12 @@ export default function OrderStatus() {
                           <p className="text-green-900">
                             You are delivering successfully!
                           </p>
-                          <button 
-  onClick={() => handleView(order.address, order.boylatitude, order.boylongitude)} 
-  className="bg-blue-500 border-2 border-blue-500 hover:text-blue-500 hover:bg-white text-white duration-300 ease-in   px-4 py-1 rounded"
->
-  Map
-</button>
+                          <button
+                            onClick={() => handleView(order.address, order.boylatitude, order.boylongitude)}
+                            className="bg-blue-500 border-2 border-blue-500 hover:text-blue-500 hover:bg-white text-white duration-300 ease-in   px-4 py-1 rounded"
+                          >
+                            Map
+                          </button>
                         </article>
                       )}
                       {order.status.toLowerCase() === "completed" && (

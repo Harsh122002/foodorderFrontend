@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect,  } from "react";
 import axios from "axios";
 
 // Create the context
@@ -31,6 +31,7 @@ export const UserProvider = ({ children }) => {
             },
           }
         );
+
         setUserDetail(response.data);
         setIsLoggedIn(true);
       } catch (error) {
@@ -47,26 +48,26 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     const userId = localStorage.getItem("userId");
-  
+
     if (!userId) {
       console.error("User ID not found");
       return;
     }
-  
+
     try {
-      // API call to log out
       await axios.get(`${process.env.REACT_APP_API_BASE_URL}/logout/${userId}`);
-  
-      // Remove stored user data
+
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
       localStorage.removeItem("tokenExpiration");
       sessionStorage.removeItem("token");
-  
-      // Update state
+
+     
+
       setUserDetail(null);
       setIsLoggedIn(false);
-  
+      setBoyLogin(false);
+
       console.log("Logout successful");
     } catch (error) {
       console.error("Logout failed:", error.response ? error.response.data : error.message);
@@ -75,7 +76,14 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ userDetail, isLoggedIn, logout, setUserDetail,boyLogin,setBoyLogin }}
+      value={{
+        userDetail,
+        isLoggedIn,
+        logout,
+        setUserDetail,
+        boyLogin,
+        setBoyLogin,
+      }}
     >
       {children}
     </UserContext.Provider>

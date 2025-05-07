@@ -32,6 +32,12 @@ function Login() {
 
   const autoLogin = async (email, password) => {
     try {
+      const tokens = localStorage.getItem("token");
+      if (tokens) {
+        alert("You are already logged in.");
+        navigate("/login")
+        return;
+      }
       setIsLoading(true);
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/login`,

@@ -29,6 +29,10 @@ export default function HeaderFunction() {
   };
 
   const handleLogout = () => {
+    const message=window.confirm("Are you sure you want to logout?")
+    if(!message){
+      return
+    }
     logout();
     removeFromCart1();
     navigate("/login");
